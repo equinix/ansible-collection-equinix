@@ -1,12 +1,12 @@
-# Ansible Collection - equinix.metal
+# Equinix Ansible Collection - equinix.equinix
 
-[![CI](https://github.com/equinix/ansible-collection-metal/actions/workflows/ansible-integration.yml/badge.svg)](https://github.com/equinix/ansible-collection-metal/actions/workflows/ansible-integration.yml)[![Codecov](https://img.shields.io/codecov/c/github/equinix/ansible-collection-metal)](https://codecov.io/gh/equinix/ansible-collection-metal)
+[![CI](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml/badge.svg)](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml)[![Codecov](https://img.shields.io/codecov/c/github/equinix/ansible-collection-equinix)](https://codecov.io/gh/equinix/ansible-collection-equinix)
 
 ![](https://img.shields.io/badge/stability-maintained-green.svg) [![Slack](https://slack.equinixmetal.com/badge.svg)](https://slack.equinixmetal.com/) [![Twitter Follow](https://img.shields.io/twitter/follow/equinixmetal.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=equinixmetal)
 
 This repository is [Maintained](https://github.com/packethost/standards/blob/master/maintained-statement.md)!
 
-The Ansible Equinix Metal collection includes a variety of Ansible content to help automate the management of Equinix Metal resources. This collection is maintained by the Equinix Metal team.
+The Ansible Equinix collection includes a variety of Ansible content to help automate the management of Equinix resources. (in future: This collection is maintained by the Equinix DevRel team).
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
@@ -28,25 +28,25 @@ This collection depends on [packet-python](https://github.com/packethost/packet-
 ### Inventory plugins
 Name | Description
 --- | ---
-[equinix.metal.device](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.device_inventory.rst)|Equinix Metal Device inventory source
+[equinix.metal.device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_inventory.rst)|Equinix Metal Device inventory source
 
 ### Modules
 Name | Description
 --- | ---
-[equinix.metal.capacity_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.capacity_info_module.rst)|Gather information about Equinix Metal capacity
-[equinix.metal.device](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.device_module.rst)|Manage a bare metal server in Equinix Metal
-[equinix.metal.device_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.device_info_module.rst)|Gather information about Equinix Metal devices
-[equinix.metal.facility_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.facility_info_module.rst)|Gather information about Equinix Metal facilities
-[equinix.metal.ip_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.ip_info_module.rst)|Gather information about project IP Addresses
-[equinix.metal.ip_subnet](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.ip_subnet_module.rst)|Assign IP subnet to a bare metal server.
-[equinix.metal.operating_system_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.operating_system_info_module.rst)|Gather information about Equinix Metal operating_systems
-[equinix.metal.org_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.org_info_module.rst)|Gather information about Equinix Metal organizations
-[equinix.metal.plan_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.plan_info_module.rst)|Gather information about Equinix Metal plans
-[equinix.metal.project](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.project_module.rst)|Create/delete a project in Equinix Metal
-[equinix.metal.project_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.project_info_module.rst)|Gather information about Equinix Metal projects
-[equinix.metal.sshkey](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.sshkey_module.rst)|Create/delete an SSH key in Equinix Metal
-[equinix.metal.sshkey_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.sshkey_info_module.rst)|Gather information about Equinix Metal SSH keys
-[equinix.metal.user_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.user_info_module.rst)|Gather information about the logged in user
+[equinix.metal.capacity_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.capacity_info_module.rst)|Gather information about Equinix Metal capacity
+[equinix.metal.device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_module.rst)|Manage a bare metal server in Equinix Metal
+[equinix.metal.device_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_info_module.rst)|Gather information about Equinix Metal devices
+[equinix.metal.facility_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.facility_info_module.rst)|Gather information about Equinix Metal facilities
+[equinix.metal.ip_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.ip_info_module.rst)|Gather information about project IP Addresses
+[equinix.metal.ip_subnet](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.ip_subnet_module.rst)|Assign IP subnet to a bare metal server.
+[equinix.metal.operating_system_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.operating_system_info_module.rst)|Gather information about Equinix Metal operating_systems
+[equinix.metal.org_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.org_info_module.rst)|Gather information about Equinix Metal organizations
+[equinix.metal.plan_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.plan_info_module.rst)|Gather information about Equinix Metal plans
+[equinix.metal.project](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.project_module.rst)|Create/delete a project in Equinix Metal
+[equinix.metal.project_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.project_info_module.rst)|Gather information about Equinix Metal projects
+[equinix.metal.sshkey](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.sshkey_module.rst)|Create/delete an SSH key in Equinix Metal
+[equinix.metal.sshkey_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.sshkey_info_module.rst)|Gather information about Equinix Metal SSH keys
+[equinix.metal.user_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.user_info_module.rst)|Gather information about the logged in user
 
 <!--end collection content-->
 
@@ -54,14 +54,14 @@ Name | Description
 
 You can install the Equinix Metal collection with the Ansible Galaxy CLI:
 
-    ansible-galaxy collection install equinix.metal
+    ansible-galaxy collection install equinix
 
 You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
 
 ```yaml
 ---
 collections:
-  - name: equinix.metal
+  - name: equinix
 ```
 
 The python module dependencies are not installed by `ansible-galaxy`.  They can
@@ -76,7 +76,7 @@ or:
 ## Using this collection
 
 
-You can either call modules by their Fully Qualified Collection Namespace (FQCN), such as `equinix.metal.device`, or you can call modules by their short name if you list the `equinix.metal` collection in the playbook's `collections` keyword:
+You can either call modules by their Fully Qualified Collection Namespace (FQCN), such as `equinix.metal.device`, or you can call modules by their short name if you list the `equinix` collection in the playbook's `collections` keyword:
 
 ```yaml
 ---
@@ -92,7 +92,7 @@ TODO
 
 ## Contributing to this collection
 
-We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Equinix Metal collection repository](https://github.com/equinix/ansible-collection-metal).
+We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Equinix Metal collection repository](https://github.com/equinix/ansible-collection-equinix).
 
 If you require support, please email [support@equinixmetal.com](mailto:support@equinixmetal.com), visit the Equinix Metal IRC channel (#equinixmetal on freenode), subscribe to the [Equinix Metal Community Slack channel](https://slack.equinixmetal.com/) or post an issue within this repository.
 
