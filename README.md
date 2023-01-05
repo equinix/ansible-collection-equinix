@@ -1,4 +1,7 @@
-# Equinix Ansible Collection - equinix.equinix
+# Equinix Ansible Collection
+
+This is an unofficial fork of Equinix Metal collection, aiming to include other __ from Equinix beyond Metal. It's still work in progress, not ready for production.
+
 
 [![CI](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml/badge.svg)](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml)[![Codecov](https://img.shields.io/codecov/c/github/equinix/ansible-collection-equinix)](https://codecov.io/gh/equinix/ansible-collection-equinix)
 
