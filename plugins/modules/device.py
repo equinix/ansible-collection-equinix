@@ -243,7 +243,7 @@ from ansible.module_utils._text import to_native
 
 HAS_METAL_SDK = True
 try:
-    import packet
+    import equinixmetalpy
 except ImportError:
     HAS_METAL_SDK = False
 
@@ -484,7 +484,7 @@ def main():
     )
 
     if not HAS_METAL_SDK:
-        module.fail_json(msg='packet-python required for this module')
+        module.fail_json(msg='equinixmetalpy required for this module')
 
     state = module.params.get('state')
 

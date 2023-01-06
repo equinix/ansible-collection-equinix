@@ -6,18 +6,18 @@
     test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
 
 - module_defaults:
-    equinix.metal.project:
+    equinix.cloud.project:
       api_token: '{{ api_token }}'
-    equinix.metal.project_info:
+    equinix.cloud.project_info:
       api_token: '{{ api_token }}'
   block:
     - name: create project for test
-      equinix.metal.project:
+      equinix.cloud.project:
         name: "{{ test_prefix }}-1"
       register: test_project
 
     - name: test project is deleted
-      equinix.metal.project:
+      equinix.cloud.project:
         id: "{{ test_project.id }}"
         state: absent
 
@@ -32,14 +32,14 @@
         msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
 
     - name: list projects
-      equinix.metal.project_info:
+      equinix.cloud.project_info:
       register: test_projects
 
     - set_fact:
         matching_projects: "{{ test_projects.projects | selectattr('name', 'match', '^'+test_prefix) | list }}"
 
     - name: delete test projects
-      equinix.metal.project:
+      equinix.cloud.project:
         id: "{{ item.id }}"
         state: absent
       loop: "{{ matching_projects }}"

@@ -69,15 +69,15 @@ from ansible_collections.equinix.cloud.plugins.module_utils.metal import Ansible
 
 
 def get_project_info(module):
-    projects = module.metal_conn.list_projects(params={'per_page': 1000, 'exclude': 'members'})
+    projects = module.metal_conn.find_projects(per_page=1000, exclude=['members'])
 
     if module.params.get('ids'):
-        projects = [p for p in projects if p.id in module.params.get('ids')]
+        projects = [p for p in projects.projects if p.id in module.params.get('ids')]
     elif module.params.get('names'):
-        projects = [p for p in projects if p.name in module.params.get('names')]
+        projects = [p for p in projects.projects if p.name in module.params.get('names')]
 
     return {
-        'projects': [serialize_project(p) for p in projects]
+        'projects': [serialize_project(p) for p in projects.projects]
     }
 
 

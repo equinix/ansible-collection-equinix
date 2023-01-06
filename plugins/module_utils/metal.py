@@ -10,7 +10,7 @@ import uuid
 
 HAS_METAL_SDK = True
 try:
-    import equninixmetalpy
+    import equinixmetalpy
 except ImportError:
     HAS_METAL_SDK = False
 
@@ -70,7 +70,7 @@ class AnsibleMetalModule(object):
         self._name = self._module._name
 
         if not HAS_METAL_SDK:
-            self.fail_json(msg='packet-python required for this module')
+            self.fail_json(msg='equnixmetalpy required for this module')
 
         if local_settings["default_args"]:
             self.metal_conn = equinixmetalpy.Manager(self.params.get('api_token'))
