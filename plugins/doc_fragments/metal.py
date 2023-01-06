@@ -19,4 +19,5 @@ class ModuleDocFragment(object):
                 - auth_token
     requirements:
         - "packet-python >= 1.43.1"
+        - "equinixmetalpy >= 0.0.1"
     '''

@@ -1,6 +1,6 @@
 # (c) 2016, Peter Sankauskas
-# (c) 2017, Tomas Karasek
 # (c) 2021, Jason DeTiberus
+# (c) 2023, Tomas Karasek
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -14,12 +14,12 @@ DOCUMENTATION = '''
     requirements:
         - "packet-python >= 1.43.1"
     extends_documentation_fragment:
-        - equinix.metal.auth_options
+        - equinix.cloud.auth_options
         - inventory_cache
         - constructed
     description:
         - Get inventory hosts from the Equinix Metal Device API.
-        - Uses a YAML configuration file that ends with equinix_metal.(yml|yaml).
+        - Uses a YAML configuration file that ends with equinix_cloud.(yml|yaml).
     author:
         - Peter Sankauskas
         - Tomas Karasek
@@ -28,7 +28,7 @@ DOCUMENTATION = '''
         plugin:
             description: Token that ensures this is a source file for the plugin.
             required: True
-            choices: ['equinix_metal', 'equinix.metal.device']
+            choices: ['equinix_cloud', 'equinix.cloud.device']
         projects:
           description:
               - A list of projects in which to describe Equinix Metal devices.
@@ -40,25 +40,25 @@ DOCUMENTATION = '''
 
 EXAMPLES = '''
 # Minimal example using environment var credentials
-plugin: equinix.metal.device
+plugin: equinix.cloud.device
 
 # Example using constructed features to create groups and set ansible_host
-plugin: equinix.metal.device
+plugin: equinix.cloud.device
 # keyed_groups may be used to create custom groups
 strict: False
 keyed_groups:
   # Add hosts to tag_Name groups for each tag
   - prefix: tag
     key: tags
-  # Add hosts to e.g. equinix_metal_plan_c3_small_x86
-  - prefix: equinix_metal_plan
+  # Add hosts to e.g. equinix_cloud_plan_c3_small_x86
+  - prefix: equinix_cloud_plan
     key: plan
-  # Create a group per region e.g. equinix_metal_facility_am6
+  # Create a group per region e.g. equinix_cloud_facility_am6
   - key: facility
-    prefix: equinix_metal_facility
-  # Create a group per device state e.g. equinix_metal_state_active
+    prefix: equinix_cloud_facility
+  # Create a group per device state e.g. equinix_cloud_state_active
   - key: state
-    prefix: equinix_metal_state
+    prefix: equinix_cloud_state
 # Set individual variables with compose
 compose:
   # Use the private IP address to connect to the host
@@ -70,21 +70,21 @@ from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.module_utils import six
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable, to_safe_group_name
 
+HAS_EMPY = True
 try:
-    import packet
-    HAS_METAL = True
+    import equinixmetalpy
 except ImportError:
-    HAS_METAL = False
+    HAS_EMPY = False
 
 
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
-    NAME = 'equinix.metal.device'
+    NAME = 'equinix.cloud.device'
 
     def __init__(self):
         super(InventoryModule, self).__init__()
 
-        self.group_prefix = 'equinix_metal'
+        self.group_prefix = 'equinix_cloud'
 
         # credentials
         self.api_token = None
@@ -96,9 +96,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             :return the contents of the config file
         '''
         if super(InventoryModule, self).verify_file(path):
-            if path.endswith(('equinix_metal.yml', 'equinix_metal.yaml')):
+            if path.endswith(('equinix_cloud.yml', 'equinix_cloud.yaml')):
                 return True
-        self.display.debug("equinix_metal inventory filename must end with 'equinix_metal.yml' or 'equinix_metal.yaml'")
+        self.display.debug("equinix_cloud inventory filename must end with 'equinix_cloud.yml' or 'equinix_cloud.yaml'")
         return False
 
     def _set_credentials(self):
@@ -115,7 +115,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         for id in project_ids:
             devices.extend(self._get_devices_by_project(id))
 
-        return {'equinix_metal': devices}
+        return {'equinix_cloud': devices}
 
     def _populate(self, groups):
         for group in groups:
@@ -149,9 +149,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def parse(self, inventory, loader, path, cache=True):
 
-        if not HAS_METAL:
+        if not HAS_EMPY:
             raise AnsibleParserError(
-                'The Equinix Metal Device inventory plugin requires the python "packet-python" library'
+                'The Equinix Metal Device inventory plugin requires the python "equinixmetalpy" library'
             )
 
         super(InventoryModule, self).parse(inventory, loader, path)
@@ -188,8 +188,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def _connect(self):
         ''' create connection to api server'''
-        manager = packet.Manager(auth_token=self.api_token, consumer_token="ansible-equinix-metal-inventory")
-        return manager
+        metal_client = equinixmetalpy.Manager(credential=self.api_token)
+        return metal_client
 
     def _get_project_ids(self):
         project_ids = self.get_option('projects')
@@ -197,8 +197,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         if not project_ids:
             try:
                 manager = self._connect()
-                projects = manager.list_projects()
-                project_ids = [project.id for project in projects]
+                projects = manager.find_projects()
+                project_ids = [project.id for project in projects.projects]
             except Exception as e:
                 raise AnsibleError("Failed to query projects from Equinix Metal API", orig_exc=e)
 
@@ -214,19 +214,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         '''
         try:
             manager = self._connect()
-            devices = manager.list_all_devices(project_id=project_id)
-            return [self._get_host_info_dict_from_device(device) for device in devices]
+            devices = manager.find_project_devices(project_id)
+            return [self._get_host_info_dict_from_device(device) for device in devices.devices]
         except Exception as e:
             raise AnsibleError("Failed to query devices from Equinix Metal API", orig_exc=e)
 
     def _get_host_info_dict_from_device(self, device):
         device_vars = {}
-        device.ip_addresses
-        for key in vars(device):
-            value = getattr(device, key)
-            key = to_safe_group_name(key)
-
-            # Handle complex types
+        for key, value in device.as_dict(key_tranformer=to_safe_group_name).items():
             if key == 'state':
                 device_vars[key] = device.state or ''
             elif key == 'hostname':
@@ -240,14 +235,13 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             elif key == 'facility':
                 device_vars[key] = value['code']
             elif key == 'operating_system':
-                device_vars[key] = value.slug
+                device_vars[key] = value['slug']
             elif key == 'plan':
                 device_vars[key] = value['slug']
             elif key == 'project':
                 device_vars[key] = value['href'].strip('/projects/')
             elif key == 'ip_addresses':
                 device_vars[key] = []
-
                 for addr in value:
                     device_vars[key].append(
                         {
@@ -262,7 +256,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                             'management': addr['management'],
                             'netmask': addr['netmask'],
                             'network': addr['network'],
-                            'tags': addr['tags'],
+                            'tags': []
                         }
                     )
             elif key == 'tags':

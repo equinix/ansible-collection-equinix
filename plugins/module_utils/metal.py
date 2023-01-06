@@ -10,7 +10,7 @@ import uuid
 
 HAS_METAL_SDK = True
 try:
-    import packet
+    import equninixmetalpy
 except ImportError:
     HAS_METAL_SDK = False
 
@@ -73,14 +73,14 @@ class AnsibleMetalModule(object):
             self.fail_json(msg='packet-python required for this module')
 
         if local_settings["default_args"]:
-            self.metal_conn = packet.Manager(auth_token=self.params.get('api_token'))
+            self.metal_conn = equinixmetalpy.Manager(self.params.get('api_token'))
 
     def get_devices(self):
         project_id = self.params.get('project_id')
         if not is_valid_uuid(project_id):
             raise Exception("Project ID {0} does not seem to be valid".format(project_id))
 
-        return self.metal_conn.list_all_devices(project_id)
+        return self.metal_conn.find_project_devices(project_id)
 
     @property
     def params(self):

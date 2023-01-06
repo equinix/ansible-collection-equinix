@@ -1,0 +1,2 @@
+plugin: equinix.cloud.device
+api_token: '{{ api_token }}'

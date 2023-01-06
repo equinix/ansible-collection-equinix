@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - ../../../integration_config.yml
+  tasks:
+    - name: Delete the equinix instance
+      equinix.cloud.device:
+        label: 'ansible-test-inventory'
+        api_token: '{{ api_token }}'
+        ua_prefix: '{{ ua_prefix }}'
+        type: g6-nanode-1
+        region: us-east
+        tags:
+          - ansible-inventory-node
+        state: absent
+
+    - name: Ensure test files are absent
+      file:
+        path: '../{{item}}.yml'
+        state: absent
+      loop:
+        - filter.instance.yml
+        - nofilter.instance.yml
+        - keyedgroups.instance.yml

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2019, Nurfet Becirevic <nurfet.becirevic@gmail.com>
-# Copyright: (c) 2019, Tomas Karasek <tom.to.the.k@gmail.com>
 # Copyright: (c) 2021, Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
+# Copyright: (c) 2023, Tomas Karasek <tom.to.the.k@gmail.com>
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -109,7 +109,7 @@ from ansible.module_utils._text import to_native
 
 HAS_METAL_SDK = True
 try:
-    import packet
+    import equinixmetalpy
 except ImportError:
     HAS_METAL_SDK = False
 

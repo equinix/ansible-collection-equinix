@@ -23,7 +23,7 @@ author:
     - Nurfet Becirevic (@nurfet-becirevic) <nurfet.becirevic@gmail.com>
     - Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
 extends_documentation_fragment:
-     - equinix.metal.metal
+     - equinix.cloud.metal
 options:
     names:
         description:
@@ -44,13 +44,13 @@ EXAMPLES = '''
 - name: Gather information about all projects
   hosts: localhost
   tasks:
-    - equinix.metal.project_info:
+    - equinix.cloud.project_info:
 
 
 - name: Gather information about a particular project using ID
   hosts: localhost
   tasks:
-    - equinix.metal.project_info:
+    - equinix.cloud.project_info:
       ids:
         - 173d7f11-f7b9-433e-ac40-f1571a38037a
 '''
@@ -65,7 +65,7 @@ projects:
 
 from ansible.module_utils._text import to_native
 
-from ansible_collections.equinix.metal.plugins.module_utils.metal import AnsibleMetalModule, serialize_project
+from ansible_collections.equinix.cloud.plugins.module_utils.metal import AnsibleMetalModule, serialize_project
 
 
 def get_project_info(module):
