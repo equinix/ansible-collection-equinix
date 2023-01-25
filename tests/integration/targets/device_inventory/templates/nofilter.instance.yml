@@ -1,2 +1,2 @@
-plugin: equinix.cloud.device
+plugin: equinix.metal.device
 api_token: '{{ api_token }}'

@@ -58,7 +58,7 @@ plans:
     sample: '[{
                 "id": "e69c0169-4726-46ea-98f1-939c9e8a3607",
                 "name": "t1.small.x86",
-                "description": "Our Type 0 configuration is a general use \"cloud killer\" server, with a Intel Atom 2.4Ghz processor and 8GB of RAM.",
+                "description": "Our Type 0 configuration is a general use \"metal killer\" server, with a Intel Atom 2.4Ghz processor and 8GB of RAM.",
                 "available_in":[
                     "ams1",
                     "ewr1",

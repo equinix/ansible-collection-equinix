@@ -4,17 +4,15 @@
     test_prefix: ansible-integration-test
   tasks:
     - name: list projects
-      equinix.metal.project_info:
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
       register: test_projects
 
-    - set_fact:
-        matching_projects: "{{ test_projects.projects | selectattr('name', 'match', '^'+test_prefix) | list }}"
-
     - name: list devices
-      equinix.metal.device_info:
+      equinix.cloud.metal_device_info:
         project_id: "{{ item.id }}"
       register: test_devices
-      loop: "{{ matching_projects }}"
+      loop: "{{ test_projects }}"
 
     - set_fact:
         mp: "{{ test_devices.results | map(attribute='item.id') | list }}"
@@ -24,15 +22,14 @@
         matching_proj_device_ids: "{{ dict(mp | zip(md)) | dict2items(key_name='project_id', value_name='device_ids') | selectattr('device_ids') | list }}"
 
     - name: delete test devices
-      equinix.metal.device:
-        device_ids: "{{ item.device_ids }}"
-        project_id: "{{ item.project_id }}"
+      equinix.cloud.metal_device:
+        id: "{{ item }}"
         state: absent
       loop: "{{ matching_proj_device_ids }}"
       ignore_errors: true
 
     - name: delete test projects
-      equinix.metal.project:
+      equinix.cloud.metal_project:
         id: "{{ item.id }}"
         state: absent
       loop: "{{ matching_projects }}"

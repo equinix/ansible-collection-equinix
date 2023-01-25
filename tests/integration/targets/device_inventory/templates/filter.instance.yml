@@ -1,4 +1,4 @@
-plugin: equinix.cloud.device
+plugin: equinix.metal.device
 api_token: '{{ api_token }}'
 types:
   - g6-nanode-1

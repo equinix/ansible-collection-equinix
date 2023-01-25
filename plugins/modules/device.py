@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # (c) 2016, Tomas Karasek <tom.to.the.k@gmail.com>
-# (c) 2016, Matt Baldwin <baldwin@stackpointcloud.com>
+# (c) 2016, Matt Baldwin <baldwin@stackpointmetal.com>
 # (c) 2016, Thibaud Morel l'Horset <teebes@gmail.com>
 # (c) 2021, Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
 #
@@ -21,7 +21,7 @@ description:
 version_added: 1.1.0
 author:
     - Tomas Karasek (@t0mk) <tom.to.the.k@gmail.com>
-    - Matt Baldwin (@baldwinSPC) <baldwin@stackpointcloud.com>
+    - Matt Baldwin (@baldwinSPC) <baldwin@stackpointmetal.com>
     - Thibaud Morel l'Horset (@teebes) <teebes@gmail.com>
     - Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
 notes:
@@ -176,7 +176,7 @@ EXAMPLES = '''
       project_id: 89b497ee-5afc-420a-8fb5-56984898f4df
       wait_for_public_IPv: 4
       user_data: |
-        #cloud-config
+        #metal-config
         ssh_authorized_keys:
           - {{ lookup('ansible.builtin.file', 'my_equinix_metal_sshkey') }}
         coreos:

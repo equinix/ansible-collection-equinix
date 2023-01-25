@@ -48,9 +48,9 @@ testall:
 	./scripts/test_all.sh
 
 $(INTEGRATION_CONFIG):
-	@if test "$(METAL_AUTH_TOKEN)" = "" && "$(LINODE_TOKEN)" = ""; then \
+	@if test "$(METAL_AUTH_TOKEN)" = ""; then \
 	  echo "METAL_AUTH_TOKEN must be set"; \
 	  exit 1; \
 	fi
-	echo "api_token: $(METAL_AUTH_TOKEN)" > $(INTEGRATION_CONFIG)
-	echo "ua_prefix: E2E" >> $(INTEGRATION_CONFIG)
+	echo "metal_api_token: $(METAL_AUTH_TOKEN)" > $(INTEGRATION_CONFIG)
+	echo "metal_ua_prefix: E2E" >> $(INTEGRATION_CONFIG)

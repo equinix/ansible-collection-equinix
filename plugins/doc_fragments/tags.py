@@ -7,11 +7,10 @@ __metaclass__ = type
 
 class ModuleDocFragment(object):
     # Standard documentation
-    DOCUMENTATION = r'''
+    DOCUMENTATION = '''
     options:
-        project_id:
+        tags:
             description:
-                - Project ID.
-            required: true
-            type: str
+                - The tags to assign to the resource.
+            type: list
     '''

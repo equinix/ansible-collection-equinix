@@ -6,7 +6,7 @@
     - ../../../integration_config.yml
   tasks:
     - name: Delete the equinix instance
-      equinix.cloud.device:
+      equinix.metal.device:
         label: 'ansible-test-inventory'
         api_token: '{{ api_token }}'
         ua_prefix: '{{ ua_prefix }}'

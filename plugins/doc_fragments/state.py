@@ -7,16 +7,14 @@ __metaclass__ = type
 
 class ModuleDocFragment(object):
     # Standard documentation
-    DOCUMENTATION = r'''
+    DOCUMENTATION = '''
     options:
-        api_token:
-            description: The Equinix Metal API token to use
-            required: True
+        state:
+            description:
+                - The state of the resource.
             type: str
-            aliases:
-                - auth_token
-            env:
-                - name: METAL_API_TOKEN
-                - name: PACKET_API_TOKEN
-                - name: PACKET_TOKEN
+            default: present
+            choices:
+                - present
+                - absent
     '''

@@ -1,0 +1,64 @@
+- name: metal_project
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-project'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-1"
+        backend_transfer_enabled: true
+      register: test_project
+
+    - assert:
+        that:
+        - test_project.name == '{{ test_prefix }}-1'
+        - test_project.backend_transfer_enabled == true
+
+    - name: update project name
+      equinix.cloud.metal_project:
+        id: "{{ test_project.id }}"
+        name: "{{ test_prefix }}-2"
+        backend_transfer_enabled: false
+      register: test_project_updated
+
+    - assert:
+        that:
+        - test_project_updated.name == '{{ test_prefix }}-2'
+        - test_project_updated.backend_transfer_enabled == false
+
+    - name: delete test project
+      equinix.cloud.metal_project:
+        id: "{{ test_project.id }}"
+        state: absent
+
+  always:
+
+    # ============================================================
+    # TEAR DOWN: project
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list all testing projects
+      equinix.cloud.metal_project_info:
+        name: '{{ test_prefix }}'
+      register: ansible_test_projects
+
+    #- set_fact:
+    #    matching_projects: "{{ all_projects.resources | selectattr('name', 'match', '^'+test_prefix) | list }}"
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ ansible_test_projects.resources }}"
+   #ignore_errors: true
