@@ -1,20 +1,18 @@
 # Equinix Ansible Collection
 
-This is an unofficial fork of Equinix Metal collection, aiming to include other __ from Equinix beyond Metal. It's still work in progress, not ready for production.
+This is an unofficial fork of Equinix Metal collection, aiming to include other services from Equinix beyond Metal. It's still work in progress, not ready for production.
 
 
 [![CI](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml/badge.svg)](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml)[![Codecov](https://img.shields.io/codecov/c/github/equinix/ansible-collection-equinix)](https://codecov.io/gh/equinix/ansible-collection-equinix)
 
 ![](https://img.shields.io/badge/stability-maintained-green.svg) [![Slack](https://slack.equinixmetal.com/badge.svg)](https://slack.equinixmetal.com/) [![Twitter Follow](https://img.shields.io/twitter/follow/equinixmetal.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=equinixmetal)
 
-This repository is [Maintained](https://github.com/packethost/standards/blob/master/maintained-statement.md)!
-
 The Ansible Equinix collection includes a variety of Ansible content to help automate the management of Equinix resources. (in future: This collection is maintained by the Equinix DevRel team).
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.9.10**.
+This collection has been tested against following Ansible versions: **>=2.13.7**.
 
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
