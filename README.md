@@ -30,10 +30,10 @@ Name | Description
 ### Modules
 Name | Description
 --- | ---
-[equinix.metal.device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_module.rst)|Manage a bare metal server in Equinix Metal
-[equinix.metal.device_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_info_module.rst)|Gather information about Equinix Metal devices
-[equinix.metal.project](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.project_module.rst)|Create/delete a project in Equinix Metal
-[equinix.metal.project_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.project_info_module.rst)|Gather information about Equinix Metal projects
+[equinix.cloud.metal_device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_device_module.rst)|Manage a bare metal server in Equinix Metal
+[equinix.cloud.metal_device_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_device_info_module.rst)|Gather information about Equinix Metal devices
+[equinix.cloud.metal_project](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_project_module.rst)|Create/delete a project in Equinix Metal
+[equinix.cloud.metal_project_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_project_info_module.rst)|Gather information about Equinix Metal projects
 
 <!--end collection content-->
 
