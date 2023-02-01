@@ -4,6 +4,40 @@ This is an unofficial fork of Equinix Metal collection, aiming to include other 
 
 The Ansible Equinix collection includes a variety of Ansible content to help automate the management of Equinix resources. (in future: This collection is maintained by the Equinix DevRel team).
 
+## Basic Usage
+
+You can use this collection to create resources in Equinix cloud. This is how you can create a new project and one device in it:
+
+```yaml
+# Export your Equinix Metal Auth token in METAL_AUTH_TOKEN environment variable
+
+- hosts: localhost
+  tasks:
+    - set_fact:
+        project_name: My project
+    - set_fact:
+        device_hostname: my-device
+       
+
+    - name: create a project
+      equinix.cloud.metal_project:
+        name: "{{ project_name }}"
+      register: my_project
+
+    - name: start a device in 
+      equinix.cloud.metal_device:
+        project_id: "{{ my_project.id }}"
+        hostname: "{{ device_hostname }}"
+        operating_system: ubuntu_20_04
+        plan: c3.small.x86
+        metro: sv
+        state: present
+      register: my_device
+
+    - debug:
+        msg: "Device '{{ device_hostname }}' is created and its ID is {{ my_device.id }}"
+```
+
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
