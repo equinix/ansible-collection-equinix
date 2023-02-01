@@ -2,11 +2,6 @@
 
 This is an unofficial fork of Equinix Metal collection, aiming to include other services from Equinix beyond Metal. It's still work in progress, not ready for production.
 
-
-[![CI](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml/badge.svg)](https://github.com/equinix/ansible-collection-equinix/actions/workflows/ansible-integration.yml)[![Codecov](https://img.shields.io/codecov/c/github/equinix/ansible-collection-equinix)](https://codecov.io/gh/equinix/ansible-collection-equinix)
-
-![](https://img.shields.io/badge/stability-maintained-green.svg) [![Slack](https://slack.equinixmetal.com/badge.svg)](https://slack.equinixmetal.com/) [![Twitter Follow](https://img.shields.io/twitter/follow/equinixmetal.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=equinixmetal)
-
 The Ansible Equinix collection includes a variety of Ansible content to help automate the management of Equinix resources. (in future: This collection is maintained by the Equinix DevRel team).
 
 <!--start requires_ansible-->
@@ -21,7 +16,8 @@ PEP440 is the schema used to describe the versions of Ansible.
 
 ## Python version compatibility
 
-This collection depends on [packet-python](https://github.com/packethost/packet-python). This collection requires Python 2.7 or greater.
+This collection depends on:
+ - [equinixmetalpy](https://github.com/t0mk/equinixmetalpy). This collection requires Python 3.8 or greater.
 
 ## Included content
 
@@ -29,25 +25,15 @@ This collection depends on [packet-python](https://github.com/packethost/packet-
 ### Inventory plugins
 Name | Description
 --- | ---
-[equinix.metal.device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_inventory.rst)|Equinix Metal Device inventory source
+[equinix.cloud.metal_device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_device_inventory.rst)|Equinix Metal Device inventory source
 
 ### Modules
 Name | Description
 --- | ---
-[equinix.metal.capacity_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.capacity_info_module.rst)|Gather information about Equinix Metal capacity
 [equinix.metal.device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_module.rst)|Manage a bare metal server in Equinix Metal
 [equinix.metal.device_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.device_info_module.rst)|Gather information about Equinix Metal devices
-[equinix.metal.facility_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.facility_info_module.rst)|Gather information about Equinix Metal facilities
-[equinix.metal.ip_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.ip_info_module.rst)|Gather information about project IP Addresses
-[equinix.metal.ip_subnet](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.ip_subnet_module.rst)|Assign IP subnet to a bare metal server.
-[equinix.metal.operating_system_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.operating_system_info_module.rst)|Gather information about Equinix Metal operating_systems
-[equinix.metal.org_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.org_info_module.rst)|Gather information about Equinix Metal organizations
-[equinix.metal.plan_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.plan_info_module.rst)|Gather information about Equinix Metal plans
 [equinix.metal.project](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.project_module.rst)|Create/delete a project in Equinix Metal
 [equinix.metal.project_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.project_info_module.rst)|Gather information about Equinix Metal projects
-[equinix.metal.sshkey](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.sshkey_module.rst)|Create/delete an SSH key in Equinix Metal
-[equinix.metal.sshkey_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.sshkey_info_module.rst)|Gather information about Equinix Metal SSH keys
-[equinix.metal.user_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.metal.user_info_module.rst)|Gather information about the logged in user
 
 <!--end collection content-->
 
@@ -55,14 +41,14 @@ Name | Description
 
 You can install the Equinix Metal collection with the Ansible Galaxy CLI:
 
-    ansible-galaxy collection install equinix
+    ansible-galaxy collection install equinix.cloud
 
 You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
 
 ```yaml
 ---
 collections:
-  - name: equinix
+  - name: equinix.cloud
 ```
 
 The python module dependencies are not installed by `ansible-galaxy`.  They can
@@ -72,20 +58,17 @@ be manually installed using pip:
 
 or:
 
-    pip install packet-python
+    pip install equinixmetalpy
 
 ## Using this collection
 
 
-You can either call modules by their Fully Qualified Collection Namespace (FQCN), such as `equinix.metal.device`, or you can call modules by their short name if you list the `equinix` collection in the playbook's `collections` keyword:
+You can either call modules by their Fully Qualified Collection Namespace (FQCN), such as `equinix.cloud.metal_device`, or you can call modules by their short name if you list the `equinix.cloud` collection in the playbook's `collections` keyword:
 
 ```yaml
 ---
 TODO
 ```
-
-**NOTE**: For Ansible 2.9, you may not see deprecation warnings when you run your playbooks with this collection. Use this documentation to track when a module is deprecated.
-
 
 ### See Also:
 
@@ -93,7 +76,7 @@ TODO
 
 ## Contributing to this collection
 
-We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Equinix Metal collection repository](https://github.com/equinix/ansible-collection-equinix).
+We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Equinix collection repository](https://github.com/FIXTHIS).
 
 If you require support, please email [support@equinixmetal.com](mailto:support@equinixmetal.com), visit the Equinix Metal IRC channel (#equinixmetal on freenode), subscribe to the [Equinix Metal Community Slack channel](https://slack.equinixmetal.com/) or post an issue within this repository.
 
@@ -108,7 +91,7 @@ Running integration tests:
 
 ```sh
 cat << EOF > tests/integration/integration_config.yml
-api_token: <YOUR EQUINIX METAL API TOKEN>
+metal_api_token: <YOUR EQUINIX METAL API TOKEN>
 EOF
  ansible-test integration -v --docker
  ```

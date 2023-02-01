@@ -2,6 +2,8 @@
   module_defaults:
     equinix.cloud.metal_project:
       metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_project_info:
       metal_api_token: '{{ metal_api_token }}'
   block:
@@ -12,53 +14,68 @@
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
 
-    - name: create project for test
+    - name: create first project for test
       equinix.cloud.metal_project:
-        name: "{{ test_prefix }}-1"
+        name: "{{ test_prefix }}-project1"
         backend_transfer_enabled: true
-      register: test_project
+      register: first_project
 
     - assert:
         that:
-        - test_project.name == '{{ test_prefix }}-1'
-        - test_project.backend_transfer_enabled == true
+        - first_project.name == '{{ test_prefix }}-project1'
+        - first_project.backend_transfer_enabled == true
 
     - name: update project name
       equinix.cloud.metal_project:
-        id: "{{ test_project.id }}"
-        name: "{{ test_prefix }}-2"
+        id: "{{ first_project.id }}"
+        name: "{{ test_prefix }}-project1_renamed"
         backend_transfer_enabled: false
-      register: test_project_updated
+      register: first_project_updated
 
     - assert:
         that:
-        - test_project_updated.name == '{{ test_prefix }}-2'
-        - test_project_updated.backend_transfer_enabled == false
+        - first_project_updated.name == '{{ test_prefix }}-project1_renamed'
+        - first_project_updated.backend_transfer_enabled == false
 
-    - name: delete test project
+    - name: create second project for test
       equinix.cloud.metal_project:
-        id: "{{ test_project.id }}"
-        state: absent
+        name: "{{ test_prefix }}-project2"
+      register: second_project
 
+    - name: list second project
+      equinix.cloud.metal_project_info:
+        filters:
+          name: project2
+      register: second_project_listed
+
+    - assert:
+        that:
+        - "second_project_listed.resources | length == 1"  
+
+    - name: list both projects
+      equinix.cloud.metal_project_info:
+        filters:
+          name: "{{ test_prefix }}"
+      register: both_projects_listed
+        
+    - assert:
+        that:
+        - "both_projects_listed.resources | length == 2"  
   always:
-
-    # ============================================================
-    # TEAR DOWN: project
     - name: Announce teardown start
       debug:
         msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
 
-    - name: list all testing projects
+    - name: list test projects
       equinix.cloud.metal_project_info:
-        name: '{{ test_prefix }}'
-      register: ansible_test_projects
-
-    #- set_fact:
-    #    matching_projects: "{{ all_projects.resources | selectattr('name', 'match', '^'+test_prefix) | list }}"
+        filters:
+          name: "{{ test_prefix }}"
+      register: test_projects_listed
 
     - name: delete test projects
       equinix.cloud.metal_project:
         id: "{{ item.id }}"
         state: absent
-      loop: "{{ ansible_test_projects.resources }}"
-   #ignore_errors: true
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes
+

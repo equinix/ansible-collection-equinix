@@ -3,34 +3,28 @@
   vars:
     test_prefix: ansible-integration-test
   tasks:
-    - name: list projects
+    - name: list test projects
       equinix.cloud.metal_project_info:
-        name: "{{ test_prefix }}"
+        filters:
+          name: "{{ test_prefix }}"
       register: test_projects
-
-    - name: list devices
+    
+    - name: list devices in test projects
       equinix.cloud.metal_device_info:
         project_id: "{{ item.id }}"
-      register: test_devices
-      loop: "{{ test_projects }}"
-
-    - set_fact:
-        mp: "{{ test_devices.results | map(attribute='item.id') | list }}"
-        md: "{{ test_devices.results | map(attribute='devices') | map('selectattr', 'hostname', 'match', '^'+test_prefix) | map('map', attribute='id') | list }}"
-
-    - set_fact:
-        matching_proj_device_ids: "{{ dict(mp | zip(md)) | dict2items(key_name='project_id', value_name='device_ids') | selectattr('device_ids') | list }}"
+      register: "test_devices"
+      loop: "{{ test_projects.resources }}"
 
     - name: delete test devices
       equinix.cloud.metal_device:
-        id: "{{ item }}"
+        id: "{{ item.id }}"
         state: absent
-      loop: "{{ matching_proj_device_ids }}"
-      ignore_errors: true
+      ignore_errors: yes
+      loop: "{{ test_devices.results | map(attribute='resources') | flatten }}"
 
     - name: delete test projects
       equinix.cloud.metal_project:
         id: "{{ item.id }}"
         state: absent
-      loop: "{{ matching_projects }}"
-      ignore_errors: true
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"

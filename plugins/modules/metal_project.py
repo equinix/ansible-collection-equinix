@@ -11,7 +11,6 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = r'''
----
 module: metal_project
 extends_documentation_fragment:
     - equinix.cloud.metal_common
@@ -50,29 +49,29 @@ EXAMPLES = r'''
 - name: Create new project
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
-      name: "new project"
+      equinix.cloud.metal_project:
+          name: "new project"
 
 - name: Create new project within non-default organization
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
-      name: "my org project"
-      organization_id: a4cc87f9-e00f-48c2-9460-74aa60beb6b0
+      equinix.cloud.metal_project:
+          name: "my org project"
+          organization_id: a4cc87f9-e00f-48c2-9460-74aa60beb6b0
 
 - name: Remove project by id
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
-      state: absent
-      id: eef49903-7a09-4ca1-af67-4087c29ab5b6
+      equinix.cloud.metal_project:
+          state: absent
+          id: eef49903-7a09-4ca1-af67-4087c29ab5b6
 
 - name: Create new project with non-default billing method
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
-      name: "newer project"
-      payment_method_id: "abf49903-7a09-4ca1-af67-4087c29ab343"
+      equinix.cloud.metal_project:
+          name: "newer project"
+          payment_method_id: "abf49903-7a09-4ca1-af67-4087c29ab343"
 '''
 
 RETURN = r'''
@@ -139,24 +138,30 @@ def main():
         required_one_of=[("name", "id")],
     )
 
-    try:
-        fetched = module.get_one("metal_project")
-    except Exception as e:
-        tb = traceback.format_exc()
-        module.fail_json(msg="failed to fetch project: {0}".format(to_native(e)),
-                         exception=tb)
-    changed = False
     state = module.params.get("state")
+    changed = False
+
     try:
+        if module.params.get("id"):
+            tolerate_not_found = state == "absent"
+            fetched = module.get_by_id("metal_project", tolerate_not_found)
+        else:
+            name = module.params.get("name")
+            fetched = module.get_one_from_list(
+                "metal_project",
+                "name",
+                {"name": name})
+
         if fetched:
+            module.params['id'] = fetched['id']
             if state == "present":
                 diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
                 if diff:
-                    fetched = module.update(diff, "metal_project")
+                    fetched = module.update_by_id(diff, "metal_project")
                     changed = True
 
             else:
-                module.delete("metal_project")
+                module.delete_by_id("metal_project")
                 changed = True
         else:
             if state == "present":
@@ -171,10 +176,8 @@ def main():
 
                 # backend_transfer_enabled need to be explicitly set by update
                 if module.params.get("backend_transfer_enabled"):
-                    fetched = module.update_by_id(
-                        fetched['id'],
-                        {"backend_transfer_enabled": True},
-                        "metal_project")
+                    module.params['id'] = fetched['id']
+                    fetched = module.update_by_id({"backend_transfer_enabled": True}, "metal_project")
 
                 # TODO: add support for bgp_config once we have a module
             else:

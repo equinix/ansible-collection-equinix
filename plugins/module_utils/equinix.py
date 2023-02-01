@@ -1,26 +1,23 @@
-# (c) 2021, Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
+# (c) 2023, Tomas Karasek <tom.to.the.k@gmail.com>
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-import re
-import uuid
+import time
 import traceback
-from typing import Any
 
-from .mappers import *
-
-try:
-    from ansible.module_utils.ansible_release import __version__ as ANSIBLE_VERSION
-except Exception:
-    ANSIBLE_VERSION = 'unknown'
+from .mappers import (
+    get_api_call_configs,
+    get_attribute_mapper,
+    Action,
+    ApiCall,
+)
 
 HAS_METAL_SDK = True
 try:
     import equinixmetalpy
-    from equinixmetalpy import ApiException
 except ImportError:
     HAS_METAL_SDK = False
     HAS_METAL_SDK_EXC = traceback.format_exc()
@@ -31,7 +28,7 @@ from ansible.module_utils.basic import AnsibleModule, env_fallback, missing_requ
 NAME_RE = r'({0}|{0}{1}*{0})'.format(r'[a-zA-Z0-9]', r'[a-zA-Z0-9\-]')
 HOSTNAME_RE = r'({0}\.)*{0}$'.format(NAME_RE)
 
-METAL_USER_AGENT = 'ansible_equinix Ansible/{0}'.format(ANSIBLE_VERSION)
+METAL_USER_AGENT = 'ansible-metal'
 
 METAL_COMMON_ARGS = dict(
     metal_api_token=dict(
@@ -42,15 +39,12 @@ METAL_COMMON_ARGS = dict(
     ),
     metal_api_url=dict(
         type='str',
-        description='The Equinix Metal API URL to use',
         default='https://api.equinix.com/metal/v1',
         fallback=(env_fallback, ['METAL_API_URL']),
         no_log=True,
     ),
     metal_ua_prefix=dict(
         type='str',
-        description='The prefix to use for the User-Agent header',
-        fallback=(env_fallback, ['METAL_UA_PREFIX']),
         no_log=True,
     ),
 )
@@ -90,6 +84,29 @@ def populate_ids_from_hrefs(resource):
                     add_id_from_href(i)
     return return_dict
 
+
+def response_to_ansible_dict(response, attribute_mapper):
+    return_dict = {}
+    if response is None:
+        return {}
+    response_dict = populate_ids_from_hrefs(response)
+    if attribute_mapper is None:
+        return response_dict()
+    for k, v in attribute_mapper.items():
+        if callable(v):
+            return_dict[k] = v(response_dict)
+        elif "." in v:
+            vs = v.split(".")
+            if vs[0] in response_dict:
+                if vs[1] in response_dict[vs[0]]:
+                    return_dict[k] = response_dict[vs[0]][vs[1]]
+        elif k in response_dict:
+            return_dict[k] = response_dict[v]
+        else:
+            raise Exception('key {0} (to map to {1}) not found in response_dict:\n {2}'.format(k, v))
+    return return_dict
+
+
 class EquinixModule(AnsibleModule):
     def __init__(self, *args, **kwargs):
         argument_spec = {}
@@ -103,8 +120,11 @@ class EquinixModule(AnsibleModule):
 
         kwargs["argument_spec"] = argument_spec
         AnsibleModule.__init__(self, *args, **kwargs)
+        self.client = self._get_metal_client()
+        self.api_call_configs = get_api_call_configs(equinixmetalpy)
+        AnsibleModule.__init__(self, *args, **kwargs)
 
-    def get_metal_client(self):
+    def _get_metal_client(self):
         if not HAS_METAL_SDK:
             self.fail_json(msg=missing_required_lib('equinixmetalpy'), exception=HAS_METAL_SDK_EXC)
         ua = METAL_USER_AGENT
@@ -117,99 +137,77 @@ class EquinixModule(AnsibleModule):
             user_agent_overwrite=True,
         )
 
+    def _do_api_call(self, resource_type, action, params, additional_params: dict = None):
+        conf = self.api_call_configs[(resource_type, action)]
+        response = ApiCall(conf, self.client, params)
+        return self._parse_api_response(resource_type, action, response.do(additional_params))
+
+    def _parse_api_response(self, resource_type, action, response):
+        equinixmetalpy.raise_if_error(response)
+        if action == Action.DELETE:
+            return None
+        attribute_mapper = get_attribute_mapper(resource_type)
+        if action == Action.LIST:
+            return [response_to_ansible_dict(r, attribute_mapper)for r in response.list]
+        return response_to_ansible_dict(response, attribute_mapper)
+
     def create(self, resource_type):
-        client = self.get_metal_client()
-        creator = pick_creator(client, self.params, resource_type)
-        request_model = CREATOR_REQUEST_MODEL_MAP.get(resource_type)
-        if request_model is None:
-            raise NotImplementedError(f'Model for creating {resource_type} not implemented')
-        request = request_model.from_dict(self.params)
-        result = creator(request)
-        equinixmetalpy.raise_if_error(result)
-        return self.map_to_module_params(resource_type, result)
+        return self._do_api_call(resource_type, Action.CREATE, self.params.copy())
 
-    def map_to_module_params(self, resource_type, response):
-        # resource_type will be necessary with non-straightforward attribute mappings
-        return_dict = {}
-        simple_types = ['str', 'bool', 'int', 'float']
-        response_dict = populate_ids_from_hrefs(response)
-        # The input params of a module
-        for k, v in self.argument_spec.items():
-            if k in SKIPPED_MODULE_PARAMS:
-                continue
-            if v['type'] in simple_types:
-                if k in response_dict:
-                    return_dict[k] = response_dict[k]
-                elif k.endswith('_id'):
-                    subres = k[:-3]
-                    if subres in response_dict:
-                        return_dict[k] = response_dict[subres]['id']
-                else:
-                    raise NotImplementedError(f'Not sure how to map "{k}" to "{v}" from {response}')
-        for k, v in response_dict.items():
-            if k not in return_dict:
-                return_dict[k] = v
-        return return_dict
+    def get_by_id(self, resource_type, tolerate_not_found=False):
+        if self.params.get('id') is None:
+            raise Exception("get_by_id called without id, this is a module bug.")
+        try:
+            result = self._do_api_call(resource_type, Action.GET, self.params.copy())
+        except equinixmetalpy.ApiError as e:
+            if (e.error_list == ["Not found"]) & tolerate_not_found:
+                return None
+            raise e
+        return result
 
-    def get_one(self, resource_type: str):
-        client = self.get_metal_client()
-        id = self.params.get('id')
-        if id:
-            getter = pick_getter(client, self.params, resource_type)
-            result = getter(id)
-            equinixmetalpy.raise_if_error(result)
-            return self.map_to_module_params(resource_type, result)
-        name = self.params.get('name')
-        if name:
-            lister = pick_lister(client, self.params, resource_type)
-            resource_list = lister().list
-            matchings = [resource for resource in resource_list if resource.name == name]
-            if len(matchings) > 1:
-                raise Exception(f'found more than one {resource_type} with name {name}')
-            if len(matchings) == 1:
-                result = matchings[0]
-                equinixmetalpy.raise_if_error(result)
-                return self.map_to_module_params(resource_type, result)
+    def get_one_from_list(self, resource_type: str, name_attr: str, filters: dict = None):
+        name_value = self.params.get(name_attr)
+        if name_value is None:
+            raise Exception(f'get_one_from_list called without {name_attr}, this is a module bug.')
+        result = self._do_api_call(resource_type, Action.LIST, self.params.copy(), filters)
+        dict_list = result
+        matches = [i for i in dict_list if i[name_attr] == name_value]
+        if len(matches) == 0:
             return None
-        raise Exception('no id or name in module when fetching, this is a module bug')
+        if len(matches) > 1:
+            raise Exception(f'found more than one {resource_type} with name {name_value}')
+        return matches[0]
 
-    def get_list(self, resource_type: str):
-        client = self.get_metal_client()
-        lister = pick_lister(client, self.params, resource_type)
-        listing_kwargs = {}
+    def get_list(self, resource_type: str, filters: dict = None):
+        return self._do_api_call(resource_type, Action.LIST, self.params.copy(), filters)
 
-        search = self.params.get('name')
-        if search:
-            listing_kwargs['name'] = search
-        result_list = lister(**listing_kwargs).list
-        return [self.map_to_module_params(resource_type, result) for result in result_list]
+    def delete_by_id(self, resource_type: str):
+        if self.params.get('id') is None:
+            raise Exception('no id in module when deleting, this is a module bug')
+        try:
+            self._do_api_call(resource_type, Action.DELETE, self.params.copy())
+        except equinixmetalpy.ApiError as e:
+            if e.error_list == ["Not found"]:
+                return None
+            raise e
+        return None
 
-    def delete(self, resource_type: str):
-        client = self.get_metal_client()
+    def update_by_id(self, update_dict: dict, resource_type: str):
         id = self.params.get('id')
-        if id:
-            deleter = pick_deleter(client, resource_type)
-            result = deleter(id)
-            equinixmetalpy.raise_if_error(result)
-            return None
-        raise Exception('no id in module when deleting, this is a module bug')
+        if id is None:
+            raise Exception('no id in module when updating, this is a module bug')
+        update_dict['id'] = id
+        return self._do_api_call(resource_type, Action.UPDATE, update_dict)
 
-    def update(self, params: dict, resource_type: str):
-        id = self.params.get('id')
-        return self.update_by_id(id, params, resource_type)
-
-    def update_by_id(self, id, params: dict, resource_type: str):
-        client = self.get_metal_client()
-        if id:
-            updater = pick_updater(client, params, resource_type)
-            request_model = UPDATER_REQUEST_MODEL_MAP.get(resource_type)
-            if request_model is None:
-                raise NotImplementedError(f'Update of {resource_type} not implemented')
-            request = request_model.from_dict(params)
-            result = updater(id, request)
-            equinixmetalpy.raise_if_error(result)
-            return self.map_to_module_params(resource_type, result)
-        raise Exception('no id in module when updating, this is a module bug')
+    def wait_for_resource_condition(self, resource_type: str,
+                                    attribute: str, target_value: str, timeout: int):
+        stop_time = time.time() + timeout
+        while time.time() < stop_time:
+            result = self._do_api_call(resource_type, Action.GET, self.params.copy())
+            if result[attribute] == target_value:
+                return result
+            time.sleep(5)
+        raise Exception(f'wait for {resource_type} {id} {attribute} {target_value} timed out')
 
 
 def update_dict(current, fetched, mutables: list):

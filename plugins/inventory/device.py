@@ -79,7 +79,7 @@ except ImportError:
 
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
-    NAME = 'equinix.metal.device'
+    NAME = 'equinix.cloud.metal_device'
 
     def __init__(self):
         super(InventoryModule, self).__init__()

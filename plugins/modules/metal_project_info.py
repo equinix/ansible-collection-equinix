@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 # Copyright: (c) 2019, Nurfet Becirevic <nurfet.becirevic@gmail.com>
 # Copyright: (c) 2021, Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
 # Copyright: (c) 2023, Tomas Karasek <tom.to.the.k@gmail.com>
@@ -11,43 +8,34 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 DOCUMENTATION = r'''
----
 module: metal_project_info
 extends_documentation_fragment:
     - equinix.cloud.metal_common
+    - equinix.cloud.filters
 short_description: Gather information about Equinix Metal projects
 description:
     - Gather information about Equinix Metal projects.
 options:
-    name:
-        description:
-            - Substring to match against project names.
-        type: str   
     organization_id:
         description:
             - UUID of the organization to list projects for.
         type: str
 '''
 
-EXAMPLES = '''
-# All the examples assume that you have your Equinix Metal API token in env var METAL_API_TOKEN.
-# You can also pass it to the api_token parameter of the module instead.
-
+EXAMPLES = r'''
 - name: Gather information about all projects
   hosts: localhost
   tasks:
-    - equinix.metal.project_info:
+      - equinix.cloud.metal_project_info
 
-
-- name: Gather information about a particular project using ID
+- name: Gather information about all projects in organization
   hosts: localhost
   tasks:
-    - equinix.metal.project_info:
-        ids:
-          - 173d7f11-f7b9-433e-ac40-f1571a38037a
+      - equinix.cloud.metal_project_info:
+            organization_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 '''
 
-RETURN = '''
+RETURN = r'''
 resources:
     description: Information about each project that was found
     type: list
@@ -65,17 +53,19 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 
 def main():
     argument_spec = dict(
-        name=dict(type='str'),
+        filters=dict(type='dict'),
         organization_id=dict(type='str'),
     )
     module = EquinixModule(
         argument_spec=argument_spec,
+        supports_check_mode=True,
     )
     try:
+        filters = module.params.get('filters')
         if module.params.get('organization_id'):
-            return_value = {'resources': module.get_list("metal_organization_project")}
+            return_value = {'resources': module.get_list("metal_organization_project", filters)}
         else:
-            return_value = {'resources': module.get_list("metal_project")}
+            return_value = {'resources': module.get_list("metal_project", filters)}
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)

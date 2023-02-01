@@ -1,0 +1,101 @@
+- name: metal_project
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-device'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}"
+      register: test_project
+
+    - name: start first test device
+      equinix.cloud.metal_device:
+        project_id: "{{ test_project.id }}"
+        hostname: "{{ test_prefix }}-dev1"
+        operating_system: ubuntu_20_04
+        plan: c3.small.x86
+        metro: sv
+        state: present
+        provisioning_wait_seconds: 180
+      register: test_device_1
+
+    - name: assert device started
+      assert:
+        that:
+          - "test_device_1.metal_state == 'active'"
+
+    - name: start second test device
+      equinix.cloud.metal_device:
+        project_id: "{{ test_project.id }}"
+        hostname: "{{ test_prefix }}-dev2"
+        operating_system: ubuntu_20_04
+        plan: c3.small.x86
+        metro: sv
+        state: present
+        provisioning_wait_seconds: 180
+      register: test_device_2
+    
+    - name: list both devices
+      equinix.cloud.metal_device_info:
+        project_id: "{{ test_project.id }}"
+      register: both_devices
+
+    - name: assert both devices selected
+      assert:
+        that:
+        - "both_devices.resources|length == 2"
+
+    - name: list second device
+      equinix.cloud.metal_device_info:
+        project_id: "{{ test_project.id }}"
+        filters:
+          hostname: dev2
+      register: second_device
+
+    - name: assert only 2nd device selected
+      assert:
+        that:
+        - "second_device.resources|length == 1"
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        filters:
+          name: "{{ test_prefix }}"
+      register: test_projects
+    
+    - name: list devices in test projects
+      equinix.cloud.metal_device_info:
+        project_id: "{{ item.id }}"
+      register: "test_devices"
+      loop: "{{ test_projects.resources }}"
+
+    - name: delete test devices
+      equinix.cloud.metal_device:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_devices.results | map(attribute='resources') | flatten }}"
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"
