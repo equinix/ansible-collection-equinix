@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+# TODO: 
+# - elements to fields of type list
+# - string->str, integer->int, boolean->bool, number->float
+# - line lenngth max 160
+# - quote strings with special chars
 
 import re
 import sys
