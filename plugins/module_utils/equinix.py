@@ -7,6 +7,7 @@ __metaclass__ = type
 
 import time
 import traceback
+import re
 
 from .mappers import (
     get_api_call_configs,
@@ -117,6 +118,14 @@ class EquinixModule(AnsibleModule):
         if kwargs.get("supports_tags", False):
             argument_spec.update(METAL_TAG_ARGS)
             kwargs.pop("supports_tags")
+        if kwargs.get("name"):
+            # check if name is a valid hostname
+            if not re.match(NAME_RE, kwargs.get("name")):
+                raise ValueError("name {0} is not a valid hostname".format(kwargs.get("name")))
+        if kwargs.get("hostname"):
+            # check if name is a valid hostname
+            if not re.match(HOSTNAME_RE, kwargs.get("hostname")):
+                raise ValueError("hostname {0} is not a valid hostname".format(kwargs.get("hostname")))
 
         kwargs["argument_spec"] = argument_spec
         AnsibleModule.__init__(self, *args, **kwargs)
@@ -193,21 +202,24 @@ class EquinixModule(AnsibleModule):
         return None
 
     def update_by_id(self, update_dict: dict, resource_type: str):
-        id = self.params.get('id')
-        if id is None:
+        specified_id = self.params.get('id')
+        if specified_id is None:
             raise Exception('no id in module when updating, this is a module bug')
-        update_dict['id'] = id
+        update_dict['id'] = specified_id
         return self._do_api_call(resource_type, Action.UPDATE, update_dict)
 
     def wait_for_resource_condition(self, resource_type: str,
                                     attribute: str, target_value: str, timeout: int):
+        specified_id = self.params.get('id')
+        if specified_id is None:
+            raise Exception('no id in module when waiting for condition, this is a module bug')
         stop_time = time.time() + timeout
         while time.time() < stop_time:
             result = self._do_api_call(resource_type, Action.GET, self.params.copy())
             if result[attribute] == target_value:
                 return result
             time.sleep(5)
-        raise Exception(f'wait for {resource_type} {id} {attribute} {target_value} timed out')
+        raise Exception(f'wait for {resource_type} {specified_id} {attribute} {target_value} timed out')
 
 
 def update_dict(current, fetched, mutables: list):
