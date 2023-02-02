@@ -45,7 +45,7 @@ options:
               be used on only the first boot.
 
     billing_cycle:
-        type: string
+        type: str
         description:
             - The billing cycle of the device.
         choices:
@@ -61,40 +61,49 @@ options:
 
     features:
         type: list
+        elements: str
         description:
             - The features attribute allows you to optionally specify what features your server should have.
-            - In the API shorthand syntax, all features listed are `required`:
+            - In the API shorthand syntax, all features listed are `required`
             - '` { "features": ["tpm"] } `'
-            - Alternatively, if you do not require a certain feature, but would prefer to be assigned a server with that feature if there are any available, you may specify that feature with a `preferred` value. The request will not fail if we have no servers with that feature in our inventory. The API offers an alternative syntax for mixing preferred and required features:
+            - Alternatively, if you do not require a certain feature, but would prefer to be assigned a server
+              with that feature if there are any available, you may specify that feature with a `preferred` value.
+              The request will not fail if we have no servers with that feature in our inventory.
+              The API offers an alternative syntax for mixing preferred and required features
             - '` { "features": { "tpm": "required", "raid": "preferred" } } `'
             - The request will only fail if there are no available servers matching the required `tpm` criteria.
 
     hardware_reservation_id:
-        type: string
+        type: str
         description:
-            - The Hardware Reservation UUID to provision. Alternatively, `next-available` can be specified to select from any of the available hardware reservations. An error will be returned if the requested reservation option is not available.
+            - The Hardware Reservation UUID to provision. Alternatively, `next-available` can be specified to select from any of the available hardware
+              reservations. An error will be returned if the requested reservation option is not available.
             - See [Reserved Hardware](https://metal.equinix.com/developers/docs/deploy/reserved/) for more details.
 
     hostname:
-        type: string
+        type: str
         description:
             - The hostname to use within the operating system. The same hostname may be used on multiple devices within a project.
 
     ip_addresses:
         type: list
+        elements: dict
         description:
             - 'The `ip_addresses` attribute will allow you to specify the addresses you want created with your device.'
             - The default value configures public IPv4, public IPv6, and private IPv4.
             - 'Private IPv4 address is required. When specifying `ip_addresses`, one of the array items must enable private IPv4.'
             - Some operating systems require public IPv4 address. In those cases you will receive an error message if public IPv4 is not enabled.
-            - 'For example, to only configure your server with a private IPv4 address, you can send `{ "ip_addresses": [{ "address_family": 4, "public": false }] }`.'
+            - 'For example, to only configure your server with a private IPv4 address, you can send
+              `{ "ip_addresses": [{ "address_family": 4, "public": false }] }`.'
             - 'It is possible to request a subnet size larger than a `/30` by assigning addresses using the UUID(s) of ip_reservations in your project.'
             - 'For example, `{ "ip_addresses": [..., {"address_family": 4, "public": true, "ip_reservations": ["uuid1", "uuid2"]}] }`'
-            - To access a server without public IPs, you can use our Out-of-Band console access (SOS) or proxy through another server in the project with public IPs enabled.
-        default: [{'address_family': 4, 'public': True}, {'address_family': 4, 'public': False}, {'address_family': 6, 'public': True}]
+            - To access a server without public IPs, you can use our Out-of-Band console access (SOS) or proxy through another server
+              in the project with public IPs enabled.
+            - "default is `[{'address_family': 4, 'public': True}, {'address_family': 4, 'public': False}, {'address_family': 6, 'public': True}]`"
+
 
     ipxe_script_url:
-        type: string
+        type: str
         description:
             - When set, the device will chainload an iPXE Script at boot fetched from the supplied URL.
             - See [Custom iPXE](https://metal.equinix.com/developers/docs/operating-systems/custom-ipxe/) for more details.
@@ -104,10 +113,10 @@ options:
         description:
             - Whether the device should be locked, preventing accidental deletion.
 
-    metal_state:
-        type: string
+    network_frozen:
+        type: bool
         description:
-            - The state of the device from the perspective of the Equinix Metal API.
+            - Whether the device network should be frozen, preventing any changes to the network configuration.
 
     no_ssh_keys:
         type: bool
@@ -115,72 +124,82 @@ options:
             - Overrides default behaviour of attaching all of the organization members ssh keys and project ssh keys to device if no specific keys specified
 
     operating_system:
-        type: string
+        type: str
         description:
-            - The slug of the operating system to provision. Check the Equinix Metal operating system documentation for rules that may be imposed per operating system, including restrictions on IP address options and device plans.
+            - The slug of the operating system to provision. Check the Equinix Metal operating system documentation for rules that may be
+              imposed per operating system, including restrictions on IP address options and device plans.
 
     plan:
-        type: string
+        type: str
         description:
             - The slug of the device plan to provision.
 
     private_ipv4_subnet_size:
-        type: integer
+        type: int
         description:
             - Deprecated. Use ip_addresses. Subnet range for addresses allocated to this device.
-        default: 28
+            - If unspecified, the default value is 28.
 
     project_ssh_keys:
         type: list
+        elements: str
         description:
-            - A list of UUIDs identifying the device parent project that should be authorized to access this device (typically via /root/.ssh/authorized_keys). These keys will also appear in the device metadata.
-            - If no SSH keys are specified (`user_ssh_keys`, `project_ssh_keys`, and `ssh_keys` are all empty lists or omitted), all parent project keys, parent project members keys and organization members keys will be included. This behaviour can be changed with 'no_ssh_keys' option to omit any SSH key being added.
+            - A list of UUIDs identifying the device parent project that should be authorized to access this device
+              (typically via /root/.ssh/authorized_keys). These keys will also appear in the device metadata.
+            - If no SSH keys are specified (`user_ssh_keys`, `project_ssh_keys`, and `ssh_keys` are all empty
+              lists or omitted), all parent project keys, parent project members keys and organization members keys
+              will be included. This behaviour can be changed with 'no_ssh_keys' option to omit any SSH key being added.
 
     provisioning_wait_seconds:
-        type: integer
+        type: int
         description:
             - The number of seconds to wait for the device to be provisioned. If the device is not provisioned within this time, the module will fail.
         default: 300
 
     public_ipv4_subnet_size:
-        type: integer
+        type: int
         description:
-            - Deprecated. Use ip_addresses. Subnet range for addresses allocated to this device. Your project must have addresses available for a non-default request.
-        default: 31
+            - Deprecated. Use ip_addresses. Subnet range for addresses allocated to this device. Your project must have addresses
+              available for a non-default request.
+            - If not specified, the default is a /31 for IPv4 and a /127 for IPv6.
 
     spot_instance:
         type: bool
         description:
-            - Create a spot instance. Spot instances are created with a maximum bid price. If the bid price is not met, the spot instance will be terminated as indicated by the `termination_time` field.
+            - Create a spot instance. Spot instances are created with a maximum bid price. If the bid price is not met, the spot instance
+              will be terminated as indicated by the `termination_time` field.
 
     spot_price_max:
-        type: number
+        type: float
         description:
             - The maximum amount to bid for a spot instance.
 
     ssh_keys:
         type: list
+        elements: str
         description:
             - A list of new or existing project ssh_keys that should be authorized to access this device (typically via /root/.ssh/authorized_keys).
               These keys will also appear in the device metadata.
             - These keys are added in addition to any keys defined by `project_ssh_keys` and `user_ssh_keys`.
 
     termination_time:
-        type: string
+        type: str
         description:
             - The time at which the device will be terminated.
 
     user_ssh_keys:
         type: list
+        elements: str
         description:
-            - A list of UUIDs identifying the users that should be authorized to access this device (typically via /root/.ssh/authorized_keys).  These keys will also appear in the device metadata.
+            - A list of UUIDs identifying the users that should be authorized to access this device
+              (typically via /root/.ssh/authorized_keys).  These keys will also appear in the device metadata.
             - The users must be members of the project or organization.
             - If no SSH keys are specified (`user_ssh_keys`, `project_ssh_keys`, and `ssh_keys` are all empty lists or omitted), all parent project keys,
               parent project members keys and organization members keys will be included. This behaviour can be changed with 'no_ssh_keys' option to omit
               any SSH key being added.
 
     userdata:
-        type: string
+        type: str
         description:
             - The userdata presented in the metadata service for this device.  Userdata is fetched and interpreted by the operating system installed on
               the device. Acceptable formats are determined by the operating system, with the exception of a special iPXE enabling
@@ -248,8 +267,8 @@ def main():
         metro=dict(type="str"),
         facility=dict(type="str"),
         always_pxe=dict(type="bool"),
-        billing_cycle=dict(type="str"),
-        customdata=dict(type="str"),
+        billing_cycle=dict(type="str", choices=["hourly", "daily", "monthly", "yearly"]),
+        customdata=dict(type="dict"),
         hostname=dict(type="str"),
         ip_addresses=dict(type="list", elements="dict"),
         ipxe_script_url=dict(type="str"),
@@ -257,15 +276,20 @@ def main():
         network_frozen=dict(type="bool"),
         operating_system=dict(type="str"),
         plan=dict(type="str"),
-        project_ssh_keys=dict(type="list", elements="str"),
+        project_ssh_keys=dict(type="list", elements="str", no_log=False),
         provisioning_wait_seconds=dict(type="int", default=300),
         public_ipv4_subnet_size=dict(type="int"),
         spot_instance=dict(type="bool"),
         spot_price_max=dict(type="float"),
-        ssh_keys=dict(type="list", elements="str"),
+        ssh_keys=dict(type="list", elements="str", no_log=False),
         termination_time=dict(type="str"),
-        user_ssh_keys=dict(type="list", elements="str"),
+        user_ssh_keys=dict(type="list", elements="str", no_log=False),
         userdata=dict(type="str"),
+        features=dict(type="list", elements="str"),
+        hardware_reservation_id=dict(type="str"),
+        no_ssh_keys=dict(type="bool"),
+        private_ipv4_subnet_size=dict(type="int"),
+
     )
     module = EquinixModule(
         argument_spec=argument_spec,
