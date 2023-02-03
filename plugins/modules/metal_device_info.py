@@ -58,12 +58,8 @@ EXAMPLES = r'''
 
 RETURN = '''
 resources:
-    description: Information about each device that was found
+    description: Information about each device that was found. See docs of equinix.cloud.metal_device for description of each item.
     type: list
-    sample: '[{"hostname": "my-server.com", "id": "2a5122b9-c323-4d5c-b53c-9ad3f54273e7",
-            "public_ipv4": "147.229.15.12", "private-ipv4": "10.0.15.12",
-            "tags": [], "locked": false, "state": "provisioning",
-            "public_ipv6": ""2604:1380:2:5200::3"}]'
     returned: always
 '''
 
@@ -88,6 +84,7 @@ def main():
         supports_check_mode=True,
     )
     try:
+        module.params_syntax_check()
         filters = module.params.get('filters')
         resource_type = "metal_project_device"
         if module.params.get('organization_id'):

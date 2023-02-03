@@ -37,10 +37,10 @@ EXAMPLES = r'''
 
 RETURN = r'''
 resources:
-    description: Information about each project that was found
-    type: list
-    sample: '[{"name": "my-project", "id": "2a5122b9-c323-4d5c-b53c-9ad3f54273e7"}]'
+    description: List of project resources. See docs of equinix.cloud.metal_project for description of each item.
     returned: always
+    type: list
+
 '''
 
 import traceback
@@ -61,6 +61,7 @@ def main():
         supports_check_mode=True,
     )
     try:
+        module.params_syntax_check()
         filters = module.params.get('filters')
         if module.params.get('organization_id'):
             return_value = {'resources': module.get_list("metal_organization_project", filters)}

@@ -142,6 +142,7 @@ def main():
     changed = False
 
     try:
+        module.params_syntax_check()
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id("metal_project", tolerate_not_found)

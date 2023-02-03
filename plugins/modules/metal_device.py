@@ -13,6 +13,7 @@ module: metal_device
 extends_documentation_fragment:
     - equinix.cloud.metal_common
     - equinix.cloud.state
+    - equinix.cloud.project_id
 short_description: Create/delete a device in Equinix Metal
 description:
     - Create/delete a device in Equinix Metal.
@@ -20,11 +21,6 @@ options:
     id:
         description:
             - UUID of the device.
-        type: str
-
-    project_id:
-        description:
-            - UUID of the project to create the device in.
         type: str
 
     facility:
@@ -182,6 +178,12 @@ options:
               These keys will also appear in the device metadata.
             - These keys are added in addition to any keys defined by `project_ssh_keys` and `user_ssh_keys`.
 
+    tags:
+        type: list
+        elements: str
+        description:
+            - A list of tags to apply to the device.
+
     termination_time:
         type: str
         description:
@@ -231,11 +233,106 @@ id:
     returned: success
     type: str
     sample: "eef49903-7a09-4ca1-af67-4087c29ab5b6"
-href:
-    description: URL of the device.
+billing_cycle:
+    description: Billing cycle of the device.
     returned: success
     type: str
-    sample: "https://api.equinix.com/metal/v1/devices/eef49903-7a09-4ca1-af67-4087c29ab5b6"
+    sample: "hourly"
+customdata:
+    description: Customdata of the device.
+    returned: success
+    type: dict
+    sample: {}
+facility:
+    description: Facility of the device.
+    returned: success
+    type: str
+    sample: "ewr1"
+hardware_reservation_id:
+    description: Hardware reservation id of the device.
+    returned: success
+    type: str
+    sample: "eef49903-7a09-4ca1-af67-4087c29ab5b6"
+hostname:
+    description: Hostname of the device.
+    returned: success
+    type: str
+    sample: "new-device"
+ip_addresses:
+    description: IP addresses of the device.
+    returned: success
+    type: list
+    sample:
+        - address: "145.40.67.57"
+          address_family: 4
+          public: true
+        - address: "2604:1380:2001:2900::1"
+          address_family: 6
+          public: true
+        - address: "10.67.85.125"
+          address_family: 4
+          public: false
+ipxe_script_url:
+    description: iPXE boot script URL for the device.
+    returned: success
+    type: str
+    sample: "https://example.com/boot.ipxe"
+locked:
+    description: Whether the device is locked.
+    returned: success
+    type: bool
+    sample: false
+network_frozen:
+    description: Whether the device's network is frozen.
+    returned: success
+    type: bool
+    sample: false
+metal_state:
+    description: State attribute of the Equinix Metal device resource (not ansible module state).
+    returned: success
+    type: str
+    sample: "queued"
+metro:
+    description: Metro of the device.
+    returned: success
+    type: str
+    sample: "sv"
+operating_system:
+    description: Operating system of the device.
+    returned: success
+    type: str
+    sample: ubuntu_20_04
+plan:
+    description: Plan of the device.
+    returned: success
+    type: str
+    sample: c3.medium.x86
+project_id:
+    description: Project id of the device.
+    returned: success
+    type: str
+    sample: "8e4b0b2a-4a6f-4d3b-9c6c-7a0b3c4d5e6f"
+spot_instance:
+    description: Whether the device is a spot instance.
+    returned: success
+    type: bool
+    sample: false
+ssh_keys:
+    description: SSH keys of the device.
+    returned: success
+    type: list
+    sample:
+        - id: "eef49903-7a09-4ca1-af67-4087c29ab5b6"
+          href: "/metal/v1/ssh-keys/eef49903-7a09-4ca1-af67-4087c29ab5b6"
+        - id: "aae49903-7a09-4ca1-af67-4087c29ab5b6"
+          href: "/metal/v1/ssh-keys/aae49903-7a09-4ca1-af67-4087c29ab5b6"
+tags:
+    description: Tags of the device.
+    returned: success
+    type: list
+    sample:
+        - "tag1"
+        - "tag2"
 """
 
 from ansible.module_utils._text import to_native
@@ -256,51 +353,55 @@ MUTABLE_ATTRIBUTES = [
     "network_frozen",
     "spot_instance",
     "userdata",
+    "tags",
 ]
 
 
 def main():
     argument_spec = dict(
-        state=dict(type="str", default="present", choices=["present", "absent"]),
-        id=dict(type="str"),
-        project_id=dict(type="str"),
-        metro=dict(type="str"),
-        facility=dict(type="str"),
         always_pxe=dict(type="bool"),
         billing_cycle=dict(type="str", choices=["hourly", "daily", "monthly", "yearly"]),
         customdata=dict(type="dict"),
+        facility=dict(type="str"),
+        features=dict(type="list", elements="str"),
+        hardware_reservation_id=dict(type="str"),
         hostname=dict(type="str"),
+        id=dict(type="str"),
         ip_addresses=dict(type="list", elements="dict"),
         ipxe_script_url=dict(type="str"),
         locked=dict(type="bool"),
+        metro=dict(type="str"),
         network_frozen=dict(type="bool"),
+        no_ssh_keys=dict(type="bool"),
         operating_system=dict(type="str"),
         plan=dict(type="str"),
+        private_ipv4_subnet_size=dict(type="int"),
         project_ssh_keys=dict(type="list", elements="str", no_log=False),
         provisioning_wait_seconds=dict(type="int", default=300),
         public_ipv4_subnet_size=dict(type="int"),
         spot_instance=dict(type="bool"),
         spot_price_max=dict(type="float"),
         ssh_keys=dict(type="list", elements="str", no_log=False),
+        state=dict(type="str", default="present", choices=["present", "absent"]),
         termination_time=dict(type="str"),
         user_ssh_keys=dict(type="list", elements="str", no_log=False),
         userdata=dict(type="str"),
-        features=dict(type="list", elements="str"),
-        hardware_reservation_id=dict(type="str"),
-        no_ssh_keys=dict(type="bool"),
-        private_ipv4_subnet_size=dict(type="int"),
 
     )
     module = EquinixModule(
         argument_spec=argument_spec,
         required_one_of=[("hostname", "id")],
-        required_by=dict(hostname=("project_id", "operating_system", "plan")),
+        required_by=dict(hostname=("project_id")),
+        supports_project_id=True,
+        supports_tags=True,
     )
 
-    state = module.params.get("state")
-    changed = False
-
     try:
+        module.params_syntax_check()
+
+        state = module.params.get("state")
+        changed = False
+
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id("metal_device", tolerate_not_found)
@@ -320,7 +421,10 @@ def main():
                 changed = True
         else:
             if state == "present":
-                # device doesn't exist, create it
+                plan = module.params.get("plan")
+                operating_system = module.params.get("operating_system")
+                if (plan is None) or (operating_system is None):
+                    raise Exception("plan and operating_system are required when creating a device")
                 metro = module.params.get("metro")
                 facility = module.params.get("facility")
                 if metro and facility:
