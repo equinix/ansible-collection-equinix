@@ -6,27 +6,23 @@ The Ansible Equinix collection includes a variety of Ansible content to help aut
 
 ## Basic Usage
 
-You can use this collection to create resources in Equinix cloud. This is how you can create a new project and one device in it:
+Following example playbook shows how to create a device in an existing project.
+
+To run this example, you should have a project in Equinix Metal ready, and 
+the project ID exported in environment variable `METAL_PROJECT_ID`.
+
+You should also have you Equinix Metal API token exported in environment variable `METAL_API_TOKEN` (or `METAL_AUTH_TOKEN`).
+
+You can supply both as module parameters (`project_id` and `metal_api_token`) of equinix.cloud.metal_device, instead of from the environment.
 
 ```yaml
-# Export your Equinix Metal Auth token in METAL_AUTH_TOKEN environment variable
-
 - hosts: localhost
   tasks:
     - set_fact:
-        project_name: My project
-    - set_fact:
         device_hostname: my-device
-       
-
-    - name: create a project
-      equinix.cloud.metal_project:
-        name: "{{ project_name }}"
-      register: my_project
 
     - name: start a device in 
       equinix.cloud.metal_device:
-        project_id: "{{ my_project.id }}"
         hostname: "{{ device_hostname }}"
         operating_system: ubuntu_20_04
         plan: c3.small.x86
@@ -37,6 +33,8 @@ You can use this collection to create resources in Equinix cloud. This is how yo
     - debug:
         msg: "Device '{{ device_hostname }}' is created and its ID is {{ my_device.id }}"
 ```
+
+Save the example to `example.yml` and run `$ ansible-playbook example.yml`.
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
