@@ -26,8 +26,9 @@ except ImportError:
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback, missing_required_lib
 
-NAME_RE = r'({0}|{0}{1}*{0})'.format(r'[a-zA-Z0-9]', r'[a-zA-Z0-9\-]')
-HOSTNAME_RE = r'({0}\.)*{0}$'.format(NAME_RE)
+NAME_RE = r'^({0}|{0}{1}*{0})$'.format(r'[a-zA-Z0-9]', r'[a-zA-Z0-9\-_ ]')
+HOSTNAME_RE = r'^({0}\.)*{0}$'.format(NAME_RE)
+UUID_RE = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 METAL_USER_AGENT = 'ansible-metal'
 
@@ -50,9 +51,17 @@ METAL_COMMON_ARGS = dict(
     ),
 )
 
-METAL_TAG_ARGS = dict(
+METAL_PROJECT_ARG = dict(
+    project_id=dict(
+        type='str',
+        fallback=(env_fallback, ['METAL_PROJECT_ID']),
+    ),
+)
+
+METAL_TAGS_ARG = dict(
     tags=dict(type='list',
-              description='The tags to assign to this resource.'),
+              elements='str',
+              ),
 )
 
 
@@ -116,22 +125,34 @@ class EquinixModule(AnsibleModule):
         argument_spec.update(METAL_COMMON_ARGS)
 
         if kwargs.get("supports_tags", False):
-            argument_spec.update(METAL_TAG_ARGS)
+            argument_spec.update(METAL_TAGS_ARG)
             kwargs.pop("supports_tags")
-        if kwargs.get("name"):
-            # check if name is a valid hostname
-            if not re.match(NAME_RE, kwargs.get("name")):
-                raise ValueError("name {0} is not a valid hostname".format(kwargs.get("name")))
-        if kwargs.get("hostname"):
-            # check if name is a valid hostname
-            if not re.match(HOSTNAME_RE, kwargs.get("hostname")):
-                raise ValueError("hostname {0} is not a valid hostname".format(kwargs.get("hostname")))
-
+        if kwargs.get("supports_project_id", False):
+            argument_spec.update(METAL_PROJECT_ARG)
+            kwargs.pop("supports_project_id")
         kwargs["argument_spec"] = argument_spec
         AnsibleModule.__init__(self, *args, **kwargs)
         self.client = self._get_metal_client()
         self.api_call_configs = get_api_call_configs(equinixmetalpy)
+        self.params_checked = False
         AnsibleModule.__init__(self, *args, **kwargs)
+
+    def params_syntax_check(self):
+        name = self.params.get("name")
+        if name:
+            import q
+            q(name)
+            if not re.match(NAME_RE, name):
+                raise Exception("name {0} is not a valid name. Regexp for name is {1}".format(name, NAME_RE))
+        hostname = self.params.get("hostname")
+        if hostname:
+            if not re.match(HOSTNAME_RE, hostname):
+                raise Exception("hostname {0} is not a valid hostname. regexp for hostname is {1}".format(hostname, HOSTNAME_RE))
+        uuid_args = {k: v for k, v in self.params.items() if (k == "id") | (k.endswith("_id"))}
+        for k, v in uuid_args.items():
+            if v is not None:
+                if not re.match(UUID_RE, v):
+                    raise Exception("{0} {1} is not a valid UUID".format(k, v))
 
     def _get_metal_client(self):
         if not HAS_METAL_SDK:
