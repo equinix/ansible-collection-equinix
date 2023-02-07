@@ -11,24 +11,18 @@ DOCUMENTATION = '''
     name: device
     plugin_type: inventory
     short_description: Equinix Metal Device inventory source
-    requirements:
-        - "packet-python >= 1.43.1"
     extends_documentation_fragment:
-        - equinix.metal.auth_options
+        - equinix.cloud.metal_common
         - inventory_cache
         - constructed
     description:
-        - Get inventory hosts from the Equinix Metal Device API.
-        - Uses a YAML configuration file that ends with equinix_metal.(yml|yaml).
-    author:
-        - Peter Sankauskas
-        - Tomas Karasek
-        - Jason DeTiberus
+        - Reads device inventories from Equinix Metal
+        - Uses YAML configuration file that ends with equinix_metal.(yml|yaml).
     options:
         plugin:
             description: Token that ensures this is a source file for the plugin.
             required: True
-            choices: ['equinix_metal', 'equinix.metal.device']
+            choices: ['equinix_metal', 'equinix.cloud.metal_device']
         projects:
           description:
               - A list of projects in which to describe Equinix Metal devices.
@@ -66,7 +60,7 @@ compose:
   ansible_host: (ip_addresses | selectattr('address_family', 'equalto', 4) | selectattr('public', 'equalto', false) | first).address
 '''
 
-from ansible.errors import AnsibleError, AnsibleParserError
+from ansible.errors import AnsibleError
 from ansible.module_utils import six
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable, to_safe_group_name
 
@@ -82,23 +76,19 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     NAME = 'equinix.cloud.metal_device'
 
     def __init__(self):
-        super(InventoryModule, self).__init__()
-
-        self.group_prefix = 'equinix_metal'
-
+        super().__init__()
         # credentials
         self.api_token = None
 
     def verify_file(self, path):
         '''
-            :param loader: an ansible.parsing.dataloader.DataLoader object
             :param path: the path to the inventory config file
             :return the contents of the config file
         '''
         if super(InventoryModule, self).verify_file(path):
-            if path.endswith(('equinix_metal.yml', 'equinix_metal.yaml')):
+            if path.endswith(('equinix.yml', 'equinix.yaml')):
                 return True
-        self.display.debug("equinix_metal inventory filename must end with 'equinix_metal.yml' or 'equinix_metal.yaml'")
+        self.display.debug("equinix.cloud inventory filename must end with 'equinix.yml' or 'equinix.yaml'")
         return False
 
     def _set_credentials(self):
@@ -147,14 +137,12 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             # Create groups based on variable values and add the corresponding hosts to it
             self._add_host_to_keyed_groups(self.get_option('keyed_groups'), host, hostname, strict=strict)
 
-    def parse(self, inventory, loader, path, cache=True):
+    def parse(self, inventory, loader, path, cache: bool = True):
+        super().parse(inventory, loader, path)
 
         if not HAS_EMPY:
-            raise AnsibleParserError(
-                'The Equinix Metal Device inventory plugin requires the python "equinixmetalpy" library'
-            )
+            raise AnsibleError('The Equinix Metal Device inventory plugin requires the python "equinixmetalpy" library')
 
-        super(InventoryModule, self).parse(inventory, loader, path)
 
         self._read_config_data(path)
 

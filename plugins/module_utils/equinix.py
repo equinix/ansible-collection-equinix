@@ -1,4 +1,4 @@
-# (c) 2023, Tomas Karasek <tom.to.the.k@gmail.com>
+# (c) 2023, Equnix DevRel Team (@equinix)
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -16,6 +16,8 @@ from .mappers import (
     ApiCall,
 )
 
+from .metal_client import get_metal_client, MissingEquinixSDK
+
 HAS_METAL_SDK = True
 try:
     import equinixmetalpy
@@ -30,7 +32,6 @@ NAME_RE = r'^({0}|{0}{1}*{0})$'.format(r'[a-zA-Z0-9]', r'[a-zA-Z0-9\-_ ]')
 HOSTNAME_RE = r'^({0}\.)*{0}$'.format(NAME_RE)
 UUID_RE = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
-METAL_USER_AGENT = 'ansible-metal'
 
 METAL_COMMON_ARGS = dict(
     metal_api_token=dict(
@@ -47,6 +48,7 @@ METAL_COMMON_ARGS = dict(
     ),
     metal_ua_prefix=dict(
         type='str',
+        default="",
         no_log=True,
     ),
 )
@@ -132,7 +134,15 @@ class EquinixModule(AnsibleModule):
             kwargs.pop("supports_project_id")
         kwargs["argument_spec"] = argument_spec
         AnsibleModule.__init__(self, *args, **kwargs)
-        self.client = self._get_metal_client()
+        #self.client = self._get_metal_client()
+        try:
+            self.client = get_metal_client(
+                self.params.get("metal_api_token"),
+                self.params.get("metal_api_url"),
+                self.params.get("metal_ua_prefix"),
+            )
+        except MissingEquinixSDK as e:
+            self.fail_json(msg=str(e), exception=e.exception_traceback)
         self.api_call_configs = get_api_call_configs(equinixmetalpy)
         self.params_checked = False
         AnsibleModule.__init__(self, *args, **kwargs)
@@ -140,8 +150,6 @@ class EquinixModule(AnsibleModule):
     def params_syntax_check(self):
         name = self.params.get("name")
         if name:
-            import q
-            q(name)
             if not re.match(NAME_RE, name):
                 raise Exception("name {0} is not a valid name. Regexp for name is {1}".format(name, NAME_RE))
         hostname = self.params.get("hostname")
@@ -153,19 +161,6 @@ class EquinixModule(AnsibleModule):
             if v is not None:
                 if not re.match(UUID_RE, v):
                     raise Exception("{0} {1} is not a valid UUID".format(k, v))
-
-    def _get_metal_client(self):
-        if not HAS_METAL_SDK:
-            self.fail_json(msg=missing_required_lib('equinixmetalpy'), exception=HAS_METAL_SDK_EXC)
-        ua = METAL_USER_AGENT
-        if self.params.get('metal_ua_prefix'):
-            ua = '{0} {1}'.format(self.params.get('metal_ua_prefix'), ua)
-        return equinixmetalpy.Client(
-            credential=self.params.get('metal_api_token'),
-            base_url=self.params.get('metal_api_url'),
-            base_user_agent=ua,
-            user_agent_overwrite=True,
-        )
 
     def _do_api_call(self, resource_type, action, params, additional_params: dict = None):
         conf = self.api_call_configs[(resource_type, action)]

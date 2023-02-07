@@ -9,7 +9,7 @@ INTEGRATION_CONFIG := tests/integration/integration_config.yml
 clean:
 	rm -f *.tar.gz && rm -rf galaxy.yml
 
-build: clean gendocs
+build: clean 
 	python scripts/render_galaxy.py $(COLLECTION_VERSION) && ansible-galaxy collection build
 
 publish: build
@@ -30,14 +30,6 @@ lint:
 
 	mypy plugins/modules
 	mypy plugins/inventory
-
-gendocs:
-	rm -rf $(DOCS_PATH)/modules $(DOCS_PATH)/inventory
-	mkdir -p $(DOCS_PATH)/modules $(DOCS_PATH)/inventory
-
-	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_generate.sh
-	ansible-doc-extractor --template=template/module.rst.j2 $(DOCS_PATH)/inventory plugins/inventory/*.py
-	python scripts/render_readme.py $(COLLECTION_VERSION)
 
 integration-test: $(INTEGRATION_CONFIG)
 	ansible-test integration $(TEST_ARGS)
