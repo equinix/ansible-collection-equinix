@@ -5,32 +5,77 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils.basic import missing_required_lib
 
 import traceback
+import re
 
 HAS_METAL_SDK = True
+HAS_METAL_SDK_EXC = None
 try:
     import equinixmetalpy
+    from equinixmetalpy import MetalApiError
+    from equinixmetalpy import raise_if_error
 except ImportError:
     HAS_METAL_SDK = False
     HAS_METAL_SDK_EXC = traceback.format_exc()
 
-METAL_USER_AGENT = 'ansible-metal'
+USER_AGENT = 'ansible-equinix'
+API_URL = 'https://api.equinix.com/metal/v1'
+TOKEN_ENVVARS = ['METAL_API_TOKEN', 'METAL_AUTH_TOKEN']
+URL_ENVVARS = ['METAL_API_URL']
+
+RESOURCE_NAME_RE = r'^({0}|{0}{1}*{0})$'.format(r'[a-zA-Z0-9]', r'[a-zA-Z0-9\-_ ]')
+HOSTNAME_RE = r'^({0}\.)*{0}$'.format(RESOURCE_NAME_RE)
+UUID_RE = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 
-class MissingEquinixSDK(Exception):
+class MissingEquinixmetalpyError(Exception):
     def __init__(self, exception_traceback):
         self.exception_traceback = exception_traceback
 
 
-def get_metal_client(api_token, api_url, ua_prefix):
+def has_equinix_metal_sdk():
+    return HAS_METAL_SDK
+
+
+def raise_if_missing_equinixmetalpy():
     if not HAS_METAL_SDK:
-        raise MissingEquinixSDK(missing_required_lib('equinixmetalpy'), HAS_METAL_SDK_EXC)
-    ua = ua_prefix + METAL_USER_AGENT
+        raise MissingEquinixmetalpyError(HAS_METAL_SDK_EXC)
+
+
+def get_metal_client(api_token, api_url=API_URL, ua_prefix=""):
+    raise_if_missing_equinixmetalpy()
+    ua = ua_prefix + USER_AGENT
     return equinixmetalpy.Client(
         credential=api_token,
         base_url=api_url,
         base_user_agent=ua,
         user_agent_overwrite=True,
     )
+
+
+def is_valid_uuid(uuid):
+    return re.match(UUID_RE, uuid) is not None
+
+
+def raise_if_invalid_uuid(uuid):
+    if not is_valid_uuid(uuid):
+        raise ValueError("Invalid UUID: %s, regexp for UUID is %s" % (uuid, UUID_RE))
+
+
+def is_valid_hostname(hostname):
+    return re.match(HOSTNAME_RE, hostname) is not None
+
+
+def raise_if_invalid_hostname(hostname):
+    if not is_valid_hostname(hostname):
+        raise ValueError("Invalid hostname: %s, regexp for hostname is %s" % (hostname, HOSTNAME_RE))
+
+
+def is_valid_resource_name(name):
+    return re.match(RESOURCE_NAME_RE, name) is not None
+
+
+def raise_if_invalid_resource_name(name):
+    if not is_valid_resource_name(name):
+        raise ValueError("Invalid resource name: %s, regexp for resource name is %s" % (name, RESOURCE_NAME_RE))
