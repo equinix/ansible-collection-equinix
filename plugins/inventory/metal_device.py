@@ -13,7 +13,6 @@ DOCUMENTATION = '''
     short_description: Equinix Metal Device inventory source
     extends_documentation_fragment:
         - equinix.cloud.metal_common
-        - inventory_cache
         - constructed
     description:
         - Reads device inventories from Equinix Metal
@@ -23,33 +22,36 @@ DOCUMENTATION = '''
             description: Token that ensures this is a source file for the plugin.
             required: True
             choices: ['equinix_metal', 'equinix.cloud.metal_device']
-        projects:
-          description:
-              - A list of projects in which to describe Equinix Metal devices.
-              - If empty (the default) default this will include all projects.
-          type: list
-          default: []
-    version_added: 1.0.0
+        project_ids:
+            description: List of Equinix Metal project IDs to query for devices.
+            type: list
+            elements: str
+        metal_api_token:
+            description: Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment variable.
+            required: True
+            env:
+                - name: METAL_AUTH_TOKEN
+    version_added: 0.0.1
 '''
 
 EXAMPLES = '''
 # Minimal example using environment var credentials
-plugin: equinix.metal.device
+plugin: equinix.cloud.metal_device
 
 # Example using constructed features to create groups and set ansible_host
-plugin: equinix.metal.device
+plugin: equinix.cloud.metal_device
 # keyed_groups may be used to create custom groups
 strict: False
 keyed_groups:
-  # Add hosts to tag_Name groups for each tag
+  # Add devices to tag_Name groups for each tag
   - prefix: tag
     key: tags
-  # Add hosts to e.g. equinix_metal_plan_c3_small_x86
+  # Add devices to e.g. equinix_metal_plan_c3_small_x86
   - prefix: equinix_metal_plan
     key: plan
-  # Create a group per region e.g. equinix_metal_facility_am6
-  - key: facility
-    prefix: equinix_metal_facility
+  # Create a group per region e.g. equinix_metal_metro_sv
+  - key: metro
+    prefix: equinix_metal_metro
   # Create a group per device state e.g. equinix_metal_state_active
   - key: state
     prefix: equinix_metal_state
@@ -60,25 +62,60 @@ compose:
   ansible_host: (ip_addresses | selectattr('address_family', 'equalto', 4) | selectattr('public', 'equalto', false) | first).address
 '''
 
-from ansible.errors import AnsibleError
-from ansible.module_utils import six
-from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable, to_safe_group_name
+from ansible.errors import AnsibleError, AnsibleParserError
+from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, to_safe_group_name
 
-HAS_EMPY = True
-try:
-    import equinixmetalpy
-except ImportError:
-    HAS_EMPY = False
+from ansible.module_utils.six import string_types
+from ansible_collections.equinix.cloud.plugins.module_utils import (
+    metal_client,
+    metal_api,
+    action,
+)
+
+EXCLUDE_ATTRIBUTES = [
+    "ssh_keys",
+]
+
+import os
+from typing import List, Dict, Set, Tuple, Any
 
 
-class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
+def label(device: Dict[str, Any]) -> str:
+    """Return the label of a device."""
+    return device['hostname']
+
+
+class InventoryModule(BaseInventoryPlugin, Constructable):
 
     NAME = 'equinix.cloud.metal_device'
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        # credentials
-        self.api_token = None
+        self.devices: List[Dict] = []
+        self.projects: List[Dict] = []
+        self.equinix_metal_groups: Set[str] = set()
+        self.client = None
+        self.api_call_configs = None
+
+    def _build_client(self) -> None:
+        metal_api_token = self.get_option('metal_api_token')
+        if metal_api_token is None:
+            for envvarname in metal_client.TOKEN_ENVVARS:
+                metal_api_token = os.environ.get(envvarname)
+                if metal_api_token is not None:
+                    break
+        if metal_api_token is None:
+            raise AnsibleError(
+                "The Equinix Metal dynamic inventory plugin requires a token. "
+                "Please set the 'metal_api_token' option or set one of the "
+                "following environment variables: %s"
+                % ', '.join(metal_client.TOKEN_ENVVARS)
+            )
+        try:
+            self.client = metal_client.get_metal_client(str(metal_api_token))
+            self.api_call_configs = metal_api.get_api_call_configs()
+        except metal_client.MissingEquinixmetalpyError:
+            raise AnsibleError("The Equinix Metal dynamic inventory plugin requires the 'equinixmetal' package: %s")
 
     def verify_file(self, path):
         '''
@@ -86,170 +123,75 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             :return the contents of the config file
         '''
         if super(InventoryModule, self).verify_file(path):
-            if path.endswith(('equinix.yml', 'equinix.yaml')):
+            if path.endswith(('equinix.yml', 'equinix.yaml', 'device.yml', 'device.yaml')):
                 return True
         self.display.debug("equinix.cloud inventory filename must end with 'equinix.yml' or 'equinix.yaml'")
         return False
 
-    def _set_credentials(self):
-        '''
-            :param config_data: contents of the inventory config file
-        '''
-        self.api_token = self.get_option('api_token')
-
-    def _query(self, project_ids):
-        '''
-            :param project_ids: a list of project ids to query
-        '''
-        devices = []
-        for id in project_ids:
-            devices.extend(self._get_devices_by_project(id))
-
-        return {'equinix_metal': devices}
-
-    def _populate(self, groups):
-        for group in groups:
-            group = self.inventory.add_group(group)
-            self._add_hosts(hosts=groups[group], group=group)
-            self.inventory.add_child('all', group)
-
-    def _add_hosts(self, hosts, group):
-        '''
-            :param hosts: a list of hosts to be added to a group
-            :param group: the name of the group to which the hosts belong
-        '''
-        for host in hosts:
-            hostname = host['hostname']
-
-            self.inventory.add_host(hostname, group=group)
-            for hostvar, hostval in host.items():
-                self.inventory.set_variable(hostname, hostvar, hostval)
-
-            # Use constructed if applicable
-            strict = self.get_option('strict')
-
-            # Composed variables
-            self._set_composite_vars(self.get_option('compose'), host, hostname, strict=strict)
-
-            # Complex groups based on jinja2 conditionals, hosts that meet the conditional are added to group
-            self._add_host_to_composed_groups(self.get_option('groups'), host, hostname, strict=strict)
-
-            # Create groups based on variable values and add the corresponding hosts to it
-            self._add_host_to_keyed_groups(self.get_option('keyed_groups'), host, hostname, strict=strict)
-
-    def parse(self, inventory, loader, path, cache: bool = True):
+    def parse(self, inventory, loader, path, cache):
         super().parse(inventory, loader, path)
-
-        if not HAS_EMPY:
-            raise AnsibleError('The Equinix Metal Device inventory plugin requires the python "equinixmetalpy" library')
-
 
         self._read_config_data(path)
 
-        self._set_credentials()
+        configured_project_ids = self._get_project_ids()
+        devices = self._get_devices_from_project_ids(configured_project_ids)
+        import q
+        q(devices)
+        projects = set([device['project_id'] for device in devices])
+        for project in projects:
+            self.inventory.add_group(project)
 
-        cache_key = self.get_cache_key(path)
-        # false when refresh_cache or --flush-cache is used
-        if cache:
-            # get the user-specified directive
-            cache = self.get_option('cache')
+        for device in devices:
+            self.inventory.add_host(label(device), group=device['project_id'])
+            first_public_ip = next((ip['address'] for ip in device['ip_addresses'] if ip['public']), None)
+            self.inventory.set_variable(label(device), 'ansible_host', first_public_ip)
+            self.inventory.add_host(label(device), group='all')
+            for k, v in device.items():
+                if k not in EXCLUDE_ATTRIBUTES:
+                    self.inventory.set_variable(label(device), k, v)
 
-        # Generate inventory
-        cache_needs_update = False
-        if cache:
-            try:
-                results = self._cache[cache_key]
-            except KeyError:
-                # if cache expires or cache file doesn't exist
-                cache_needs_update = True
+        strict = self.get_option('strict')
 
-        if not cache or cache_needs_update:
-            project_ids = self._get_project_ids()
-            results = self._query(project_ids)
-
-        self._populate(results)
-
-        # If the cache has expired/doesn't exist or if refresh_inventory/flush cache is used
-        # when the user is using caching, update the cached inventory
-        if cache_needs_update or (not cache and self.get_option('cache')):
-            self._cache[cache_key] = results
-
-    def _connect(self):
-        ''' create connection to api server'''
-        metal_client = equinixmetalpy.Client(credential=self.api_token)
-        return metal_client
+        for device in self.devices:
+            variables = self.inventory.get_host(label(device)).get_vars()
+            self._add_host_to_composed_groups(
+                self.get_option('groups'),
+                variables,
+                label(device),
+                strict=strict)
+            self._add_host_to_keyed_groups(
+                self.get_option('keyed_groups'),
+                variables,
+                label(device),
+                strict=strict)
+            self._set_composite_vars(
+                self.get_option('compose'),
+                variables,
+                label(device),
+                strict=strict
+            )
 
     def _get_project_ids(self):
-        project_ids = self.get_option('projects')
-
-        if not project_ids:
-            try:
-                client = self._connect()
-                projects = client.find_projects()
-                project_ids = [project.id for project in projects.projects]
-            except Exception as e:
-                raise AnsibleError("Failed to query projects from Equinix Metal API", orig_exc=e)
-
-        if not project_ids:
-            raise AnsibleError('Unable to get projects list from available methods, you must specify the "projects" option to continue.')
-
+        project_ids_arg_value = self.get_option('project_ids')
+        project_ids: List[str] = []
+        if project_ids_arg_value:
+            project_ids = project_ids_arg_value
+        for pid in project_ids:
+            if not metal_client.is_valid_uuid(pid):
+                raise AnsibleError("Invalid project id: %s" % pid)
+        self._build_client()
+        if len(project_ids) == 0:
+            return [p["id"] for p in self._get_all_projects()]
         return project_ids
 
-    def _get_devices_by_project(self, project_id):
-        '''
-           :param project_id: a project id in which to discover devices
-           :return A list of device dictionaries
-        '''
-        try:
-            client = self._connect()
-            devices = client.find_project_devices(project_id)
-            return [self._get_host_info_dict_from_device(device) for device in devices.devices]
-        except Exception as e:
-            raise AnsibleError("Failed to query devices from Equinix Metal API", orig_exc=e)
+    def _get_all_projects(self):
+        return metal_api.call("metal_project", action.LIST, self.client)
 
-    def _get_host_info_dict_from_device(self, device):
-        device_vars = {}
-        for key, value in device.as_dict(key_tranformer=to_safe_group_name).items():
-            if key == 'state':
-                device_vars[key] = device.state or ''
-            elif key == 'hostname':
-                device_vars[key] = value
-            elif isinstance(value, (int, bool)):
-                device_vars[key] = value
-            elif isinstance(value, six.string_types):
-                device_vars[key] = value.strip()
-            elif value is None:
-                device_vars[key] = ''
-            elif key == 'facility':
-                device_vars[key] = value['code']
-            elif key == 'operating_system':
-                device_vars[key] = value['slug']
-            elif key == 'plan':
-                device_vars[key] = value['slug']
-            elif key == 'project':
-                device_vars[key] = value['href'].strip('/projects/')
-            elif key == 'ip_addresses':
-                device_vars[key] = []
-                for addr in value:
-                    device_vars[key].append(
-                        {
-                            'address': addr['address'],
-                            'address_family': addr['address_family'],
-                            'public': addr['public'],
-                            'cidr': addr['cidr'],
-                            'enabled': addr['enabled'],
-                            'gateway': addr['gateway'],
-                            'global_ip': addr['global_ip'],
-                            'manageable': addr['manageable'],
-                            'management': addr['management'],
-                            'netmask': addr['netmask'],
-                            'network': addr['network'],
-                            'tags': []
-                        }
-                    )
-            elif key == 'tags':
-                device_vars[key] = value
-            else:
-                pass
+    def _get_project_devices(self, project_id):
+        return metal_api.call("metal_project_device", action.LIST, self.client, {"project_id": project_id})
 
-        return device_vars
+    def _get_devices_from_project_ids(self, project_ids):
+        devices = []
+        for p in project_ids:
+            devices.extend(self._get_project_devices(p))
+        return devices
