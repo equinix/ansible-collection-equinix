@@ -60,7 +60,18 @@
         
     - assert:
         that:
-        - "both_projects_listed.resources | length == 2"  
+        - "both_projects_listed.resources | length == 2"
+
+    - name: delete second project
+      equinix.cloud.metal_project:
+        id: "{{ second_project.id }}"
+        state: absent
+
+    - name: check that deleting nonexistent resource doesn't err
+      equinix.cloud.metal_project:
+        id: "{{ second_project.id }}"
+        state: absent
+       
   always:
     - name: Announce teardown start
       debug:
