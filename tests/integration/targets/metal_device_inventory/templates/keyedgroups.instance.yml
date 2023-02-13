@@ -1,7 +1,0 @@
-plugin: equinix.metal.device
-api_token: '{{ api_token }}'
-keyed_groups:
-  - key: tags
-    separator: ''
-groups:
-  cool_group: "'ansible-inventory-node' in (tags|list)"

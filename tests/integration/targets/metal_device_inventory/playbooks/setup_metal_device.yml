@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - ../../../integration_config.yml
+  tasks:
+
+    - name: Create testing project
+      equinix.cloud.metal_project:
+        metal_api_token: '{{ metal_api_token }}'
+        name: 'ansible-test-inventory'
+      register: project
+
+    - name: Create a basic Equinix Metal Device
+      equinix.cloud.metal_device:
+        project_id: "{{ project.id }}"
+        hostname: 'ansible-test-inventory'
+        metal_api_token: '{{ metal_api_token }}'
+        plan: c3.small.x86
+        operating_system: ubuntu_20_04
+        metro: sv
+        tags:
+          - ansible-inventory-node
