@@ -1,7 +1,6 @@
-# (c) 2016, Peter Sankauskas
-# (c) 2021, Jason DeTiberus
-# (c) 2023, Tomas Karasek
-#
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -17,6 +16,7 @@ DOCUMENTATION = '''
     description:
         - Reads device inventories from Equinix Metal
         - Uses YAML configuration file that ends with equinix_metal.(yml|yaml).
+        - ansible_host is set to first public IP address of the device.
     options:
         plugin:
             description: Token that ensures this is a source file for the plugin.
@@ -31,6 +31,22 @@ DOCUMENTATION = '''
             required: True
             env:
                 - name: METAL_AUTH_TOKEN
+        keyed_groups:
+            description: List of groups to create based on the values of a variable.
+            type: list
+            elements: dict
+            suboptions:
+                key:
+                    description: The key to group by.
+                    type: str
+                prefix:
+                    description: Prefix to prepend to the group name.
+                    type: str
+                separator:
+                    description: Separator to use when joining the key and value.
+                    type: str
+                    default: ''
+      
     version_added: 0.0.1
 '''
 
@@ -55,11 +71,6 @@ keyed_groups:
   # Create a group per device state e.g. equinix_metal_state_active
   - key: state
     prefix: equinix_metal_state
-# Set individual variables with compose
-compose:
-  # Use the private IP address to connect to the host
-  # (note: this does not modify inventory_hostname, which is set via I(hostnames))
-  ansible_host: (ip_addresses | selectattr('address_family', 'equalto', 4) | selectattr('public', 'equalto', false) | first).address
 '''
 
 from ansible.errors import AnsibleError, AnsibleParserError
@@ -91,9 +102,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
     def __init__(self) -> None:
         super().__init__()
-        self.devices: List[Dict] = []
-        self.projects: List[Dict] = []
-        self.equinix_metal_groups: Set[str] = set()
         self.client = None
         self.api_call_configs = None
 
@@ -135,8 +143,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
         configured_project_ids = self._get_project_ids()
         devices = self._get_devices_from_project_ids(configured_project_ids)
-        import q
-        q(devices)
         projects = set([device['project_id'] for device in devices])
         for project in projects:
             self.inventory.add_group(project)
@@ -152,7 +158,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
         strict = self.get_option('strict')
 
-        for device in self.devices:
+        for device in devices:
             variables = self.inventory.get_host(label(device)).get_vars()
             self._add_host_to_composed_groups(
                 self.get_option('groups'),
