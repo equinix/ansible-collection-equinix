@@ -29,7 +29,6 @@
         plan: c3.small.x86
         metro: sv
         state: present
-        provisioning_wait_seconds: 180
       register: test_device_1
 
     - name: assert device started
@@ -45,7 +44,6 @@
         plan: c3.small.x86
         metro: sv
         state: present
-        provisioning_wait_seconds: 180
       register: test_device_2
     
     - name: list both devices
