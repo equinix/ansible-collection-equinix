@@ -128,6 +128,20 @@ def optional_float(key: str):
     return lambda resource: resource.get(key, 0.0)
 
 
+def cidr_to_quantity(key: str):
+    cidrs_nums = {
+        32: 1, 31: 2, 30: 4, 29: 8, 28: 16, 27: 32, 26: 64, 25: 128, 24: 256,
+    }
+
+    def cidr_to_quantity_wrapped(resource):
+        cidr = resource.get(key)
+        num = cidrs_nums.get(cidr)
+        if num is None:
+            raise ValueError('Invalid CIDR: {0}'.format(cidr))
+        return num
+    return cidr_to_quantity_wrapped
+
+
 def ip_address_getter(resource: dict):
     pick_keys = ['address', 'address_family', 'public']
     return [dict((k, ip[k]) for k in pick_keys) for ip in resource.get('ip_addresses', [])]
@@ -172,6 +186,23 @@ METAL_PROJECT_RESPONSE_ATTRIBUTE_MAP = {
     'backend_transfer_enabled': 'backend_transfer_enabled',
 }
 
+METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'details': 'details',
+    'customdata': 'customdata',
+    'metro': 'metro.code',
+    'project_id': 'project.id',
+    'quantity': 'quantity',
+    'type': 'type',
+    'address_family': 'address_family',
+    'public': 'public',
+    'management': 'management',
+    'network': 'network',
+    'netmask': 'netmask',
+    'quantity': cidr_to_quantity('cidr'),
+
+}
+
 
 id_getter = ParamsParser("id")
 
@@ -187,6 +218,7 @@ def get_api_call_configs():
     metal_client.raise_if_missing_equinixmetalpy()
 
     return {
+        # GETTERS
         ('metal_device', action.GET): ApiCallSpecs(
             equinixmetalpy.Client.find_device_by_id,
             id_getter,
@@ -195,7 +227,12 @@ def get_api_call_configs():
             equinixmetalpy.Client.find_project_by_id,
             id_getter,
             ),
+        ('metal_ip_reservation', action.GET): ApiCallSpecs(
+            equinixmetalpy.Client.find_ip_address_by_id,
+            id_getter,
+        ),
 
+        # LISTERS
         ('metal_project_device', action.LIST): ApiCallSpecs(
             equinixmetalpy.Client.find_project_devices,
             ParamsParser("project_id"),
@@ -209,7 +246,12 @@ def get_api_call_configs():
             equinixmetalpy.Client.find_organization_projects,
             ParamsParser("organization_id"),
             ),
+        ('metal_ip_reservation', action.LIST): ApiCallSpecs(
+            equinixmetalpy.Client.find_ip_reservations,
+            ParamsParser("project_id"),
+        ),
 
+        # DELETERS
         ('metal_device', action.DELETE): ApiCallSpecs(
             equinixmetalpy.Client.delete_device,
             id_getter,
@@ -218,7 +260,13 @@ def get_api_call_configs():
             equinixmetalpy.Client.delete_project,
             id_getter,
             ),
+        ('metal_ip_reservation', action.DELETE): ApiCallSpecs(
+            equinixmetalpy.Client.delete_ip_address,
+            id_getter,
+        ),
 
+
+        # CREATORS
         ('metal_device_metro', action.CREATE): ApiCallSpecs(
             equinixmetalpy.Client.create_device,
             ParamsParser("project_id"),
@@ -239,7 +287,13 @@ def get_api_call_configs():
             ParamsParser("organization_id"),
             equinixmetalpy.models.ProjectCreateInput,
             ),
+        ('metal_ip_reservation', action.CREATE): ApiCallSpecs(
+            equinixmetalpy.Client.request_ip_reservation,
+            ParamsParser("project_id"),
+            equinixmetalpy.models.IPReservationRequestInput,
+        ),
 
+        # UPDATERS
         ('metal_device', action.UPDATE): ApiCallSpecs(
             equinixmetalpy.Client.update_device,
             id_getter,
@@ -249,6 +303,11 @@ def get_api_call_configs():
             equinixmetalpy.Client.update_project,
             id_getter,
             equinixmetalpy.models.ProjectUpdateInput,
+        ),
+        ('metal_ip_reservation', action.UPDATE): ApiCallSpecs(
+            equinixmetalpy.Client.update_ip_address,
+            id_getter,
+            equinixmetalpy.models.IPAssignmentUpdateInput,
         ),
     }
 
@@ -260,10 +319,13 @@ def get_attribute_mapper(resource_type):
     device_resources = set(['metal_device', 'metal_device_metro',
                             'metal_project_device', 'metal_device_facility'])
     project_resources = set(['metal_project', 'metal_organization_project'])
+    ip_resources = set(['metal_ip_reservation'])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
         return METAL_PROJECT_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in ip_resources:
+        return METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -283,7 +345,7 @@ def call(resource_type, action, client, body_params={}, url_params={}):
         return None
     attribute_mapper = get_attribute_mapper(resource_type)
     if action == action.LIST:
-        return [response_to_ansible_dict(r, attribute_mapper)for r in response.list]
+        return [response_to_ansible_dict(r, attribute_mapper) for r in response.list]
     return response_to_ansible_dict(response, attribute_mapper)
 
 
@@ -296,8 +358,11 @@ def add_id_from_href(v):
         v['id'] = href_to_id(v['href'])
 
 
-def populate_ids_from_hrefs(resource):
-    return_dict = resource.as_dict()
+def populate_ids_from_hrefs(response):
+    return_dict = response.as_dict()
+    if return_dict == {}:
+        return_dict = response.additional_properties.copy()
+
     for v in return_dict.values():
         if type(v) is dict:
             if ('href' in v) & ('id' not in v):
@@ -307,6 +372,18 @@ def populate_ids_from_hrefs(resource):
                 if type(i) is dict:
                     add_id_from_href(i)
     return return_dict
+
+
+def get_dotted_value(_dict, key):
+    keys = key.split(".")
+    for k in keys:
+        if k in _dict:
+            if _dict[k] is None:
+                return None
+            _dict = _dict[k]
+        else:
+            return None
+    return _dict
 
 
 def response_to_ansible_dict(response, attribute_mapper):
@@ -320,12 +397,12 @@ def response_to_ansible_dict(response, attribute_mapper):
         if callable(v):
             return_dict[k] = v(response_dict)
         elif "." in v:
-            vs = v.split(".")
-            if vs[0] in response_dict:
-                if vs[1] in response_dict[vs[0]]:
-                    return_dict[k] = response_dict[vs[0]][vs[1]]
+            dv = get_dotted_value(response_dict, v)
+            if dv is None:
+                raise Exception("attribute '{0}' (to map to '{1}') not found in response_dict: {2}".format(v, k, response_dict))
+            return_dict[k] = dv
         elif k in response_dict:
             return_dict[k] = response_dict[v]
         else:
-            raise Exception('key {0} (to map to {1}) not found in response_dict:\n {2}'.format(k, v))
+            raise Exception("attribute '{0}' (to map to '{1}') not found in response_dict: {2}".format(k, v, response_dict))
     return return_dict

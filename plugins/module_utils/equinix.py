@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt) 
-
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
+
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import time
 
@@ -113,17 +114,22 @@ class EquinixModule(AnsibleModule):
             raise e
         return result
 
-    def get_one_from_list(self, resource_type: str, name_attr: str, filters: dict = None):
-        name_value = self.params.get(name_attr)
-        if name_value is None:
-            raise Exception(f'get_one_from_list called without {name_attr}, this is a module bug.')
+    def get_one_from_list(self, resource_type: str, match_attrs: List[str], filters: dict = None):
+        match_values = []
+        for attr in match_attrs:
+            if self.params.get(attr) is not None:
+                match_values.append(self.params.get(attr))
+            else:
+                raise Exception(f'get_one_from_list called without {attr}, this is a module bug.')
         result = self._metal_api_call(resource_type, action.LIST, self.params.copy(), url_params=filters)
-        dict_list = result
-        matches = [i for i in dict_list if i[name_attr] == name_value]
+        matches = []
+        for i in result:
+            if all(i.get(attr) == value for attr, value in zip(match_attrs, match_values)):
+                matches.append(i)
         if len(matches) == 0:
             return None
         if len(matches) > 1:
-            raise Exception(f'found more than one {resource_type} with name {name_value}')
+            raise Exception(f'found more than one {resource_type} with name {match_values}')
         return matches[0]
 
     def get_list(self, resource_type: str, filters: dict = None):

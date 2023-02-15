@@ -146,7 +146,7 @@ def main():
             name = module.params.get("name")
             fetched = module.get_one_from_list(
                 "metal_project",
-                "name",
+                ["name"],
                 {"name": name})
 
         if fetched:
