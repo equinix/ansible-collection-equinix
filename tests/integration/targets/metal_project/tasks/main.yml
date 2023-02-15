@@ -20,10 +20,17 @@
         backend_transfer_enabled: true
       register: first_project
 
+    - name: create first project for test again, to check idempotence
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project1"
+        backend_transfer_enabled: true
+      register: first_project_2
+
     - assert:
         that:
         - first_project.name == '{{ test_prefix }}-project1'
         - first_project.backend_transfer_enabled == true
+        - first_project_2.changed == false
 
     - name: update project name
       equinix.cloud.metal_project:

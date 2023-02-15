@@ -29,12 +29,20 @@
         plan: c3.small.x86
         metro: sv
         state: present
+        provisioning_wait_seconds: 600
       register: test_device_1
+
+    - name: start first test device again (idempotence test)
+      equinix.cloud.metal_device:
+        project_id: "{{ test_project.id }}"
+        hostname: "{{ test_prefix }}-dev1"
+      register: test_device_1_2
 
     - name: assert device started
       assert:
         that:
           - "test_device_1.metal_state == 'active'"
+          - "test_device_1_2.changed == false"
 
     - name: start second test device
       equinix.cloud.metal_device:
@@ -44,6 +52,7 @@
         plan: c3.small.x86
         metro: sv
         state: present
+        provisioning_wait_seconds: 600
       register: test_device_2
     
     - name: list both devices
