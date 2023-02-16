@@ -11,6 +11,7 @@ import inspect
 from ansible_collections.equinix.cloud.plugins.module_utils import (
     metal_client,
     action,
+    utils,
 )
 
 try:
@@ -43,16 +44,31 @@ class ParamsParser:
     body.
     """
 
-    def __init__(self, id_param_names: Union[str, List[str]] = []):
-        self.id_param_names = id_param_names if isinstance(id_param_names, list) else [id_param_names]
+    def __init__(
+        self,
+        param_names: Union[str, List[str]] = [],
+        as_list: List[str] = []):
+        self.positional_param_names = param_names if isinstance(param_names, list) else [param_names]
+
+        # def find_ip_reservations(
+        #    self,
+        #    id: str,
+        #    types: Optional[List[Union[str, "_models.Enum18"]]] = None,
+        #    include: Optional[List[str]] = None,
+        #    exclude: Optional[List[str]] = None,
+        #    per_page: int = 250,
+        #    **kwargs: Any
+        self.as_list = as_list
 
     def parse(self, params):
-        #_D("ParamsParser.parse() called with params: ", _PJ(params))
         id_params = []
-        for name in self.id_param_names:
+        for name in self.positional_param_names:
             if name not in params:
                 raise ValueError('Missing required option: {0}'.format(name))
-            id_params.append(params.pop(name))
+            if name in self.as_list:
+                id_params.append([params.pop(name)])
+            else:
+                id_params.append(params.pop(name))
         return id_params, params
 
 
@@ -109,11 +125,25 @@ class ApiCall(object):
         if self.request_model_instance is not None:
             arg_list.append(self.request_model_instance)
         #_D('arg_list: {0}'.format(arg_list))
+        import q
+        q(arg_list)
         result = self.conf.func(*arg_list, params=self.url_params)
         return result
 
     def describe(self):
         return "{0} to {1}".format(self.conf.func.__name__, self.path_vars)
+
+
+def optional(key: str):
+    return lambda resource: utils.dict_get(resource, key)
+
+
+def find_metro(resource):
+    m = utils.dict_get(resource, 'metro.code')
+    if m is not None:
+        return m
+    m = utils.dict_get(resource, 'facility.metro.code')
+    return m
 
 
 def optional_str(key: str):
@@ -129,17 +159,7 @@ def optional_float(key: str):
 
 
 def cidr_to_quantity(key: str):
-    cidrs_nums = {
-        32: 1, 31: 2, 30: 4, 29: 8, 28: 16, 27: 32, 26: 64, 25: 128, 24: 256,
-    }
-
-    def cidr_to_quantity_wrapped(resource):
-        cidr = resource.get(key)
-        num = cidrs_nums.get(cidr)
-        if num is None:
-            raise ValueError('Invalid CIDR: {0}'.format(cidr))
-        return num
-    return cidr_to_quantity_wrapped
+    return lambda resource: 2 ** (32 - resource.get(key))
 
 
 def ip_address_getter(resource: dict):
@@ -188,9 +208,8 @@ METAL_PROJECT_RESPONSE_ATTRIBUTE_MAP = {
 
 METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
-    'details': 'details',
     'customdata': 'customdata',
-    'metro': 'metro.code',
+    'metro': find_metro,
     'project_id': 'project.id',
     'quantity': 'quantity',
     'type': 'type',
@@ -200,6 +219,8 @@ METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'network': 'network',
     'netmask': 'netmask',
     'quantity': cidr_to_quantity('cidr'),
+    'details': 'details',
+    'tags': 'tags',
 
 }
 
@@ -248,8 +269,8 @@ def get_api_call_configs():
             ),
         ('metal_ip_reservation', action.LIST): ApiCallSpecs(
             equinixmetalpy.Client.find_ip_reservations,
-            ParamsParser("project_id"),
-        ),
+            ParamsParser(["project_id", "type"], as_list=["type"]),
+            ),
 
         # DELETERS
         ('metal_device', action.DELETE): ApiCallSpecs(
@@ -340,6 +361,13 @@ def call(resource_type, action, client, body_params={}, url_params={}):
         raise NotImplementedError("No API call for resource type %s and action %s" % (resource_type, action))
     call = ApiCall(conf, client, body_params, url_params)
     response = call.do()
+    # explore response here
+    if response is not None:
+        import q
+        q(action, resource_type)
+        q(response.serialize())
+        q(response.additional_properties)
+
     metal_client.raise_if_error(response, call.describe())
     if action == action.DELETE:
         return None
@@ -394,6 +422,9 @@ def response_to_ansible_dict(response, attribute_mapper):
     if attribute_mapper is None:
         return response_dict()
     for k, v in attribute_mapper.items():
+        # k is key in ansible module
+        # v is key in API response dict
+        # response_dict[v] is value in API response dict
         if callable(v):
             return_dict[k] = v(response_dict)
         elif "." in v:

@@ -1,12 +1,9 @@
-# Copyright: (c) 2019, Nurfet Becirevic <nurfet.becirevic@gmail.com>
-# Copyright: (c) 2021, Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
-# Copyright: (c) 2023, Tomas Karasek <tom.to.the.k@gmail.com>
-#
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 module: metal_device
@@ -441,7 +438,12 @@ def main():
                     raise Exception("UUID not found in device creation response")
                 changed = True
                 module.params["id"] = fetched["id"]
-                fetched = module.wait_for_resource_condition("metal_device", "metal_state", "active", timeout=60)
+                seconds = module.params.get("provisioning_wait_seconds")
+                fetched = module.wait_for_resource_condition(
+                    "metal_device",
+                    "metal_state",
+                    "active",
+                    timeout=seconds)
 
                 # network_frozen is not a create attribute, so we need to update explicitly
                 if module.params.get("network_frozen"):

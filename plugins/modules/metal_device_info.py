@@ -1,8 +1,6 @@
-# (c) 2016, Tomas Karasek <tom.to.the.k@gmail.com>
-# (c) 2016, Matt Baldwin <baldwin@stackpointmetal.com>
-# (c) 2016, Thibaud Morel l'Horset <teebes@gmail.com>
-# (c) 2021, Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
-#
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function

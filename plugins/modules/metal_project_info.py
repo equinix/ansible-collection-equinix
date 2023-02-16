@@ -1,11 +1,7 @@
-# Copyright: (c) 2019, Nurfet Becirevic <nurfet.becirevic@gmail.com>
-# Copyright: (c) 2021, Jason DeTiberus (@detiber) <jdetiberus@equinix.com>
-# Copyright: (c) 2023, Tomas Karasek <tom.to.the.k@gmail.com>
-#
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 DOCUMENTATION = r'''
 module: metal_project_info
