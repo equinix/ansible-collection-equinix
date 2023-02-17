@@ -19,6 +19,16 @@ except ImportError:
     HAS_METAL_SDK = False
     HAS_METAL_SDK_EXC = traceback.format_exc()
 
+HAS_METAL_PYTHON = True
+HAS_METAL_PYTHON_EXC = None
+try:
+    import metal_python
+    from metal_python.rest import ApiException
+    from metal_python.exceptions import NotFoundException
+except ImportError:
+    HAS_METAL_PYTHON = False
+    HAS_METAL_PYTHON_EXC = traceback.format_exc()
+
 USER_AGENT = 'ansible-equinix'
 API_URL = 'https://api.equinix.com/metal/v1'
 TOKEN_ENVVARS = ['METAL_API_TOKEN', 'METAL_AUTH_TOKEN']
@@ -29,9 +39,26 @@ HOSTNAME_RE = r'^({0}\.)*{0}$'.format(RESOURCE_NAME_RE)
 UUID_RE = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 
-class MissingEquinixmetalpyError(Exception):
+class MissingMetalLib(Exception):
     def __init__(self, exception_traceback):
         self.exception_traceback = exception_traceback
+
+
+class MissingEquinixmetalpyError(MissingMetalLib):
+    pass
+
+
+class MissingMetalPythonError(MissingMetalLib):
+    pass
+
+
+def has_metal_python():
+    return HAS_METAL_PYTHON
+
+
+def raise_if_missing_metal_python():
+    if not HAS_METAL_PYTHON:
+        raise MissingMetalPythonError(HAS_METAL_PYTHON_EXC)
 
 
 def has_equinix_metal_sdk():
@@ -41,6 +68,19 @@ def has_equinix_metal_sdk():
 def raise_if_missing_equinixmetalpy():
     if not HAS_METAL_SDK:
         raise MissingEquinixmetalpyError(HAS_METAL_SDK_EXC)
+
+
+def get_metal_python_client(api_token, api_url=API_URL, ua_prefix=""):
+    raise_if_missing_metal_python()
+    ua = ua_prefix + USER_AGENT
+    conf = metal_python.Configuration(
+        host=api_url,
+    )
+    conf.api_key['x_auth_token'] = api_token
+    conf.debug = True
+    mpc = metal_python.ApiClient(conf)
+    mpc.user_agent = ua
+    return mpc
 
 
 def get_metal_client(api_token, api_url=API_URL, ua_prefix=""):

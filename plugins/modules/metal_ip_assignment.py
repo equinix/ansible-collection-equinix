@@ -4,97 +4,97 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 DOCUMENTATION = r'''
-module: metal_project
+module: metal_ip_assignment
 extends_documentation_fragment:
     - equinix.cloud.metal_common
     - equinix.cloud.state
-short_description: Create/delete a project in Equinix Metal
+short_description: Create/delete a ip_assignment in Equinix Metal
 description:
-    - Create/delete a project in Equinix Metal.
+    - Create/delete a ip_assignment in Equinix Metal.
 options:
     name:
         description:
-            - The name of the project.
+            - The name of the ip_assignment.
         type: str
     id:
         description:
-            - UUID of the project.
+            - UUID of the ip_assignment.
         type: str
     organization_id:
         description:
-            - UUID of the organization to create the project in.
+            - UUID of the organization to create the ip_assignment in.
         type: str
     payment_method_id:
         description:
-            - UUID of payment method to use for the project. When blank, the API assumes default org payment method.
+            - UUID of payment method to use for the ip_assignment. When blank, the API assumes default org payment method.
         type: str
     customdata:
         description:
-            - Custom data about the project to create.
+            - Custom data about the ip_assignment to create.
         type: str
     backend_transfer_enabled:
         description:
-            - Enable backend transfer for the project.
+            - Enable backend transfer for the ip_assignment.
         type: bool
 '''
 
 EXAMPLES = r'''
-- name: Create new project
+- name: Create new ip_assignment
   hosts: localhost
   tasks:
-      equinix.cloud.metal_project:
-          name: "new project"
+      equinix.cloud.metal_ip_assignment:
+          name: "new ip_assignment"
 
-- name: Create new project within non-default organization
+- name: Create new ip_assignment within non-default organization
   hosts: localhost
   tasks:
-      equinix.cloud.metal_project:
-          name: "my org project"
+      equinix.cloud.metal_ip_assignment:
+          name: "my org ip_assignment"
           organization_id: a4cc87f9-e00f-48c2-9460-74aa60beb6b0
 
-- name: Remove project by id
+- name: Remove ip_assignment by id
   hosts: localhost
   tasks:
-      equinix.cloud.metal_project:
+      equinix.cloud.metal_ip_assignment:
           state: absent
           id: eef49903-7a09-4ca1-af67-4087c29ab5b6
 
-- name: Create new project with non-default billing method
+- name: Create new ip_assignment with non-default billing method
   hosts: localhost
   tasks:
-      equinix.cloud.metal_project:
-          name: "newer project"
+      equinix.cloud.metal_ip_assignment:
+          name: "newer ip_assignment"
           payment_method_id: "abf49903-7a09-4ca1-af67-4087c29ab343"
 '''
 
 RETURN = r'''
 id:
-    description: UUID of the project.
+    description: UUID of the ip_assignment.
     returned: I(state=present)
     type: str
     sample: "eef49903-7a09-4ca1-af67-4087c29ab5b6"
 name:
-    description: Name of the project.
+    description: Name of the ip_assignment.
     returned: I(state=present)
     type: str
-    sample: "new project"
+    sample: "new ip_assignment"
 organization_id:
-    description: UUID of the organization the project belongs to.
+    description: UUID of the organization the ip_assignment belongs to.
     returned: I(state=present)
     type: str
     sample: "a4cc87f9-e00f-48c2-9460-74aa60beb6b0"
 payment_method_id:
-    description: UUID of the payment method used for the project.
+    description: UUID of the payment method used for the ip_assignment.
     returned: I(state=present)
     type: str
     sample: "abf49903-7a09-4ca1-af67-4087c29ab343"
 customdata:
-    description: Custom data about the project.
+    description: Custom data about the ip_assignment.
     returned: I(state=present)
     type: str
     sample: '{"setting": 12}'
 backend_transfer_enabled:
-    description: Whether backend transfer is enabled for the project.
+    description: Whether backend transfer is enabled for the ip_assignment.
     returned: I(state=present)
     type: bool
     sample: true
@@ -108,27 +108,22 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     get_diff,
 )
 
-MUTABLE_ATTRIBUTES = [
-    'name',
-    'payment_method_id',
-    'customdata',
-    'backend_transfer_enabled',
-]
+MUTABLE_ATTRIBUTES = []
 
 
 def main():
     argument_spec = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
-        name=dict(type='str'),
         id=dict(type='str'),
-        organization_id=dict(type='str'),
-        payment_method_id=dict(type='str'),
+        device_id=dict(type='str'),
+        address=dict(type='str'),
         customdata=dict(type='str'),
-        backend_transfer_enabled=dict(type='bool'),
+        manageable=dict(type='bool'),
     )
     module = EquinixModule(
         argument_spec=argument_spec,
-        required_one_of=[("name", "id")],
+        required_one_of=[("device_id", "id")],
+        required_by=dict(device_id=["address"]),
     )
 
     state = module.params.get("state")
@@ -138,49 +133,44 @@ def main():
         module.params_syntax_check()
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
-            fetched = module.get_by_id("metal_project", tolerate_not_found)
+            fetched = module.get_by_id("metal_ip_assignment", tolerate_not_found)
         else:
-            name = module.params.get("name")
             fetched = module.get_one_from_list(
-                "metal_project",
-                ["name"],
-                {"name": name})
+                "metal_ip_assignment",
+                ["device_id", "address"],
+            )
 
         if fetched:
             module.params['id'] = fetched['id']
             if state == "present":
                 diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
                 if diff:
-                    fetched = module.update_by_id(diff, "metal_project")
-                    changed = True
-
+                    module.fail_json(msg="Cannot update metal_ip_assignment: %s" % diff)
             else:
-                module.delete_by_id("metal_project")
+                module.delete_by_id("metal_ip_assignment")
                 changed = True
         else:
             if state == "present":
                 organization_id = module.params.get("organization_id")
                 if organization_id:
-                    fetched = module.create("metal_organization_project")
+                    fetched = module.create("metal_organization_ip_assignment")
                 else:
-                    fetched = module.create("metal_project")
-                import q
-                q("in module", fetched)
+                    fetched = module.create("metal_ip_assignment")
                 if 'id' not in fetched:
-                    module.fail_json(msg="UUID not found in project creation response")
+                    module.fail_json(msg="UUID not found in ip_assignment creation response")
                 changed = True
 
                 # backend_transfer_enabled need to be explicitly set by update
                 if module.params.get("backend_transfer_enabled"):
                     module.params['id'] = fetched['id']
-                    fetched = module.update_by_id({"backend_transfer_enabled": True}, "metal_project")
+                    fetched = module.update_by_id({"backend_transfer_enabled": True}, "metal_ip_assignment")
 
                 # TODO: add support for bgp_config once we have a module
             else:
                 fetched = {}
     except Exception as e:
         tb = traceback.format_exc()
-        module.fail_json(msg="Error in metal_project: {0}".format(to_native(e)),
+        module.fail_json(msg="Error in metal_ip_assignment: {0}".format(to_native(e)),
                          exception=tb)
 
     fetched.update({'changed': changed})

@@ -19,7 +19,6 @@ from ansible_collections.equinix.cloud.plugins.module_utils import (
     action,
 )
 
-
 METAL_COMMON_ARGS = dict(
     metal_api_token=dict(
         type='str',
@@ -76,7 +75,12 @@ class EquinixModule(AnsibleModule):
                 self.params.get("metal_api_url"),
                 self.params.get("metal_ua_prefix"),
             )
-        except metal_client.MissingEquinixmetalpyError as e:
+            self.metal_python_client = metal_client.get_metal_python_client(
+                self.params.get("metal_api_token"),
+                self.params.get("metal_api_url"),
+                self.params.get("metal_ua_prefix"),
+            )
+        except metal_client.MissingMetalLib as e:
             self.fail_json(msg=missing_required_lib("equinixmetalpy"), exception=e.exception_traceback)
         self.params_checked = False
         AnsibleModule.__init__(self, *args, **kwargs)
@@ -98,7 +102,14 @@ class EquinixModule(AnsibleModule):
             self.fail_json(msg=str(e))
 
     def _metal_api_call(self, resource_type, action, body_params={}, url_params={}):
-        return metal_api.call(resource_type, action, self.client, body_params, url_params)
+        return metal_api.call(
+                resource_type,
+                action,
+                self.client,
+                self.metal_python_client,
+                body_params,
+                url_params,
+        )
 
     def create(self, resource_type):
         return self._metal_api_call(resource_type, action.CREATE, self.params.copy())
@@ -110,6 +121,10 @@ class EquinixModule(AnsibleModule):
             result = self._metal_api_call(resource_type, action.GET, self.params.copy())
         except metal_client.MetalApiError as e:
             if (e.isNotFoundError) & tolerate_not_found:
+                return None
+            raise e
+        except metal_client.NotFoundException as e:
+            if tolerate_not_found:
                 return None
             raise e
         return result
@@ -144,6 +159,8 @@ class EquinixModule(AnsibleModule):
             if e.isNotFoundError:
                 return None
             raise e
+        except metal_client.NotFoundException as e:
+            return None
         return None
 
     def update_by_id(self, update_dict: dict, resource_type: str):

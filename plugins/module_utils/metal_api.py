@@ -10,128 +10,9 @@ import inspect
 
 from ansible_collections.equinix.cloud.plugins.module_utils import (
     metal_client,
-    action,
+    metal_api_routes,
     utils,
 )
-
-try:
-    import equinixmetalpy
-except ImportError:
-    # This is handled in raise_if_missing_equinixmetalpy()
-    pass
-
-SKIPPED_PARAMS = [
-    "state",
-    "metal_api_token",
-    "metal_api_url",
-    "metal_ua_prefix",
-]
-
-SKIPPED_RESPONSE_PARAMS = [
-    "actions", "created_by", "facility", "ip_addresses",
-    "network_ports", "operating_system", "plan", "project",
-    "ssh_keys"
-]
-
-
-class ParamsParser:
-    """
-    A class to parse the module parameters into a tuple:
-    (id_params for URL path, params for request body)
-
-    Right now it only pops ids from the module params, later it might also
-    do some validation and/or transformation of the params for the request
-    body.
-    """
-
-    def __init__(
-        self,
-        param_names: Union[str, List[str]] = [],
-        as_list: List[str] = []):
-        self.positional_param_names = param_names if isinstance(param_names, list) else [param_names]
-
-        # def find_ip_reservations(
-        #    self,
-        #    id: str,
-        #    types: Optional[List[Union[str, "_models.Enum18"]]] = None,
-        #    include: Optional[List[str]] = None,
-        #    exclude: Optional[List[str]] = None,
-        #    per_page: int = 250,
-        #    **kwargs: Any
-        self.as_list = as_list
-
-    def parse(self, params):
-        id_params = []
-        for name in self.positional_param_names:
-            if name not in params:
-                raise ValueError('Missing required option: {0}'.format(name))
-            if name in self.as_list:
-                id_params.append([params.pop(name)])
-            else:
-                id_params.append(params.pop(name))
-        return id_params, params
-
-
-class ApiCallSpecs(object):
-    """
-    Specification of API call for certain resource type, action and parameters parser.
-
-    An instance might specify API calls for GETting metal_device and parsing 
-    resource attributes to ansible dict.
-    """
-
-    def __init__(self,
-                 func: Callable,
-                 params_parser: Optional[ParamsParser] = None,
-                 request_model_class: Optional[Callable] = None,
-                 ):
-        self.func = func
-        self.params_parser = params_parser
-        self.request_model_class = request_model_class
-        if self.request_model_class is not None:
-            if not inspect.isclass(request_model_class):
-                raise ValueError('request_model_class must be a class, is {0}'.format(type(request_model_class)))
-
-
-class ApiCall(object):
-    """
-    A class representing an API call. It holds the configuration of the
-    API call (ApiCallConfig) and the module parameters which are parsed
-    into URL params and body params.
-
-    API call body (if necessary) is created from the module parameters.
-    """
-
-    def __init__(self,
-                 conf: ApiCallSpecs,
-                 client,
-                 body_params: Optional[dict] = {},
-                 url_params: Optional[dict] = {},
-                 ):
-        self.conf = conf
-        self.client = client
-        self.request_model_instance = None
-        self.path_vars = []
-        self.url_params = url_params
-        if self.conf.params_parser:
-            self.path_vars, body_params = self.conf.params_parser.parse(body_params)
-        relevant_body_params = {k: v for k, v in body_params.items() if k not in SKIPPED_PARAMS}
-        if self.conf.request_model_class is not None:
-            self.request_model_instance = self.conf.request_model_class.from_dict(
-                relevant_body_params)
-
-    def do(self):
-        arg_list = [self.client] + self.path_vars
-        if self.request_model_instance is not None:
-            arg_list.append(self.request_model_instance)
-        #_D('arg_list: {0}'.format(arg_list))
-        import q
-        q(arg_list)
-        result = self.conf.func(*arg_list, params=self.url_params)
-        return result
-
-    def describe(self):
-        return "{0} to {1}".format(self.conf.func.__name__, self.path_vars)
 
 
 def optional(key: str):
@@ -221,116 +102,23 @@ METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'quantity': cidr_to_quantity('cidr'),
     'details': 'details',
     'tags': 'tags',
-
 }
 
-
-id_getter = ParamsParser("id")
-
-
-def get_api_call_configs():
-    """
-    This function returns a dictionary of API call configurations.
-    """
-
-    # we check for the presence of the equinixmetalpy module here, because
-    # the ApiCallConfigs use classes straight from the equinixmetalpy module
-    # and we prefer to fail early and hopefully into module.fail_json()
-    metal_client.raise_if_missing_equinixmetalpy()
-
-    return {
-        # GETTERS
-        ('metal_device', action.GET): ApiCallSpecs(
-            equinixmetalpy.Client.find_device_by_id,
-            id_getter,
-            ),
-        ('metal_project', action.GET): ApiCallSpecs(
-            equinixmetalpy.Client.find_project_by_id,
-            id_getter,
-            ),
-        ('metal_ip_reservation', action.GET): ApiCallSpecs(
-            equinixmetalpy.Client.find_ip_address_by_id,
-            id_getter,
-        ),
-
-        # LISTERS
-        ('metal_project_device', action.LIST): ApiCallSpecs(
-            equinixmetalpy.Client.find_project_devices,
-            ParamsParser("project_id"),
-            ),
-        ('metal_organization_device', action.LIST): ApiCallSpecs(
-            equinixmetalpy.Client.find_organization_devices,
-            ParamsParser("organization_id"),
-            ),
-        ('metal_project', action.LIST): ApiCallSpecs(equinixmetalpy.Client.find_projects),
-        ('metal_organization_project', action.LIST): ApiCallSpecs(
-            equinixmetalpy.Client.find_organization_projects,
-            ParamsParser("organization_id"),
-            ),
-        ('metal_ip_reservation', action.LIST): ApiCallSpecs(
-            equinixmetalpy.Client.find_ip_reservations,
-            ParamsParser(["project_id", "type"], as_list=["type"]),
-            ),
-
-        # DELETERS
-        ('metal_device', action.DELETE): ApiCallSpecs(
-            equinixmetalpy.Client.delete_device,
-            id_getter,
-            ),
-        ('metal_project', action.DELETE): ApiCallSpecs(
-            equinixmetalpy.Client.delete_project,
-            id_getter,
-            ),
-        ('metal_ip_reservation', action.DELETE): ApiCallSpecs(
-            equinixmetalpy.Client.delete_ip_address,
-            id_getter,
-        ),
+LIST_KEYS = ['projects', 'devices', 'ip_addresses']
 
 
-        # CREATORS
-        ('metal_device_metro', action.CREATE): ApiCallSpecs(
-            equinixmetalpy.Client.create_device,
-            ParamsParser("project_id"),
-            equinixmetalpy.models.DeviceCreateInMetroInput,
-            ),
-        ('metal_device_facility', action.CREATE): ApiCallSpecs(
-            equinixmetalpy.Client.create_device,
-            ParamsParser("project_id"),
-            equinixmetalpy.models.DeviceCreateInFacilityInput,
-        ),
-        ('metal_project', action.CREATE): ApiCallSpecs(
-            equinixmetalpy.Client.create_project,
-            None,
-            equinixmetalpy.models.ProjectCreateFromRootInput,
-        ),
-        ('metal_organization_project', action.CREATE): ApiCallSpecs(
-            equinixmetalpy.Client.create_organization_project,
-            ParamsParser("organization_id"),
-            equinixmetalpy.models.ProjectCreateInput,
-            ),
-        ('metal_ip_reservation', action.CREATE): ApiCallSpecs(
-            equinixmetalpy.Client.request_ip_reservation,
-            ParamsParser("project_id"),
-            equinixmetalpy.models.IPReservationRequestInput,
-        ),
+def get_assignment_address(resource: dict):
+    addr = resource.get('address')
+    cidr = resource.get('cidr')
+    return "{0}/{1}".format(addr, cidr)
 
-        # UPDATERS
-        ('metal_device', action.UPDATE): ApiCallSpecs(
-            equinixmetalpy.Client.update_device,
-            id_getter,
-            equinixmetalpy.models.DeviceUpdateInput,
-        ),
-        ('metal_project', action.UPDATE): ApiCallSpecs(
-            equinixmetalpy.Client.update_project,
-            id_getter,
-            equinixmetalpy.models.ProjectUpdateInput,
-        ),
-        ('metal_ip_reservation', action.UPDATE): ApiCallSpecs(
-            equinixmetalpy.Client.update_ip_address,
-            id_getter,
-            equinixmetalpy.models.IPAssignmentUpdateInput,
-        ),
-    }
+
+METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'customdata': 'customdata',
+    'management': 'management',
+    'address': get_assignment_address,
+}
 
 
 def get_attribute_mapper(resource_type):
@@ -351,30 +139,48 @@ def get_attribute_mapper(resource_type):
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
 
-def call(resource_type, action, client, body_params={}, url_params={}):
+def call(resource_type, action, client, metal_python_client, body_params={}, url_params={}):
     """
     This function wraps the API call and returns the response.
     """
     metal_client.raise_if_missing_equinixmetalpy()
-    conf = get_api_call_configs().get((resource_type, action))
+    conf = metal_api_routes.get_configs(metal_python_client).get((resource_type, action))
     if conf is None:
         raise NotImplementedError("No API call for resource type %s and action %s" % (resource_type, action))
-    call = ApiCall(conf, client, body_params, url_params)
-    response = call.do()
+
+    import q
+    q(conf)
+    if type(conf) is utils.MPSpecs:
+        q("MPApiCall")
+        united_params = {**body_params, **url_params}
+        call = MPApiCall(conf, united_params)
+        q(call.describe())
+        response = call.do()
+    else:
+        q("Old ApiCall")
+        call = ApiCall(conf, client, body_params, url_params)
+        response = call.do()
+        metal_client.raise_if_error(response, call.describe())
     # explore response here
     if response is not None:
         import q
         q(action, resource_type)
-        q(response.serialize())
-        q(response.additional_properties)
+        # q(response.serialize())
+        # q(response.additional_properties)
 
-    metal_client.raise_if_error(response, call.describe())
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)
     if action == action.LIST:
-        return [response_to_ansible_dict(r, attribute_mapper) for r in response.list]
+        return [response_to_ansible_dict(r, attribute_mapper)
+                for r in find_list_in_response(response)]
     return response_to_ansible_dict(response, attribute_mapper)
+
+
+def find_list_in_response(response):
+    for k in LIST_KEYS:
+        if hasattr(response, k):
+            return getattr(response, k)
 
 
 def href_to_id(href):
@@ -387,7 +193,12 @@ def add_id_from_href(v):
 
 
 def populate_ids_from_hrefs(response):
-    return_dict = response.as_dict()
+    if "as_dict" in dir(response):
+        return_dict = response.as_dict()
+    elif "to_dict" in dir(response):
+        return_dict = response.to_dict()
+    else:
+        raise NotImplementedError("No as_dict or to_dict method for response object")
     if return_dict == {}:
         return_dict = response.additional_properties.copy()
 
@@ -437,3 +248,82 @@ def response_to_ansible_dict(response, attribute_mapper):
         else:
             raise Exception("attribute '{0}' (to map to '{1}') not found in response_dict: {2}".format(k, v, response_dict))
     return return_dict
+
+
+class ApiCall(object):
+    """
+    A class representing an API call. It holds the configuration of the
+    API call (ApiCallConfig) and the module parameters which are parsed
+    into URL params and body params.
+
+    API call body (if necessary) is created from the module parameters.
+    """
+
+    def __init__(self,
+                 conf: utils.Specs,
+                 client,
+                 body_params: Optional[dict] = {},
+                 url_params: Optional[dict] = {},
+                 ):
+        self.conf = conf
+        self.client = client
+        self.request_model_instance = None
+        self.path_vars = []
+        self.url_params = url_params
+        if self.conf.params_parser:
+            self.path_vars, body_params = self.conf.params_parser.parse(body_params)
+        relevant_body_params = {k: v for k, v in body_params.items() if k not in utils.SKIPPED_PARAMS}
+        if self.conf.request_model_class is not None:
+            self.request_model_instance = self.conf.request_model_class.from_dict(
+                relevant_body_params)
+
+    def do(self):
+        arg_list = self.path_vars
+        if type(self.conf) is utils.Specs:
+            arg_list = [self.client] + self.path_vars
+        if self.request_model_instance is not None:
+            arg_list.append(self.request_model_instance)
+        #_D('arg_list: {0}'.format(arg_list))
+        import q
+        q(arg_list)
+        result = self.conf.func(*arg_list, params=self.url_params)
+        return result
+
+    def describe(self):
+        return "{0} to {1}".format(self.conf.func.__name__, self.path_vars)
+
+
+class MPApiCall(object):
+    """
+    A class representing an API call. It holds the configuration of the
+    API call (ApiCallConfig) and the module parameters which are parsed
+    into URL params and body params.
+
+    API call body (if necessary) is created from the module parameters.
+    """
+
+    def __init__(self,
+                 conf: utils.MPSpecs,
+                 params: Optional[dict] = {},
+                 ):
+        # make sure that only relevant params go to request model.
+        # PROBLEM: name in project list - neopouzivas se to, ani to neni vygenerovane
+        self.conf = conf
+        passed_params = set(params.keys())
+        self.sdk_kwargs = self.conf.params_parser.parse(params)
+        unused_params = passed_params - set(self.sdk_kwargs.keys()) - set(utils.SKIPPED_PARAMS)
+        self.path_kwargs = self.sdk_kwargs.copy()
+        if self.conf.request_model_class is not None:
+            body_params = {k: v for k, v in params.items() if k not in utils.SKIPPED_PARAMS}
+            unused_params = unused_params - set(body_params.keys())
+            request_model_instance = self.conf.request_model_class.from_dict(body_params)
+            self.sdk_kwargs[self.conf.request_model_arg] = request_model_instance
+        if unused_params:
+            raise Exception("Unused params: {0}".format(unused_params))
+
+    def do(self):
+        result = self.conf.func(**self.sdk_kwargs)
+        return result
+
+    def describe(self):
+        return "{0} to {1}".format(self.conf.func.__name__, self.path_kwargs)
