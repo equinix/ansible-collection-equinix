@@ -1,0 +1,108 @@
+- name: metal_reserved_ip_block_info
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_reserved_ip_block:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_reserved_ip_block_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-ip-reservation-info'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_metro: sv
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project"
+      register: project
+
+    - name: start a device to populate project with IPs
+      equinix.cloud.metal_device:
+        project_id: "{{ project.id }}"
+        hostname: "{{ test_prefix }}-dev1"
+        operating_system: ubuntu_20_04
+        plan: c3.small.x86
+        metro: "{{ test_metro }}"
+        state: present
+      register: device
+
+
+    - name: list existing private ipv4 reservations  
+      equinix.cloud.metal_reserved_ip_block_info:
+        project_id: "{{ project.id }}"
+        type: "private_ipv4"
+      register: private_ipv4_reservations
+
+    - name: list existing public ipv6 reservations  
+      equinix.cloud.metal_reserved_ip_block_info:
+        project_id: "{{ project.id }}"
+        type: "public_ipv6"
+      register: public_ipv6_reservations
+
+    - assert:
+        that:
+        - private_ipv4_reservations.resources|length > 0
+        - public_ipv6_reservations.resources|length > 0
+        - private_ipv4_reservations.resources[0].metro == "{{ test_metro }}"
+        - public_ipv6_reservations.resources[0].metro == "{{ test_metro }}"
+
+    - name: request ip reservation
+      equinix.cloud.metal_reserved_ip_block:
+        type: "public_ipv4"
+        metro: "{{ test_metro }}"
+        quantity: 1
+        project_id: "{{ project.id }}"
+      register: public_ipv4_reservation
+
+    - name: list existing reservations  
+      equinix.cloud.metal_reserved_ip_block_info:
+        project_id: "{{ project.id }}"
+        type: "public_ipv4"
+      register: public_ipv4_reservations
+
+    - assert:
+        that:
+        - public_ipv4_reservations.resources|length == 1
+        - public_ipv4_reservations.resources[0].metro == "{{ test_metro }}"
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        filters:
+          name: "{{ test_prefix }}"
+      register: test_projects
+    
+    - name: list devices in test projects
+      equinix.cloud.metal_device_info:
+        project_id: "{{ item.id }}"
+      register: "test_devices"
+      loop: "{{ test_projects.resources }}"
+
+    - name: delete test devices
+      equinix.cloud.metal_device:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_devices.results | map(attribute='resources') | flatten }}"
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"

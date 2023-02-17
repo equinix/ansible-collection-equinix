@@ -22,8 +22,8 @@
     - assert:
         that:
         - project.name == '{{ test_prefix }}-project'
-    
-    - name: create ip reservation
+
+    - name: request ip reservation
       equinix.cloud.metal_reserved_ip_block:
         type: "public_ipv4"
         metro: "sv"
@@ -31,10 +31,54 @@
         project_id: "{{ project.id }}"
       register: ip_reservation 
 
+    - name: idempotence check for ip reservation
+      equinix.cloud.metal_reserved_ip_block:
+        type: "public_ipv4"
+        metro: "sv"
+        quantity: 1
+        project_id: "{{ project.id }}"
+      register: ip_reservation_idem_check
+
+    - assert:
+        that:
+        - ip_reservation_idem_check.changed == False
+
+    - name: update ip reservation
+      equinix.cloud.metal_reserved_ip_block:
+        id: "{{ ip_reservation.id }}"
+        details: "updated description"
+        tags: ["t1", "t2"]
+
+    
+
+    - name: fetch ip reservation by id
+      equinix.cloud.metal_reserved_ip_block:
+        id: "{{ ip_reservation.id }}"
+      register: ip_reservation_fetched
+
+    - assert:
+        that:
+        - ip_reservation_fetched.id == ip_reservation.id
+        - ip_reservation_fetched.tags == ["t1","t2"]
+        # This don't work (API bug), the reservation objects aren't updated in
+        # GETs but are updated in listings
+        #- ip_reservation_fetched.details == 'updated description'
+
+
     - name: delete ip reservation
       equinix.cloud.metal_reserved_ip_block:
         id: "{{ ip_reservation.id }}"
         state: absent
+
+    - name: delete ip reservation idempotence check
+      equinix.cloud.metal_reserved_ip_block:
+        id: "{{ ip_reservation.id }}"
+        state: absent
+      register: reservation_delete_check
+
+    - assert:
+        that:
+          - reservation_delete_check.changed == False
 
     - name: delete project
       equinix.cloud.metal_project:

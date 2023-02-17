@@ -37,6 +37,10 @@
         id: "{{ first_project.id }}"
         name: "{{ test_prefix }}-project1_renamed"
         backend_transfer_enabled: false
+
+    - name: fetch updated project
+      equinix.cloud.metal_project:
+        id: "{{ first_project.id }}"
       register: first_project_updated
 
     - assert:
@@ -52,7 +56,7 @@
     - name: list second project
       equinix.cloud.metal_project_info:
         filters:
-          name: project2
+          name: "{{ test_prefix }}-project2"
       register: second_project_listed
 
     - assert:
