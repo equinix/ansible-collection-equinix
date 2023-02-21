@@ -49,7 +49,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 
 def main():
     argument_spec = dict(
-        filters=dict(type='dict'),
+        name=dict(type='str'),
         organization_id=dict(type='str'),
     )
     module = EquinixModule(
@@ -58,11 +58,10 @@ def main():
     )
     try:
         module.params_syntax_check()
-        filters = module.params.get('filters')
         if module.params.get('organization_id'):
-            return_value = {'resources': module.get_list("metal_organization_project", filters)}
+            return_value = {'resources': module.get_list("metal_organization_project")}
         else:
-            return_value = {'resources': module.get_list("metal_project", filters)}
+            return_value = {'resources': module.get_list("metal_project")}
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)

@@ -13,6 +13,14 @@ SKIPPED_PARAMS = [
     "metal_ua_prefix",
 ]
 
+OPTIONAL_REQUEST_PARAMS = [
+    "include",
+    "exclude",
+    "page"
+    "per_page",
+]
+
+
 class ParamsParser:
     """
     A class to parse the module parameters into a tuple:
@@ -120,26 +128,23 @@ class MPSpecs(object):
 
     def __init__(self,
                  func: Callable,
-                 params_parser: MPParamsParser,
-                 request_model_arg: Optional[str] = None,
+                 named_args_mapping: Optional[Dict[str, str]] = None,
                  request_model_class: Optional[Callable] = None,
                  ):
         self.func = func
-        self.params_parser = params_parser
+        self.named_args_mapping = named_args_mapping
         self.request_model_class = request_model_class
-        self.request_model_arg = request_model_arg
         if self.request_model_class is not None:
             if not inspect.isclass(request_model_class):
                 raise ValueError('request_model_class must be a class, is {0}'.format(type(request_model_class)))
-
-
 
 
 def dict_get(d, key):
     """
     Get a value from a nested dict using a dot-separated key.
     """
-    import q; q(d, key)
+    import q
+    q(d, key)
     for k in key.split("."):
         if k in d:
             d = d[k]

@@ -71,7 +71,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 
 def main():
     argument_spec = dict(
-        filters=dict(type='dict'),
+        hostname=dict(type='str'),
         project_id=dict(type='str'),
         organization_id=dict(type='str'),
     )
@@ -83,11 +83,10 @@ def main():
     )
     try:
         module.params_syntax_check()
-        filters = module.params.get('filters')
         resource_type = "metal_project_device"
         if module.params.get('organization_id'):
             resource_type = "metal_organization_device"
-        return_value = {'resources': module.get_list(resource_type, filters)}
+        return_value = {'resources': module.get_list(resource_type)}
 
     except Exception as e:
         tr = traceback.format_exc()

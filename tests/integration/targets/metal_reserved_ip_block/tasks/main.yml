@@ -92,8 +92,7 @@
 
     - name: list test projects
       equinix.cloud.metal_project_info:
-        filters:
-          name: "{{ test_prefix }}"
+        name: "{{ test_prefix }}"
       register: test_projects_listed
 
     - name: delete test projects

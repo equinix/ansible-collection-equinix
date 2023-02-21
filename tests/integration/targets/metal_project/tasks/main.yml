@@ -55,8 +55,7 @@
 
     - name: list second project
       equinix.cloud.metal_project_info:
-        filters:
-          name: "{{ test_prefix }}-project2"
+        name: "{{ test_prefix }}-project2"
       register: second_project_listed
 
     - assert:
@@ -65,8 +64,7 @@
 
     - name: list both projects
       equinix.cloud.metal_project_info:
-        filters:
-          name: "{{ test_prefix }}"
+        name: "{{ test_prefix }}"
       register: both_projects_listed
         
     - assert:
@@ -90,8 +88,7 @@
 
     - name: list test projects
       equinix.cloud.metal_project_info:
-        filters:
-          name: "{{ test_prefix }}"
+        name: "{{ test_prefix }}"
       register: test_projects_listed
 
     - name: delete test projects

@@ -76,6 +76,7 @@ def main():
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id("metal_ip_reservation", tolerate_not_found)
         else:
+            module.params['types'] = [module.params.get('type')]
             fetched = module.get_one_from_list(
                 "metal_ip_reservation",
                 ["type", "metro"],

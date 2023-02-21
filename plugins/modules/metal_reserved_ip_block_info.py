@@ -54,7 +54,6 @@ def main():
         ]),
         project_id=dict(type='str', required=True),
         metro=dict(type='str'),
-        filters=dict(type='dict'),
     )
     module = EquinixModule(
         argument_spec=argument_spec,
@@ -62,13 +61,13 @@ def main():
     )
     try:
         module.params_syntax_check()
-        filters = module.params.get('filters')
         typ = module.params.get('type')
         metro = module.params.get('metro')
         if (metro is not None) & (typ == 'global_ipv4'):
             module.fail_json(msg="metro is not valid parameter for global_ipv4")
+        module.params['types'] = [typ]
         return_value = {'resources': module.get_list(
-            "metal_ip_reservation", filters)
+            "metal_ip_reservation")
         }
     except Exception as e:
         tr = traceback.format_exc()

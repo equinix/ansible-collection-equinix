@@ -40,11 +40,9 @@ def get_configs(mpc):
             ),
         ('metal_project', action.GET): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).find_project_by_id,
-            mp_id_getter,
             ),
-        ('metal_ip_reservation', action.GET): utils.Specs(
-            equinixmetalpy.Client.find_ip_address_by_id,
-            id_getter,
+        ('metal_ip_reservation', action.GET): utils.MPSpecs(
+            metal_python.IPAddressesApi(mpc).find_ip_address_by_id,
         ),
         ('metal_ip_assignment', action.GET): utils.Specs(
             equinixmetalpy.Client.find_ip_address_by_id,
@@ -62,15 +60,15 @@ def get_configs(mpc):
             ),
         ('metal_project', action.LIST): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).find_projects,
-            mp_no_params,
         ),
-        ('metal_organization_project', action.LIST): utils.Specs(
-            equinixmetalpy.Client.find_organization_projects,
-            utils.ParamsParser("organization_id"),
-            ),
-        ('metal_ip_reservation', action.LIST): utils.Specs(
-            equinixmetalpy.Client.find_ip_reservations,
-            utils.ParamsParser(["project_id", "type"], as_list=["type"]),
+        ('metal_organization_project', action.LIST): utils.MPSpecs(
+            metal_python.OrganizationsApi(mpc).find_organization_projects,
+            {'id': 'organization_id'},
+        ),
+        ('metal_ip_reservation', action.LIST): utils.MPSpecs(
+            metal_python.IPAddressesApi(mpc).find_ip_reservations,
+            {'id': 'project_id'},
+            #utils.ParamsParser(["project_id", "type"], as_list=["type"]),
             ),
         ('metal_ip_assignment', action.LIST): utils.Specs(
             equinixmetalpy.Client.find_ip_assignments,
@@ -84,11 +82,9 @@ def get_configs(mpc):
             ),
         ('metal_project', action.DELETE): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).delete_project,
-            mp_id_getter,
             ),
-        ('metal_ip_reservation', action.DELETE): utils.Specs(
-            equinixmetalpy.Client.delete_ip_address,
-            id_getter,
+        ('metal_ip_reservation', action.DELETE): utils.MPSpecs(
+            metal_python.IPAddressesApi(mpc).delete_ip_address,
         ),
         ('metal_ip_assignment', action.DELETE): utils.Specs(
             equinixmetalpy.Client.delete_ip_address,
@@ -109,20 +105,18 @@ def get_configs(mpc):
         ),
         ('metal_project', action.CREATE): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).create_project,
-            mp_no_params,
-            'project_create_from_root_input',
+            None,
             metal_python.ProjectCreateFromRootInput,
         ),
         ('metal_organization_project', action.CREATE): utils.MPSpecs(
             metal_python.OrganizationsApi(mpc).create_organization_project,
-            utils.MPParamsParser(["organization_id"]),
-            "project_create_input",
+            {'id': 'organization_id'},
             metal_python.ProjectCreateInput,
             ),
-        ('metal_ip_reservation', action.CREATE): utils.Specs(
-            equinixmetalpy.Client.request_ip_reservation,
-            utils.ParamsParser("project_id"),
-            equinixmetalpy.models.IPReservationRequestInput,
+        ('metal_ip_reservation', action.CREATE): utils.MPSpecs(
+            metal_python.IPAddressesApi(mpc).request_ip_reservation,
+            {'id': 'project_id'},
+            metal_python.models.RequestIPReservationRequest,
         ),
         ('metal_ip_assignment', action.CREATE): utils.Specs(
             equinixmetalpy.Client.create_ip_assignment,
@@ -138,13 +132,12 @@ def get_configs(mpc):
         ),
         ('metal_project', action.UPDATE): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).update_project,
-            mp_id_getter,
-            'project_update_input',
+            {},
             metal_python.ProjectUpdateInput,
         ),
-        ('metal_ip_reservation', action.UPDATE): utils.Specs(
-            equinixmetalpy.Client.update_ip_address,
-            id_getter,
-            equinixmetalpy.models.IPAssignmentUpdateInput,
+        ('metal_ip_reservation', action.UPDATE): utils.MPSpecs(
+            metal_python.IPAddressesApi(mpc).update_ip_address,
+            {},
+            metal_python.models.IPAssignmentUpdateInput,
         ),
     }

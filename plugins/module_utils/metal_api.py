@@ -54,54 +54,54 @@ def ip_address_getter(resource: dict):
 # the value for the module attribute.
 
 METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP = {
-    'id': 'id',
-    'project_id': 'project.id',
-    'facility': 'facility.code',
-    'metro': 'metro.code',
     'always_pxe': 'always_pxe',
     'billing_cycle': 'billing_cycle',
     'customdata': 'customdata',
+    'facility': 'facility.code',
     'hardware_reservation_id': optional_str('hardware_reservation_id'),
     'hostname': 'hostname',
+    'id': 'id',
     'ip_addresses': ip_address_getter,
     'ipxe_script_url': optional_str('ipxe_script_url'),
     'locked': 'locked',
     'metal_state': optional_str('state'),
-    'tags': 'tags',
+    'metro': 'metro.code',
     'operating_system': 'operating_system.slug',
     'plan': 'plan.slug',
+    'project_id': 'project.id',
     'spot_instance': optional_bool('spot_instance'),
     'spot_price_max': optional_float('spot_price_max'),
     'ssh_keys': 'ssh_keys',
-    'userdata': 'userdata',
     'ssh_keys': 'ssh_keys',
+    'tags': 'tags',
+    'userdata': 'userdata',
 }
 
 METAL_PROJECT_RESPONSE_ATTRIBUTE_MAP = {
+    'backend_transfer_enabled': 'backend_transfer_enabled',
+    'customdata': 'customdata',
+    'description': optional_str('description'),
     'id': 'id',
     'name': 'name',
-    'description': optional_str('description'),
     'organization_id': 'organization.id',
     'payment_method_id': 'payment_method.id',
-    'customdata': 'customdata',
-    'backend_transfer_enabled': 'backend_transfer_enabled',
 }
 
 METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
-    'id': 'id',
-    'customdata': 'customdata',
-    'metro': find_metro,
-    'project_id': 'project.id',
-    'quantity': 'quantity',
-    'type': 'type',
     'address_family': 'address_family',
-    'public': 'public',
+    'customdata': 'customdata',
+    'details': optional_str('details'),
+    'id': 'id',
     'management': 'management',
-    'network': 'network',
+    'metro': find_metro,
     'netmask': 'netmask',
+    'network': 'network',
+    'project_id': 'project.id',
+    'public': 'public',
+    'quantity': 'quantity',
     'quantity': cidr_to_quantity('cidr'),
-    'details': 'details',
     'tags': 'tags',
+    'type': 'type',
 }
 
 LIST_KEYS = ['projects', 'devices', 'ip_addresses']
@@ -152,7 +152,11 @@ def call(resource_type, action, client, metal_python_client, body_params={}, url
     q(conf)
     if type(conf) is utils.MPSpecs:
         q("MPApiCall")
-        united_params = {**body_params, **url_params}
+        united_params = {}
+        if body_params is not None:
+            united_params = {**body_params}
+        if url_params is not None:
+            united_params = {**united_params, **url_params}
         call = MPApiCall(conf, united_params)
         q(call.describe())
         response = call.do()
@@ -301,29 +305,59 @@ class MPApiCall(object):
 
     API call body (if necessary) is created from the module parameters.
     """
+    @staticmethod
+    def _get_relevant_params(params):
+        return {k: v for k, v in params.items() if v and k not in utils.SKIPPED_PARAMS}
 
     def __init__(self,
                  conf: utils.MPSpecs,
                  params: Optional[dict] = {},
                  ):
-        # make sure that only relevant params go to request model.
-        # PROBLEM: name in project list - neopouzivas se to, ani to neni vygenerovane
         self.conf = conf
-        passed_params = set(params.keys())
-        self.sdk_kwargs = self.conf.params_parser.parse(params)
-        unused_params = passed_params - set(self.sdk_kwargs.keys()) - set(utils.SKIPPED_PARAMS)
+
+        param_names = set(inspect.signature(conf.func).parameters.keys())
+        self.sdk_kwargs = {}
+        import q
+        q(param_names)
+        q(params)
+
+        arg_mapping = self.conf.named_args_mapping or {}
+        q(arg_mapping)
+        for param_name in param_names:
+            lookup_name = param_name
+            if param_name in arg_mapping:
+                lookup_name = arg_mapping[param_name]
+            value_from_ansible_module = params.get(lookup_name, None)
+            if value_from_ansible_module is not None:
+                self.sdk_kwargs[param_name] = value_from_ansible_module
         self.path_kwargs = self.sdk_kwargs.copy()
+
         if self.conf.request_model_class is not None:
-            body_params = {k: v for k, v in params.items() if k not in utils.SKIPPED_PARAMS}
-            unused_params = unused_params - set(body_params.keys())
+            body_params = {k: v for k, v in params.items() if
+                           (k not in utils.SKIPPED_PARAMS)
+                           and (k not in param_names)
+                           }
             request_model_instance = self.conf.request_model_class.from_dict(body_params)
-            self.sdk_kwargs[self.conf.request_model_arg] = request_model_instance
-        if unused_params:
-            raise Exception("Unused params: {0}".format(unused_params))
+            model_arg_name = snake_case(self.conf.request_model_class.__name__)
+            self.sdk_kwargs[model_arg_name] = request_model_instance
 
     def do(self):
-        result = self.conf.func(**self.sdk_kwargs)
+        import q
+        q(self.sdk_kwargs)
+        sdk_function = self.conf.func
+
+        result = sdk_function(**self.sdk_kwargs)
         return result
 
     def describe(self):
         return "{0} to {1}".format(self.conf.func.__name__, self.path_kwargs)
+
+
+from re import sub
+
+
+def snake_case(s):
+    return '_'.join(
+        sub('([A-Z][a-z]+)', r' \1',
+            sub('([A-Z]+)', r' \1',
+                s.replace('-', ' '))).split()).lower()
