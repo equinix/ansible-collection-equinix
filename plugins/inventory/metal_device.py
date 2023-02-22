@@ -78,9 +78,11 @@ from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, to_saf
 
 from ansible.module_utils.six import string_types
 from ansible_collections.equinix.cloud.plugins.module_utils import (
+    action,
+)
+from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
     metal_client,
     metal_api,
-    action,
 )
 
 EXCLUDE_ATTRIBUTES = [
@@ -120,10 +122,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
                 % ', '.join(metal_client.TOKEN_ENVVARS)
             )
         try:
-            self.client = metal_client.get_metal_client(str(metal_api_token))
-            self.api_call_configs = metal_api.get_api_call_configs()
-        except metal_client.MissingEquinixmetalpyError:
-            raise AnsibleError("The Equinix Metal dynamic inventory plugin requires the 'equinixmetal' package: %s")
+            self.client = metal_client.get_metal_python_client(str(metal_api_token))
+        except metal_client.MissingMetalPythonError:
+            raise AnsibleError("The Equinix Metal dynamic inventory plugin requires the 'metal_python' package: %s")
 
     def verify_file(self, path):
         '''
@@ -191,10 +192,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
         return project_ids
 
     def _get_all_projects(self):
-        return metal_api.call("metal_project", action.LIST, self.client)
+        return metal_api.call("metal_project", action.LIST, None, self.client)
 
     def _get_project_devices(self, project_id):
-        return metal_api.call("metal_project_device", action.LIST, self.client, {"project_id": project_id})
+        return metal_api.call("metal_project_device", action.LIST, None, self.client, {"project_id": project_id})
 
     def _get_devices_from_project_ids(self, project_ids):
         devices = []

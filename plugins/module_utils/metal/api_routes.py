@@ -3,7 +3,6 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 try:
-    import equinixmetalpy
     import metal_python
 except ImportError:
     # This is handled in raise_if_missing_equinixmetalpy()
@@ -46,10 +45,9 @@ def get_configs(mpc):
         ('metal_ip_reservation', action.GET): utils.MPSpecs(
             metal_python.IPAddressesApi(mpc).find_ip_address_by_id,
         ),
-        ('metal_ip_assignment', action.GET): utils.Specs(
-            equinixmetalpy.Client.find_ip_address_by_id,
-            id_getter,
-        ),
+        # ('metal_ip_assignment', action.GET): utils.MPSpecs(
+        #    metal_python.IPAddressesApi(mpc).find_ip_address_by_id,
+        # ),
 
         # LISTERS
         ('metal_project_device', action.LIST): utils.MPSpecs(
@@ -72,10 +70,10 @@ def get_configs(mpc):
             {'id': 'project_id'},
             #utils.ParamsParser(["project_id", "type"], as_list=["type"]),
             ),
-        ('metal_ip_assignment', action.LIST): utils.Specs(
-            equinixmetalpy.Client.find_ip_assignments,
-            utils.ParamsParser("device_id"),
-        ),
+        # ('metal_ip_assignment', action.LIST): utils.MPSpecs(
+        #    metal_python.IPAddressesApi(mpc).find_ip_assignments,
+        #    {'id': 'device_id'}
+        # ),
 
         # DELETERS
         ('metal_device', action.DELETE): utils.MPSpecs(
@@ -87,10 +85,9 @@ def get_configs(mpc):
         ('metal_ip_reservation', action.DELETE): utils.MPSpecs(
             metal_python.IPAddressesApi(mpc).delete_ip_address,
         ),
-        ('metal_ip_assignment', action.DELETE): utils.Specs(
-            equinixmetalpy.Client.delete_ip_address,
-            id_getter,
-        ),
+        # ('metal_ip_assignment', action.DELETE): utils.MPSpecs(
+        #    metal_python.IPAddressesApi(mpc).delete_ip_address,
+        # ),
 
 
         # CREATORS
@@ -119,11 +116,11 @@ def get_configs(mpc):
             {'id': 'project_id'},
             metal_python.models.RequestIPReservationRequest,
         ),
-        ('metal_ip_assignment', action.CREATE): utils.Specs(
-            equinixmetalpy.Client.create_ip_assignment,
-            utils.ParamsParser("device_id"),
-            equinixmetalpy.models.IPAssignmentInput,
-        ),
+        # ('metal_ip_assignment', action.CREATE): utils.MPSpecs(
+        #    metal_python.IPAddressesApi(mpc).create_ip_assignment,
+        #    {'id': 'device_id'},
+        #    metal_python.models.IPAssignmentInput,
+        # ),
 
         # UPDATERS
         ('metal_device', action.UPDATE): utils.MPSpecs(

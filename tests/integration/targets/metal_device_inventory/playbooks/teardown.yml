@@ -8,8 +8,7 @@
     - name: get testing project id
       equinix.cloud.metal_project_info:
         metal_api_token: '{{ metal_api_token }}'
-        filters:
-          name: 'ansible-test-inventory'
+        name: 'ansible-test-inventory'
       register: projects
 
     - name: Delete the metal_device
