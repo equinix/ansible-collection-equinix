@@ -5,8 +5,6 @@
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-from typing import List, Union, Optional, Callable
-import inspect
 
 from ansible_collections.equinix.cloud.plugins.module_utils import (
     utils,
@@ -118,9 +116,16 @@ def get_assignment_address(resource: dict):
 
 METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
-    'customdata': 'customdata',
+    # 'customdata': 'customdata',
     'management': 'management',
     'address': get_assignment_address,
+    'cidr': 'cidr',
+    'address_family': 'address_family',
+    'public': 'public',
+    'network': 'network',
+    'netmask': 'netmask',
+    'device_id': 'assigned_to.id',
+    'metro': find_metro,
 }
 
 
@@ -131,54 +136,44 @@ def get_attribute_mapper(resource_type):
     device_resources = set(['metal_device', 'metal_device_metro',
                             'metal_project_device', 'metal_device_facility'])
     project_resources = set(['metal_project', 'metal_organization_project'])
-    ip_resources = set(['metal_ip_reservation'])
+    ip_reservation_resources = set(['metal_ip_reservation', 'metal_available_ip'])
+    ip_assignment_resources = set(['metal_ip_assignment'])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
         return METAL_PROJECT_RESPONSE_ATTRIBUTE_MAP
-    elif resource_type in ip_resources:
+    elif resource_type in ip_reservation_resources:
         return METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in ip_assignment_resources:
+        return METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
 
-def call(resource_type, action, metal_python_client, body_params={}, url_params={}):
+def call(resource_type, action, metal_python_client, params={}):
     """
     This function wraps the API call and returns the response.
     """
     metal_client.raise_if_missing_metal_python()
-    conf = api_routes.get_configs(metal_python_client).get((resource_type, action))
+    conf = api_routes.get_routes(metal_python_client).get((resource_type, action))
     if conf is None:
         raise NotImplementedError("No API call for resource type %s and action %s" % (resource_type, action))
 
     import q
     q(conf)
-    if type(conf) is utils.MPSpecs:
-        q("MPApiCall")
-        united_params = {}
-        if body_params is not None:
-            united_params = {**body_params}
-        if url_params is not None:
-            united_params = {**united_params, **url_params}
-        call = MPApiCall(conf, united_params)
-        q(call.describe())
-        response = call.do()
-    else:
-        q("Old ApiCall")
-        call = ApiCall(conf, client, body_params, url_params)
-        response = call.do()
-        metal_client.raise_if_error(response, call.describe())
-    # explore response here
+    call = api_routes.build_api_call(conf, params)
+    q(call.describe())
+    response = call.do()
     if response is not None:
         import q
-        q(action, resource_type)
-        # q(response.serialize())
-        # q(response.additional_properties)
+        q(action, resource_type, response.to_dict())
 
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)
     if action == action.LIST:
+        if resource_type == 'metal_available_ip':
+            return response.to_dict()['available']
         return [response_to_ansible_dict(r, attribute_mapper)
                 for r in find_list_in_response(response)]
     return response_to_ansible_dict(response, attribute_mapper)
@@ -200,12 +195,7 @@ def add_id_from_href(v):
 
 
 def populate_ids_from_hrefs(response):
-    if "as_dict" in dir(response):
-        return_dict = response.as_dict()
-    elif "to_dict" in dir(response):
-        return_dict = response.to_dict()
-    else:
-        raise NotImplementedError("No as_dict or to_dict method for response object")
+    return_dict = response.to_dict()
     if return_dict == {}:
         return_dict = response.additional_properties.copy()
 
@@ -255,112 +245,3 @@ def response_to_ansible_dict(response, attribute_mapper):
         else:
             raise Exception("attribute '{0}' (to map to '{1}') not found in response_dict: {2}".format(k, v, response_dict))
     return return_dict
-
-
-class ApiCall(object):
-    """
-    A class representing an API call. It holds the configuration of the
-    API call (ApiCallConfig) and the module parameters which are parsed
-    into URL params and body params.
-
-    API call body (if necessary) is created from the module parameters.
-    """
-
-    def __init__(self,
-                 conf: utils.Specs,
-                 client,
-                 body_params: Optional[dict] = {},
-                 url_params: Optional[dict] = {},
-                 ):
-        self.conf = conf
-        self.client = client
-        self.request_model_instance = None
-        self.path_vars = []
-        self.url_params = url_params
-        if self.conf.params_parser:
-            self.path_vars, body_params = self.conf.params_parser.parse(body_params)
-        relevant_body_params = {k: v for k, v in body_params.items() if k not in utils.SKIPPED_PARAMS}
-        if self.conf.request_model_class is not None:
-            self.request_model_instance = self.conf.request_model_class.from_dict(
-                relevant_body_params)
-
-    def do(self):
-        arg_list = self.path_vars
-        if type(self.conf) is utils.Specs:
-            arg_list = [self.client] + self.path_vars
-        if self.request_model_instance is not None:
-            arg_list.append(self.request_model_instance)
-        #_D('arg_list: {0}'.format(arg_list))
-        import q
-        q(arg_list)
-        result = self.conf.func(*arg_list, params=self.url_params)
-        return result
-
-    def describe(self):
-        return "{0} to {1}".format(self.conf.func.__name__, self.path_vars)
-
-
-class MPApiCall(object):
-    """
-    A class representing an API call. It holds the configuration of the
-    API call (ApiCallConfig) and the module parameters which are parsed
-    into URL params and body params.
-
-    API call body (if necessary) is created from the module parameters.
-    """
-    @staticmethod
-    def _get_relevant_params(params):
-        return {k: v for k, v in params.items() if v and k not in utils.SKIPPED_PARAMS}
-
-    def __init__(self,
-                 conf: utils.MPSpecs,
-                 params: Optional[dict] = {},
-                 ):
-        self.conf = conf
-
-        param_names = set(inspect.signature(conf.func).parameters.keys())
-        self.sdk_kwargs = {}
-        import q
-        q(param_names)
-        q(params)
-
-        arg_mapping = self.conf.named_args_mapping or {}
-        q(arg_mapping)
-        for param_name in param_names:
-            lookup_name = param_name
-            if param_name in arg_mapping:
-                lookup_name = arg_mapping[param_name]
-            value_from_ansible_module = params.get(lookup_name, None)
-            if value_from_ansible_module is not None:
-                self.sdk_kwargs[param_name] = value_from_ansible_module
-        self.path_kwargs = self.sdk_kwargs.copy()
-
-        if self.conf.request_model_class is not None:
-            body_params = {k: v for k, v in params.items() if
-                           (k not in utils.SKIPPED_PARAMS)
-                           and (k not in param_names)
-                           }
-            request_model_instance = self.conf.request_model_class.from_dict(body_params)
-            model_arg_name = snake_case(self.conf.request_model_class.__name__)
-            self.sdk_kwargs[model_arg_name] = request_model_instance
-
-    def do(self):
-        import q
-        q(self.sdk_kwargs)
-        sdk_function = self.conf.func
-
-        result = sdk_function(**self.sdk_kwargs)
-        return result
-
-    def describe(self):
-        return "{0} to {1}".format(self.conf.func.__name__, self.path_kwargs)
-
-
-from re import sub
-
-
-def snake_case(s):
-    return '_'.join(
-        sub('([A-Z][a-z]+)', r' \1',
-            sub('([A-Z]+)', r' \1',
-                s.replace('-', ' '))).split()).lower()

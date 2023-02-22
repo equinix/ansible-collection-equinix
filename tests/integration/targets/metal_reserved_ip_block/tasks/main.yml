@@ -60,7 +60,7 @@
         that:
         - ip_reservation_fetched.id == ip_reservation.id
         - ip_reservation_fetched.tags == ["t1","t2"]
-        # This don't work (API bug), the reservation objects aren't updated in
+        # This doesn't work (API bug), the reservation objects aren't updated in
         # GETs but are updated in listings
         #- ip_reservation_fetched.details == 'updated description'
 

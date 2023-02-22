@@ -403,8 +403,7 @@ def main():
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id("metal_device", tolerate_not_found)
         else:
-            hostname = module.params.get("hostname")
-            fetched = module.get_one_from_list("metal_project_device", ["hostname"], {"hostname": hostname})
+            fetched = module.get_one_from_list("metal_project_device", ["hostname"])
         if fetched:
             module.params["id"] = fetched["id"]
             if state == "present":

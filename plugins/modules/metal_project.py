@@ -140,11 +140,10 @@ def main():
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id("metal_project", tolerate_not_found)
         else:
-            name = module.params.get("name")
             fetched = module.get_one_from_list(
                 "metal_project",
                 ["name"],
-                {"name": name})
+            )
 
         if fetched:
             module.params['id'] = fetched['id']

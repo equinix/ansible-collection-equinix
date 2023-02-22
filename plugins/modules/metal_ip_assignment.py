@@ -151,21 +151,10 @@ def main():
                 changed = True
         else:
             if state == "present":
-                organization_id = module.params.get("organization_id")
-                if organization_id:
-                    fetched = module.create("metal_organization_ip_assignment")
-                else:
-                    fetched = module.create("metal_ip_assignment")
+                fetched = module.create("metal_ip_assignment")
                 if 'id' not in fetched:
                     module.fail_json(msg="UUID not found in ip_assignment creation response")
                 changed = True
-
-                # backend_transfer_enabled need to be explicitly set by update
-                if module.params.get("backend_transfer_enabled"):
-                    module.params['id'] = fetched['id']
-                    fetched = module.update_by_id({"backend_transfer_enabled": True}, "metal_ip_assignment")
-
-                # TODO: add support for bgp_config once we have a module
             else:
                 fetched = {}
     except Exception as e:

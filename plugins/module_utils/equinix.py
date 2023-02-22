@@ -98,14 +98,16 @@ class EquinixModule(AnsibleModule):
         except Exception as e:
             self.fail_json(msg=str(e))
 
-    def _metal_api_call(self, resource_type, action, body_params={}, url_params={}):
-        return metal_api.call(
+    def _metal_api_call(self, resource_type, action, call_params={}):
+        result = metal_api.call(
             resource_type,
             action,
             self.metal_python_client,
-            body_params,
-            url_params,
+            call_params,
         )
+        import q
+        q(result)
+        return result
 
     def create(self, resource_type):
         return self._metal_api_call(resource_type, action.CREATE, self.params.copy())
@@ -121,14 +123,14 @@ class EquinixModule(AnsibleModule):
             raise e
         return result
 
-    def get_one_from_list(self, resource_type: str, match_attrs: List[str], filters: dict = None):
+    def get_one_from_list(self, resource_type: str, match_attrs: List[str]):
         match_values = []
         for attr in match_attrs:
             if self.params.get(attr) is not None:
                 match_values.append(self.params.get(attr))
             else:
                 raise Exception(f'get_one_from_list called without {attr}, this is a module bug.')
-        result = self._metal_api_call(resource_type, action.LIST, self.params.copy(), url_params=filters)
+        result = self._metal_api_call(resource_type, action.LIST, self.params.copy())
         matches = []
         for i in result:
             if all(i.get(attr) == value for attr, value in zip(match_attrs, match_values)):
@@ -139,8 +141,8 @@ class EquinixModule(AnsibleModule):
             raise Exception(f'found more than one {resource_type} with name {match_values}')
         return matches[0]
 
-    def get_list(self, resource_type: str, filters: dict = None):
-        return self._metal_api_call(resource_type, action.LIST, self.params.copy(), url_params=filters)
+    def get_list(self, resource_type: str):
+        return self._metal_api_call(resource_type, action.LIST, self.params.copy())
 
     def delete_by_id(self, resource_type: str):
         if self.params.get('id') is None:
