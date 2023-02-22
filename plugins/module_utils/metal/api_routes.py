@@ -10,9 +10,12 @@ except ImportError:
     pass
 
 from ansible_collections.equinix.cloud.plugins.module_utils import (
-    metal_client,
     action,
     utils,
+)
+
+from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
+    metal_client,
 )
 
 
@@ -34,9 +37,8 @@ def get_configs(mpc):
 
     return {
         # GETTERS
-        ('metal_device', action.GET): utils.Specs(
-            equinixmetalpy.Client.find_device_by_id,
-            id_getter,
+        ('metal_device', action.GET): utils.MPSpecs(
+            metal_python.DevicesApi(mpc).find_device_by_id,
             ),
         ('metal_project', action.GET): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).find_project_by_id,
@@ -50,13 +52,13 @@ def get_configs(mpc):
         ),
 
         # LISTERS
-        ('metal_project_device', action.LIST): utils.Specs(
-            equinixmetalpy.Client.find_project_devices,
-            utils.ParamsParser("project_id"),
+        ('metal_project_device', action.LIST): utils.MPSpecs(
+            metal_python.DevicesApi(mpc).find_project_devices,
+            {'id': 'project_id'},
         ),
-        ('metal_organization_device', action.LIST): utils.Specs(
-            equinixmetalpy.Client.find_organization_devices,
-            utils.ParamsParser("organization_id"),
+        ('metal_organization_device', action.LIST): utils.MPSpecs(
+            metal_python.DevicesApi(mpc).find_organization_devices,
+            {'id': 'organization_id'},
             ),
         ('metal_project', action.LIST): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).find_projects,
@@ -76,9 +78,8 @@ def get_configs(mpc):
         ),
 
         # DELETERS
-        ('metal_device', action.DELETE): utils.Specs(
-            equinixmetalpy.Client.delete_device,
-            id_getter,
+        ('metal_device', action.DELETE): utils.MPSpecs(
+            metal_python.DevicesApi(mpc).delete_device,
             ),
         ('metal_project', action.DELETE): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).delete_project,
@@ -93,15 +94,15 @@ def get_configs(mpc):
 
 
         # CREATORS
-        ('metal_device_metro', action.CREATE): utils.Specs(
-            equinixmetalpy.Client.create_device,
-            utils.ParamsParser("project_id"),
-            equinixmetalpy.models.DeviceCreateInMetroInput,
+        ('metal_device_metro', action.CREATE): utils.MPSpecs(
+            metal_python.DevicesApi(mpc).create_device,
+            {'id': 'project_id'},
+            metal_python.CreateDeviceRequest,
             ),
-        ('metal_device_facility', action.CREATE): utils.Specs(
-            equinixmetalpy.Client.create_device,
-            utils.ParamsParser("project_id"),
-            equinixmetalpy.models.DeviceCreateInFacilityInput,
+        ('metal_device_facility', action.CREATE): utils.MPSpecs(
+            metal_python.DevicesApi(mpc).create_device,
+            {'id': 'project_id'},
+            metal_python.CreateDeviceRequest,
         ),
         ('metal_project', action.CREATE): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).create_project,
@@ -125,10 +126,10 @@ def get_configs(mpc):
         ),
 
         # UPDATERS
-        ('metal_device', action.UPDATE): utils.Specs(
-            equinixmetalpy.Client.update_device,
-            id_getter,
-            equinixmetalpy.models.DeviceUpdateInput,
+        ('metal_device', action.UPDATE): utils.MPSpecs(
+            metal_python.DevicesApi(mpc).update_device,
+            {},
+            metal_python.DeviceUpdateInput,
         ),
         ('metal_project', action.UPDATE): utils.MPSpecs(
             metal_python.ProjectsApi(mpc).update_project,

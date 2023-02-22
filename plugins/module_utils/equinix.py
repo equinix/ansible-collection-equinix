@@ -14,9 +14,11 @@ import time
 from ansible.module_utils.basic import AnsibleModule, env_fallback, missing_required_lib
 
 from ansible_collections.equinix.cloud.plugins.module_utils import (
+    action,
+)
+from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
     metal_client,
     metal_api,
-    action,
 )
 
 METAL_COMMON_ARGS = dict(

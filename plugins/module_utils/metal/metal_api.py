@@ -9,9 +9,12 @@ from typing import List, Union, Optional, Callable
 import inspect
 
 from ansible_collections.equinix.cloud.plugins.module_utils import (
-    metal_client,
-    metal_api_routes,
     utils,
+)
+
+from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
+    metal_client,
+    api_routes,
 )
 
 
@@ -144,7 +147,7 @@ def call(resource_type, action, client, metal_python_client, body_params={}, url
     This function wraps the API call and returns the response.
     """
     metal_client.raise_if_missing_equinixmetalpy()
-    conf = metal_api_routes.get_configs(metal_python_client).get((resource_type, action))
+    conf = api_routes.get_configs(metal_python_client).get((resource_type, action))
     if conf is None:
         raise NotImplementedError("No API call for resource type %s and action %s" % (resource_type, action))
 
