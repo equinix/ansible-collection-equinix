@@ -21,7 +21,7 @@ You can supply both as module parameters (`project_id` and `metal_api_token`) of
     - set_fact:
         device_hostname: my-device
 
-    - name: start a device in 
+    - name: start a c3.small.x86 ubuntu_20_04 device in sv 
       equinix.cloud.metal_device:
         hostname: "{{ device_hostname }}"
         operating_system: ubuntu_20_04
@@ -49,7 +49,7 @@ PEP440 is the schema used to describe the versions of Ansible.
 ## Python version compatibility
 
 This collection depends on:
- - [equinixmetalpy](https://github.com/t0mk/equinixmetalpy). This collection requires Python 3.8 or greater.
+ - [metal_python](https://github.com/t0mk/metal-python-nextgen). This collection requires Python 3.8 or greater.
 
 ## Included content
 
@@ -90,7 +90,7 @@ be manually installed using pip:
 
 or:
 
-    pip install equinixmetalpy
+    pip install metal_python
 
 ## Using this collection
 

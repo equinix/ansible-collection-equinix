@@ -5,8 +5,7 @@
   tasks:
     - name: list test projects
       equinix.cloud.metal_project_info:
-        filters:
-          name: "{{ test_prefix }}"
+        name: "{{ test_prefix }}"
       register: test_projects
     
     - name: list devices in test projects

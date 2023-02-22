@@ -57,7 +57,7 @@ METAL_TAGS_ARG = dict(
 
 class EquinixModule(AnsibleModule):
     def __init__(self, *args, **kwargs):
-        metal_client.raise_if_missing_equinixmetalpy()
+        metal_client.raise_if_missing_metal_python()
         argument_spec = {}
         if "argument_spec" in kwargs:
             argument_spec = kwargs["argument_spec"]
@@ -72,18 +72,13 @@ class EquinixModule(AnsibleModule):
         kwargs["argument_spec"] = argument_spec
         AnsibleModule.__init__(self, *args, **kwargs)
         try:
-            self.client = metal_client.get_metal_client(
-                self.params.get("metal_api_token"),
-                self.params.get("metal_api_url"),
-                self.params.get("metal_ua_prefix"),
-            )
             self.metal_python_client = metal_client.get_metal_python_client(
                 self.params.get("metal_api_token"),
                 self.params.get("metal_api_url"),
                 self.params.get("metal_ua_prefix"),
             )
-        except metal_client.MissingMetalLib as e:
-            self.fail_json(msg=missing_required_lib("equinixmetalpy"), exception=e.exception_traceback)
+        except metal_client.MissingMetalPythonError as e:
+            self.fail_json(msg=missing_required_lib("metal_python"), exception=e.exception_traceback)
         self.params_checked = False
         AnsibleModule.__init__(self, *args, **kwargs)
 
@@ -105,12 +100,11 @@ class EquinixModule(AnsibleModule):
 
     def _metal_api_call(self, resource_type, action, body_params={}, url_params={}):
         return metal_api.call(
-                resource_type,
-                action,
-                self.client,
-                self.metal_python_client,
-                body_params,
-                url_params,
+            resource_type,
+            action,
+            self.metal_python_client,
+            body_params,
+            url_params,
         )
 
     def create(self, resource_type):
@@ -121,10 +115,6 @@ class EquinixModule(AnsibleModule):
             raise Exception("get_by_id called without id, this is a module bug.")
         try:
             result = self._metal_api_call(resource_type, action.GET, self.params.copy())
-        except metal_client.MetalApiError as e:
-            if (e.isNotFoundError) & tolerate_not_found:
-                return None
-            raise e
         except metal_client.NotFoundException as e:
             if tolerate_not_found:
                 return None
@@ -157,10 +147,6 @@ class EquinixModule(AnsibleModule):
             raise Exception('no id in module when deleting, this is a module bug')
         try:
             self._metal_api_call(resource_type, action.DELETE, self.params.copy())
-        except metal_client.MetalApiError as e:
-            if e.isNotFoundError:
-                return None
-            raise e
         except metal_client.NotFoundException as e:
             return None
         return None

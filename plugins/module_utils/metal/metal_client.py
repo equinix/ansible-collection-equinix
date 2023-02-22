@@ -9,16 +9,6 @@ __metaclass__ = type
 import traceback
 import re
 
-HAS_METAL_SDK = True
-HAS_METAL_SDK_EXC = None
-try:
-    import equinixmetalpy
-    from equinixmetalpy import MetalApiError
-    from equinixmetalpy import raise_if_error
-except ImportError:
-    HAS_METAL_SDK = False
-    HAS_METAL_SDK_EXC = traceback.format_exc()
-
 HAS_METAL_PYTHON = True
 HAS_METAL_PYTHON_EXC = None
 try:
@@ -39,17 +29,9 @@ HOSTNAME_RE = r'^({0}\.)*{0}$'.format(RESOURCE_NAME_RE)
 UUID_RE = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 
-class MissingMetalLib(Exception):
+class MissingMetalPythonError(Exception):
     def __init__(self, exception_traceback):
         self.exception_traceback = exception_traceback
-
-
-class MissingEquinixmetalpyError(MissingMetalLib):
-    pass
-
-
-class MissingMetalPythonError(MissingMetalLib):
-    pass
 
 
 def has_metal_python():
@@ -59,15 +41,6 @@ def has_metal_python():
 def raise_if_missing_metal_python():
     if not HAS_METAL_PYTHON:
         raise MissingMetalPythonError(HAS_METAL_PYTHON_EXC)
-
-
-def has_equinix_metal_sdk():
-    return HAS_METAL_SDK
-
-
-def raise_if_missing_equinixmetalpy():
-    if not HAS_METAL_SDK:
-        raise MissingEquinixmetalpyError(HAS_METAL_SDK_EXC)
 
 
 def get_metal_python_client(api_token, api_url=API_URL, ua_prefix=""):
@@ -81,17 +54,6 @@ def get_metal_python_client(api_token, api_url=API_URL, ua_prefix=""):
     mpc = metal_python.ApiClient(conf)
     mpc.user_agent = ua
     return mpc
-
-
-def get_metal_client(api_token, api_url=API_URL, ua_prefix=""):
-    raise_if_missing_equinixmetalpy()
-    ua = ua_prefix + USER_AGENT
-    return equinixmetalpy.Client(
-        credential=api_token,
-        base_url=api_url,
-        base_user_agent=ua,
-        user_agent_overwrite=True,
-    )
 
 
 def is_valid_uuid(uuid):

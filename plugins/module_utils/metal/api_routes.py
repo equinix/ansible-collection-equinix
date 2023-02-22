@@ -5,7 +5,7 @@
 try:
     import metal_python
 except ImportError:
-    # This is handled in raise_if_missing_equinixmetalpy()
+    # This is handled in raise_if_missing_metal_python()
     pass
 
 from ansible_collections.equinix.cloud.plugins.module_utils import (
@@ -28,10 +28,9 @@ def get_configs(mpc):
     This function returns a dictionary of API call configurations.
     """
 
-    # we check for the presence of the equinixmetalpy module here, because
-    # the ApiCallConfigs use classes straight from the equinixmetalpy module
+    # we check for the presence of the metal_python module here, because
+    # the ApiCallConfigs use classes straight from the metal_python module
     # and we prefer to fail early and hopefully into module.fail_json()
-    metal_client.raise_if_missing_equinixmetalpy()
     metal_client.raise_if_missing_metal_python()
 
     return {
