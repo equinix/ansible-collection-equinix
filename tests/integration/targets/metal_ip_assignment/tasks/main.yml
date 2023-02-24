@@ -46,6 +46,11 @@
         reserved_ip_block_id: "{{ ip_reservation.id }}"
         cidr: 32
       register: available_ips
+    
+    - assert:
+        that:
+          - "available_ips.available | length == 1"  
+
 
     - name: create device
       equinix.cloud.metal_device:
@@ -57,14 +62,16 @@
         state: present
       register: device
 
-    # check len 1
-
     - name: assign available IP
       equinix.cloud.metal_ip_assignment:
         device_id: "{{ device.id }}"
         address: "{{ available_ips.available[0] }}"
       register: assignment
 
+    - assert:
+        that:
+          - assignment.device_id == "{{ device.id }}"
+          - assignment.address   == "{{ available_ips.available[0] }}"
     # test assignment
 
     - name: destroy assignment
