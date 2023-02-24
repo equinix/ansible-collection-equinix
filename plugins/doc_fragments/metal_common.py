@@ -29,5 +29,5 @@ class ModuleDocFragment(object):
                 - If not set, and the value of the METAL_UA_PREFIX environment variable is not set, then the empty string is used.
             type: str
     requirements:
-        - "metal_python >= 0.0.1"
+        - "equinix_metal >= 0.0.1"
     '''

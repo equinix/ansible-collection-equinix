@@ -122,9 +122,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
                 % ', '.join(metal_client.TOKEN_ENVVARS)
             )
         try:
-            self.client = metal_client.get_metal_python_client(str(metal_api_token))
+            self.client = metal_client.get_equinix_metal_client(str(metal_api_token))
         except metal_client.MissingMetalPythonError as e:
-            raise AnsibleError("The Equinix Metal dynamic inventory plugin equires the 'metal_python' package")
+            raise AnsibleError("The Equinix Metal dynamic inventory plugin equires the 'equinix_metal' package")
 
     def verify_file(self, path):
         '''

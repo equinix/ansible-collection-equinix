@@ -57,7 +57,7 @@ METAL_TAGS_ARG = dict(
 
 class EquinixModule(AnsibleModule):
     def __init__(self, *args, **kwargs):
-        metal_client.raise_if_missing_metal_python()
+        metal_client.raise_if_missing_equinix_metal()
         argument_spec = {}
         if "argument_spec" in kwargs:
             argument_spec = kwargs["argument_spec"]
@@ -72,13 +72,13 @@ class EquinixModule(AnsibleModule):
         kwargs["argument_spec"] = argument_spec
         AnsibleModule.__init__(self, *args, **kwargs)
         try:
-            self.metal_python_client = metal_client.get_metal_python_client(
+            self.equinix_metal_client = metal_client.get_equinix_metal_client(
                 self.params.get("metal_api_token"),
                 self.params.get("metal_api_url"),
                 self.params.get("metal_ua_prefix"),
             )
         except metal_client.MissingMetalPythonError as e:
-            self.fail_json(msg=missing_required_lib("metal_python"), exception=e.exception_traceback)
+            self.fail_json(msg=missing_required_lib("equinix_metal"), exception=e.exception_traceback)
         self.params_checked = False
         AnsibleModule.__init__(self, *args, **kwargs)
 
@@ -102,7 +102,7 @@ class EquinixModule(AnsibleModule):
         result = metal_api.call(
             resource_type,
             action,
-            self.metal_python_client,
+            self.equinix_metal_client,
             call_params,
         )
         import q

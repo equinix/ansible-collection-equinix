@@ -9,15 +9,15 @@ __metaclass__ = type
 import traceback
 import re
 
-HAS_METAL_PYTHON = True
-HAS_METAL_PYTHON_EXC = None
+HAS_EQUINIX_METAL = True
+HAS_EQUINIX_METAL_EXC = None
 try:
-    import metal_python
-    from metal_python.rest import ApiException
-    from metal_python.exceptions import NotFoundException
+    import equinix_metal
+    from equinix_metal.rest import ApiException
+    from equinix_metal.exceptions import NotFoundException
 except ImportError:
-    HAS_METAL_PYTHON = False
-    HAS_METAL_PYTHON_EXC = traceback.format_exc()
+    HAS_EQUINIX_METAL = False
+    HAS_EQUINIX_METAL_EXC = traceback.format_exc()
 
 USER_AGENT = 'ansible-equinix'
 API_URL = 'https://api.equinix.com/metal/v1'
@@ -34,24 +34,24 @@ class MissingMetalPythonError(Exception):
         self.exception_traceback = exception_traceback
 
 
-def has_metal_python():
-    return HAS_METAL_PYTHON
+def has_equinix_metal():
+    return HAS_EQUINIX_METAL
 
 
-def raise_if_missing_metal_python():
-    if not HAS_METAL_PYTHON:
-        raise MissingMetalPythonError(HAS_METAL_PYTHON_EXC)
+def raise_if_missing_equinix_metal():
+    if not HAS_EQUINIX_METAL:
+        raise MissingMetalPythonError(HAS_EQUINIX_METAL_EXC)
 
 
-def get_metal_python_client(api_token, api_url=API_URL, ua_prefix=""):
-    raise_if_missing_metal_python()
+def get_equinix_metal_client(api_token, api_url=API_URL, ua_prefix=""):
+    raise_if_missing_equinix_metal()
     ua = ua_prefix + USER_AGENT
-    conf = metal_python.Configuration(
+    conf = equinix_metal.Configuration(
         host=api_url,
     )
     conf.api_key['x_auth_token'] = api_token
     #conf.debug = True
-    mpc = metal_python.ApiClient(conf)
+    mpc = equinix_metal.ApiClient(conf)
     mpc.user_agent = ua
     return mpc
 

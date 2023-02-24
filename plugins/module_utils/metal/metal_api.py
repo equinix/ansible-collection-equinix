@@ -150,12 +150,12 @@ def get_attribute_mapper(resource_type):
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
 
-def call(resource_type, action, metal_python_client, params={}):
+def call(resource_type, action, equinix_metal_client, params={}):
     """
     This function wraps the API call and returns the response.
     """
-    metal_client.raise_if_missing_metal_python()
-    conf = api_routes.get_routes(metal_python_client).get((resource_type, action))
+    metal_client.raise_if_missing_equinix_metal()
+    conf = api_routes.get_routes(equinix_metal_client).get((resource_type, action))
     if conf is None:
         raise NotImplementedError("No API call for resource type %s and action %s" % (resource_type, action))
 
