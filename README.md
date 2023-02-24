@@ -49,7 +49,7 @@ PEP440 is the schema used to describe the versions of Ansible.
 ## Python version compatibility
 
 This collection depends on:
- - [metal_python](https://github.com/t0mk/metal-python-nextgen). This collection requires Python 3.8 or greater.
+ - [equinix_metal](https://github.com/t0mk/metal-python). This collection requires Python 3.8 or greater.
 
 ## Included content
 
@@ -90,7 +90,7 @@ be manually installed using pip:
 
 or:
 
-    pip install metal_python
+    pip install equinix_metal
 
 ## Using this collection
 
