@@ -133,8 +133,7 @@ def get_attribute_mapper(resource_type):
     """
     Returns attribute mapper for the given resource type.
     """
-    device_resources = set(['metal_device', 'metal_device_metro',
-                            'metal_project_device', 'metal_device_facility'])
+    device_resources = set(['metal_device', 'metal_project_device'])
     project_resources = set(['metal_project', 'metal_organization_project'])
     ip_reservation_resources = set(['metal_ip_reservation', 'metal_available_ip'])
     ip_assignment_resources = set(['metal_ip_assignment'])

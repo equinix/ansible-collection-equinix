@@ -13,7 +13,6 @@ HAS_EQUINIX_METAL = True
 HAS_EQUINIX_METAL_EXC = None
 try:
     import equinix_metal
-    from equinix_metal.rest import ApiException
     from equinix_metal.exceptions import NotFoundException
 except ImportError:
     HAS_EQUINIX_METAL = False
@@ -42,6 +41,7 @@ def raise_if_missing_equinix_metal():
     if not HAS_EQUINIX_METAL:
         raise MissingMetalPythonError(HAS_EQUINIX_METAL_EXC)
 
+
 def get_equinix_metal_client(api_token, api_url=API_URL, ua_prefix=""):
     raise_if_missing_equinix_metal()
     ua = ua_prefix + USER_AGENT
@@ -52,6 +52,7 @@ def get_equinix_metal_client(api_token, api_url=API_URL, ua_prefix=""):
     mpc = equinix_metal.ApiClient(conf)
     mpc.user_agent = ua
     return mpc
+
 
 def is_valid_uuid(uuid):
     return re.match(UUID_RE, uuid) is not None

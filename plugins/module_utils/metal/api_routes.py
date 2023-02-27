@@ -56,7 +56,7 @@ def get_routes(mpc):
         ('metal_organization_device', action.LIST): spec_types.Specs(
             equinix_metal.DevicesApi(mpc).find_organization_devices,
             {'id': 'organization_id'},
-            ),
+        ),
         ('metal_project', action.LIST): spec_types.Specs(
             equinix_metal.ProjectsApi(mpc).find_projects,
         ),
@@ -93,12 +93,7 @@ def get_routes(mpc):
 
 
         # CREATORS
-        ('metal_device_metro', action.CREATE): spec_types.Specs(
-            equinix_metal.DevicesApi(mpc).create_device,
-            {'id': 'project_id'},
-            equinix_metal.CreateDeviceRequest,
-            ),
-        ('metal_device_facility', action.CREATE): spec_types.Specs(
+        ('metal_device', action.CREATE): spec_types.Specs(
             equinix_metal.DevicesApi(mpc).create_device,
             {'id': 'project_id'},
             equinix_metal.CreateDeviceRequest,

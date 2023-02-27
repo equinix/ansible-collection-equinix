@@ -421,18 +421,7 @@ def main():
                 operating_system = module.params.get("operating_system")
                 if (plan is None) or (operating_system is None):
                     raise Exception("plan and operating_system are required when creating a device")
-                metro = module.params.get("metro")
-                facility = module.params.get("facility")
-                if metro and facility:
-                    raise Exception("metro and facility are mutually exclusive when creating a device")
-                if (metro is None) and (facility is None):
-                    raise Exception("one of metro or facility is required when creating a device")
-                if metro:
-                    fetched = module.create("metal_device_metro")
-                elif facility:
-                    fetched = module.create("metal_device_facility")
-                else:
-                    raise Exception("metro or facility required when creating a device, this is a module bug")
+                fetched = module.create("metal_device")
                 if "id" not in fetched:
                     raise Exception("UUID not found in device creation response")
                 changed = True

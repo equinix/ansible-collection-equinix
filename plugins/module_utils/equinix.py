@@ -8,7 +8,6 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from typing import Any, Dict, List, Optional, Tuple, Union
-
 import time
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback, missing_required_lib
