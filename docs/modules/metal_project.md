@@ -77,4 +77,20 @@ Manage Projects in Equinix Metal. You can use *id* or *name* to lookup a project
 
 - `metal_project` - The module object
 
+    - Sample Response:
+        ```json
+        
+        {
+          "backend_transfer_enabled": false,
+          "changed": false,
+          "customdata": {},
+          "description": "",
+          "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
+          "name": "ansible-integration-test-project-csle6t2y-project1_renamed",
+          "organization_id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
+          "payment_method_id": "845b45a3-c565-47e5-b9b6-a86204a73d29"
+        }
+        
+        ```
+
 
