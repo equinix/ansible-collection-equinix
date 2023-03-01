@@ -1,0 +1,54 @@
+# metal_project_info
+
+Gather information about Equinix Metal projects
+
+
+- [Examples](#examples)
+- [Parameters](#parameters)
+- [Return Values](#return-values)
+
+## Examples
+
+```yaml
+- name: Gather information about all projects
+  hosts: localhost
+  tasks:
+      - equinix.cloud.metal_project_info
+
+```
+
+```yaml
+- name: Gather information about all projects in an organization
+  hosts: localhost
+  tasks:
+      - equinix.cloud.metal_project_info:
+          organization_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+
+```
+
+
+
+
+
+
+
+
+
+
+## Parameters
+
+| Field     | Type | Required | Description                                                                  |
+|-----------|------|----------|------------------------------------------------------------------------------|
+| `name` | <center>`str`</center> | <center>Optional</center> | The name of the project.   |
+| `organization_id` | <center>`str`</center> | <center>Optional</center> | UUID of the organization containing the project.   |
+
+
+
+
+
+
+## Return Values
+
+- `resources` - Found resources
+
+
