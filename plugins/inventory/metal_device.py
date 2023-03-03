@@ -6,51 +6,130 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
+from ansible_specdoc.objects import (
+    SpecField,
+    FieldType,
+)
+
+from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
+    getSpecDocMeta,
+)
+
 DOCUMENTATION = '''
-    name: device
-    plugin_type: inventory
-    short_description: Equinix Metal Device inventory source
-    extends_documentation_fragment:
-        - equinix.cloud.metal_common
-        - constructed
+author: Equinix DevRel Team (@equinix) <support@equinix.com>
+description: Reads device inventories from Equinix Metal. Uses YAML configuration
+  file that ends with equinix_metal.(yml|yaml). ansible_host is set to first public
+  IP address of the device.
+module: metal_device
+notes: []
+options:
+  keyed_groups:
     description:
-        - Reads device inventories from Equinix Metal
-        - Uses YAML configuration file that ends with equinix_metal.(yml|yaml).
-        - ansible_host is set to first public IP address of the device.
-    options:
-        plugin:
-            description: Token that ensures this is a source file for the plugin.
-            required: True
-            choices: ['equinix_metal', 'equinix.cloud.metal_device']
-        project_ids:
-            description: List of Equinix Metal project IDs to query for devices.
-            type: list
-            elements: str
-        metal_api_token:
-            description: Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment variable.
-            required: True
-            env:
-                - name: METAL_AUTH_TOKEN
-        keyed_groups:
-            description: List of groups to create based on the values of a variable.
-            type: list
-            elements: dict
-            suboptions:
-                key:
-                    description: The key to group by.
-                    type: str
-                prefix:
-                    description: Prefix to prepend to the group name.
-                    type: str
-                separator:
-                    description: Separator to use when joining the key and value.
-                    type: str
-                    default: ''
-      
-    version_added: 0.0.1
+    - List of groups to create based on the values of a variable.
+    elements: dict
+    required: false
+    suboptions:
+      key:
+        description:
+        - The key to group by.
+        required: false
+        type: str
+      prefix:
+        description:
+        - Prefix to prepend to the group name.
+        required: false
+        type: str
+      separator:
+        default: ''
+        description:
+        - Separator to use when joining the key and value.
+        required: false
+        type: str
+    type: list
+  metal_api_token:
+    description:
+    - Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment
+      variable.
+    required: true
+    type: str
+  plugin:
+    choices:
+    - equinix_metal
+    - equinix.cloud.metal_device
+    description:
+    - Token that ensures this is a source file for the plugin.
+    required: true
+    type: str
+  project_ids:
+    description:
+    - List of Equinix Metal project IDs to query for devices.
+    elements: str
+    required: false
+    type: list
+requirements:
+- python >= 3
+- metal_python >= 0.0.1
+short_description: Equinix Metal Device inventory source
+'''
+EXAMPLES = '''
+plugin: equinix.cloud.metal_device
+strict: false
+keyed_groups:
+- prefix: tag
+  key: tags
+- prefix: equinix_metal_plan
+  key: plan
+- key: metro
+  prefix: equinix_metal_metro
+- key: state
+  prefix: equinix_metal_state
+'''
+RETURN = '''
+{}
 '''
 
-EXAMPLES = '''
+module_spec = dict(
+    plugin=SpecField(
+        type=FieldType.string,
+        description=['Token that ensures this is a source file for the plugin.'],
+        choices=['equinix_metal', 'equinix.cloud.metal_device'],
+        required=True,
+    ),
+    project_ids=SpecField(
+        type=FieldType.list,
+        description=['List of Equinix Metal project IDs to query for devices.'],
+        element_type=FieldType.string,
+    ),
+    metal_api_token=SpecField(
+        type=FieldType.string,
+        description=['Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment variable.'],
+        required=True,
+    ),
+    keyed_groups=SpecField(
+        type=FieldType.list,
+        description=['List of groups to create based on the values of a variable.'],
+        element_type=FieldType.dict,
+        suboptions=dict(
+            key=SpecField(
+                type=FieldType.string,
+                description=['The key to group by.'],
+            ),
+            prefix=SpecField(
+                type=FieldType.string,
+                description=['Prefix to prepend to the group name.'],
+            ),
+            separator=SpecField(
+                type=FieldType.string,
+                description=['Separator to use when joining the key and value.'],
+                default='',
+            ),
+        ),
+    ),
+)
+
+
+specdoc_examples = [
+    '''
 # Minimal example using environment var credentials
 plugin: equinix.cloud.metal_device
 
@@ -72,6 +151,19 @@ keyed_groups:
   - key: state
     prefix: equinix_metal_state
 '''
+    ]
+
+SPECDOC_META = getSpecDocMeta(
+    short_description='Equinix Metal Device inventory source',
+    description=(
+        "Reads device inventories from Equinix Metal. "
+        "Uses YAML configuration file that ends with equinix_metal.(yml|yaml). "
+        "ansible_host is set to first public IP address of the device."
+    ),
+    examples=specdoc_examples,
+    options=module_spec,
+    return_values={},
+)
 
 from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, to_safe_group_name
@@ -90,7 +182,7 @@ EXCLUDE_ATTRIBUTES = [
 ]
 
 import os
-from typing import List, Dict, Set, Tuple, Any
+from typing import List, Dict, Any
 
 
 def label(device: Dict[str, Any]) -> str:
