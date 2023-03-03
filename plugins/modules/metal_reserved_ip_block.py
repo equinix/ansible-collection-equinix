@@ -168,8 +168,6 @@ def main():
     module = EquinixModule(
         # argument_spec=argument_spec,
         argument_spec=SPECDOC_META.ansible_spec,
-        supports_project_id=True,
-        supports_tags=True,
         required_one_of=[['id', 'project_id']],
         required_by=dict(project_id=['quantity', 'type']),
         required_if=[
