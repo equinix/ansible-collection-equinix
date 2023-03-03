@@ -9,8 +9,11 @@ __metaclass__ = type
 
 from typing import Any, Dict, List, Optional, Tuple, Union
 import time
+import yaml
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback, missing_required_lib
+
+from ansible_specdoc.objects import SpecField, FieldType
 
 from ansible_collections.equinix.cloud.plugins.module_utils import (
     action,
@@ -19,6 +22,8 @@ from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
     metal_client,
     metal_api,
 )
+
+from ansible_specdoc.objects import SpecDocMeta
 
 METAL_COMMON_ARGS = dict(
     metal_api_token=dict(
@@ -40,36 +45,38 @@ METAL_COMMON_ARGS = dict(
     ),
 )
 
-METAL_PROJECT_ARG = dict(
-    project_id=dict(
-        type='str',
-        fallback=(env_fallback, ['METAL_PROJECT_ID']),
-    ),
-)
 
-METAL_TAGS_ARG = dict(
-    tags=dict(type='list',
-              elements='str',
-              ),
+EQUINIX_STATE_ARG = dict(
+    type='str',
+    default='present',
+    choices=['present', 'absent'],
 )
 
 
 class EquinixModule(AnsibleModule):
-    def __init__(self, *args, **kwargs):
+    def __init__(self,
+                 argument_spec,
+                 required_one_of=None,
+                 required_by=None,
+                 required_if=None,
+                 supports_check_mode=False,
+                 is_info=False,
+                 ):
         metal_client.raise_if_missing_equinix_metal()
-        argument_spec = {}
-        if "argument_spec" in kwargs:
-            argument_spec = kwargs["argument_spec"]
         argument_spec.update(METAL_COMMON_ARGS)
+        if not is_info:
+            argument_spec['state'] = EQUINIX_STATE_ARG
+        AnsibleModule.__init__(
+            self,
+            argument_spec=argument_spec,
+            required_one_of=required_one_of,
+            required_by=required_by,
+            required_if=required_if,
+            supports_check_mode=supports_check_mode,
+        )
 
-        if kwargs.get("supports_tags", False):
-            argument_spec.update(METAL_TAGS_ARG)
-            kwargs.pop("supports_tags")
-        if kwargs.get("supports_project_id", False):
-            argument_spec.update(METAL_PROJECT_ARG)
-            kwargs.pop("supports_project_id")
-        kwargs["argument_spec"] = argument_spec
-        AnsibleModule.__init__(self, *args, **kwargs)
+        # not sure if calling code after super-constructor is fine, but it's the only
+        # way to get configure the client in this class' constructor
         try:
             self.equinix_metal_client = metal_client.get_equinix_metal_client(
                 self.params.get("metal_api_token"),
@@ -78,8 +85,6 @@ class EquinixModule(AnsibleModule):
             )
         except metal_client.MissingMetalPythonError as e:
             self.fail_json(msg=missing_required_lib("equinix_metal"), exception=e.exception_traceback)
-        self.params_checked = False
-        AnsibleModule.__init__(self, *args, **kwargs)
 
     def params_syntax_check(self):
         try:
@@ -202,3 +207,26 @@ def get_diff(params: dict, fetched: dict, mutables: list):
         {k: fetched_mutable[k] for k in defined_mutable_keys},
         mutables,
     )
+
+
+def getSpecDocMeta(short_description, description, options, examples, return_values):
+    validate_yaml(examples)
+    return SpecDocMeta(
+        short_description=short_description,
+        description=description,
+        options=options,
+        examples=examples,
+        return_values=return_values,
+        author='Equinix DevRel Team (@equinix) <support@equinix.com>',
+        requirements=[
+            'python >= 3',
+            'equinix_metal >= 0.0.1',
+        ]
+    )
+
+
+def validate_yaml(s):
+    try:
+        [yaml.safe_load(e) for e in s]
+    except yaml.YAMLError as e:
+        raise Exception(e)
