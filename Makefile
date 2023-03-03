@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 COLLECTIONS_PATH ?= ~/.ansible/collections
 DOCS_PATH ?= docs
-COLLECTION_VERSION ?=
+COLLECTION_VERSION ?= 0.0.1
 
 TEST_ARGS := -v
 INTEGRATION_CONFIG := tests/integration/integration_config.yml
@@ -30,6 +30,19 @@ lint:
 
 	mypy plugins/modules
 	mypy plugins/inventory
+
+.PHONY: docs
+docs:
+	rm -rf $(DOCS_PATH)/modules $(DOCS_PATH)/inventory
+	mkdir -p $(DOCS_PATH)/modules $(DOCS_PATH)/inventory
+	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_generate.sh
+	#ansible-doc-extractor --template=template/module.rst.j2 $(DOCS_PATH)/inventory plugins/inventory/*.py
+
+.PHONY: injected-docs
+injected-docs:
+	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_inject.sh
+
+
 
 integration-test: $(INTEGRATION_CONFIG)
 	ansible-test integration $(TEST_ARGS)
