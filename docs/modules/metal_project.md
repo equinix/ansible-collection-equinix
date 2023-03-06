@@ -13,7 +13,7 @@ Manage Projects in Equinix Metal. You can use *id* or *name* to lookup a project
 - name: Create new project
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
+  - equinix.cloud.metal_project:
       name: "new project"
 
 ```
@@ -22,7 +22,7 @@ Manage Projects in Equinix Metal. You can use *id* or *name* to lookup a project
 - name: Create new project within non - default organization
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
+  - equinix.cloud.metal_project:
       name: "my org project"
       organization_id: "a4cc87f9-e00f-48c2-9460-74aa60beb6b0"
 
@@ -32,7 +32,7 @@ Manage Projects in Equinix Metal. You can use *id* or *name* to lookup a project
 - name: Remove project by id
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
+  - equinix.cloud.metal_project:
       id: "eef49903-7a09-4ca1-af67-4087c29ab5b6"
       state: absent
 
@@ -42,7 +42,7 @@ Manage Projects in Equinix Metal. You can use *id* or *name* to lookup a project
 - name: Create new project with non - default billing method
   hosts: localhost
   tasks:
-    equinix.cloud.metal_project:
+  - equinix.cloud.metal_project:
       name: "newer project"
       payment_method_id: "abf49903-7a09-4ca1-af67-4087c29ab343"
 
