@@ -61,6 +61,7 @@ class EquinixModule(AnsibleModule):
                  required_if=None,
                  supports_check_mode=False,
                  is_info=False,
+                 mutually_exclusive=None,
                  ):
         metal_client.raise_if_missing_equinix_metal()
         argument_spec.update(METAL_COMMON_ARGS)
@@ -73,6 +74,7 @@ class EquinixModule(AnsibleModule):
             required_by=required_by,
             required_if=required_if,
             supports_check_mode=supports_check_mode,
+            mutually_exclusive=mutually_exclusive,
         )
 
         # not sure if calling code after super-constructor is fine, but it's the only

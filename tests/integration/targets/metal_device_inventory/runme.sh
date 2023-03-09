@@ -3,7 +3,7 @@
 set -eux
 
 # Create testing device
-ansible-playbook playbooks/setup_metal_device.yml "$@"
+ansible-playbook -vvv playbooks/setup_metal_device.yml "$@"
 
 # Test an inventory with no filter
 ansible-playbook playbooks/create_inventory.yml --extra-vars "template=nofilter.metal_device.yml" "$@"

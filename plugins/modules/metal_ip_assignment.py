@@ -103,25 +103,104 @@ backend_transfer_enabled:
 from ansible.module_utils._text import to_native
 import traceback
 
+from ansible_specdoc.objects import (
+    SpecField,
+    FieldType,
+    SpecReturnValue,
+)
+
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
+    getSpecDocMeta,
 )
 
-MUTABLE_ATTRIBUTES = []
+module_spec = dict(
+    id=SpecField(
+        type=FieldType.string,
+        description="UUID of the ip_assignment.",
+    ),
+    device_id=SpecField(
+        type=FieldType.string,
+        description="UUID of the device to assign the IP to.",
+    ),
+    address=SpecField(
+        type=FieldType.string,
+        description="IP address to assign to the device.",
+    ),
+    customdata=SpecField(
+        type=FieldType.dict,
+        description="Custom data about the ip_assignment to create.",
+    ),
+    manageable=SpecField(
+        type=FieldType.bool,
+        description="Whether the IP address is manageable.",
+    ),
+)
+
+specdoc_examples = [
+    '''
+    - name: request ip reservation
+      equinix.cloud.metal_reserved_ip_block:
+        type: "public_ipv4"
+        metro: "sv"
+        quantity: 1
+        project_id: "{{ project.id }}"
+      register: ip_reservation
+
+    - name: available addresses from reservation
+      equinix.cloud.metal_available_ips_info:
+        reserved_ip_block_id: "{{ ip_reservation.id }}"
+        cidr: 32
+      register: available_ips
+    
+    - assert:
+        that:
+          - "available_ips.available | length == 1"  
+
+
+    - name: create device
+      equinix.cloud.metal_device:
+        project_id: "{{ project.id }}"
+        hostname: "device1"
+        operating_system: ubuntu_20_04
+        plan: c3.small.x86
+        metro: sv
+        state: present
+      register: device
+
+    - name: assign available IP
+      equinix.cloud.metal_ip_assignment:
+        device_id: "{{ device.id }}"
+        address: "{{ available_ips.available[0] }}"
+      register: assignment
+''',
+]
+
+result_sample = []
+
+MUTABLE_ATTRIBUTES = [
+    k for k, v in module_spec.items() if v.editable
+]
+
+SPECDOC_META = getSpecDocMeta(
+    short_description='Manage Equinix Metal IP assignments',
+    description='Asign reserved IPs to Equinix Metal devices.',
+    examples=specdoc_examples,
+    options=module_spec,
+    return_values={
+        "metal_ip_assignment": SpecReturnValue(
+            description='The assignment object.',
+            type=FieldType.dict,
+            sample=result_sample,
+        ),
+    },
+)
 
 
 def main():
-    argument_spec = dict(
-        state=dict(type='str', default='present', choices=['present', 'absent']),
-        id=dict(type='str'),
-        device_id=dict(type='str'),
-        address=dict(type='str'),
-        customdata=dict(type='str'),
-        manageable=dict(type='bool'),
-    )
     module = EquinixModule(
-        argument_spec=argument_spec,
+        argument_spec=SPECDOC_META.ansible_spec,
         required_one_of=[("device_id", "id")],
         required_by=dict(device_id=["address"]),
     )

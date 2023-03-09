@@ -54,7 +54,7 @@ resources:
 # End
 
 from ansible.module_utils._text import to_native
-from ansible_specdoc.objects import SpecField, FieldType, SpecDocMeta, SpecReturnValue
+from ansible_specdoc.objects import SpecField, FieldType, SpecReturnValue
 import traceback
 
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (

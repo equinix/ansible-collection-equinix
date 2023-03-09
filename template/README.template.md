@@ -2,7 +2,7 @@
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/equinix-labs/cloud/) 
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix-labs/ansible-collection-equinix/integration-tests.yml?branch=main)
 
-The Ansible equinix Collection contains various plugins for managing equinix services.
+The Ansible Collection Equinix contains various plugins for managing Equinix services.
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
@@ -31,15 +31,6 @@ Modules for retrieving information about existing equinix infrastructure.
 Name | Description |
 --- | ------------ |
 {% for mod in info_modules %}[equinix.cloud.{{ mod.name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/{{ collection_version }}/docs/modules/{{ mod.name }}.md{% else %}./docs/modules/{{ mod.name }}.md{% endif %})|{{ mod.description }}|
-{% endfor %}
-
-### List Modules
-
-Modules for retrieving and filtering on multiple equinix resources.
-
-Name | Description |
---- | ------------ |
-{% for mod in list_modules %}[equinix.cloud.{{ mod.name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/{{ collection_version }}/docs/modules/{{ mod.name }}.md{% else %}./docs/modules/{{ mod.name }}.md{% endif %})|{{ mod.description }}|
 {% endfor %}
 
 ### Inventory Plugins
@@ -71,25 +62,22 @@ pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection
 ## Usage
 Once the equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
 
-In order to use this collection, the `equinix_API_TOKEN` environment variable must be set to a valid equinix API v4 token. 
-Alternatively, you can pass your equinix API v4 token into the `api_token` option for each equinix module you reference.
+In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account Equinix Metal to use the `metal_*` plugins.
 
-The `equinix_UA_PREFIX` or the `ua_prefix` module option can be used to specify a custom User-Agent prefix.
+You can authenticate either by exporting auth tokens as environment variables, or by supplying `*_api_token` attributes to modules. For example, to use `metal_device`, you can export `METAL_AUTH_TOKEN` (or `METAL_API_TOKEN`), or you can supply `metal_auth_token` attribute.
 
 #### Example Playbook
 ```yaml
 ---
-- name: create equinix instance
+- name: create Equinix Metal device
   hosts: localhost
   tasks:
-    - name: Create a equinix instance    
-      equinix.cloud.instance:
-        label: my-equinix
-        type: g6-nanode-1
-        region: us-east
-        image: equinix/ubuntu20.04
-        root_pass: verysecurepassword!!!
-        state: present
+    - equinix.cloud.instance:
+        project_id: "3b516842-c8b1-485e-9f76-c891bd804c5e"
+        hostname: "my new device"
+        operating_system: ubuntu_20_04
+        plan: c3.small.x86
+        metro: sv
 ```
 
 For more information on Ansible collection usage, see [Ansible's official usage guide](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html).

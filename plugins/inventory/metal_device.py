@@ -3,9 +3,6 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
-
 from ansible_specdoc.objects import (
     SpecField,
     FieldType,
@@ -13,6 +10,20 @@ from ansible_specdoc.objects import (
 
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     getSpecDocMeta,
+)
+
+import os
+from typing import List, Dict, Any
+
+from ansible.errors import AnsibleError
+from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, to_safe_group_name
+
+from ansible_collections.equinix.cloud.plugins.module_utils import (
+    action,
+)
+from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
+    metal_client,
+    metal_api,
 )
 
 DOCUMENTATION = '''
@@ -50,7 +61,7 @@ options:
     description:
     - Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment
       variable.
-    required: true
+    required: false
     type: str
   plugin:
     choices:
@@ -165,24 +176,10 @@ SPECDOC_META = getSpecDocMeta(
     return_values={},
 )
 
-from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, to_safe_group_name
-
-from ansible.module_utils.six import string_types
-from ansible_collections.equinix.cloud.plugins.module_utils import (
-    action,
-)
-from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
-    metal_client,
-    metal_api,
-)
 
 EXCLUDE_ATTRIBUTES = [
     "ssh_keys",
 ]
-
-import os
-from typing import List, Dict, Any
 
 
 def label(device: Dict[str, Any]) -> str:
@@ -234,14 +231,16 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
         self._read_config_data(path)
 
+        strict = self.get_option('strict')
         configured_project_ids = self._get_project_ids()
         devices = self._get_devices_from_project_ids(configured_project_ids)
         projects = set([device['project_id'] for device in devices])
         for project in projects:
-            self.inventory.add_group(project)
+            self.inventory.add_group(to_safe_group_name(project))
 
         for device in devices:
-            self.inventory.add_host(label(device), group=device['project_id'])
+            group_name = to_safe_group_name(device['project_id'])
+            self.inventory.add_host(label(device), group=group_name)
             first_public_ip = next((ip['address'] for ip in device['ip_addresses'] if ip['public']), None)
             self.inventory.set_variable(label(device), 'ansible_host', first_public_ip)
             self.inventory.add_host(label(device), group='all')
@@ -249,7 +248,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
                 if k not in EXCLUDE_ATTRIBUTES:
                     self.inventory.set_variable(label(device), k, v)
 
-        strict = self.get_option('strict')
 
         for device in devices:
             variables = self.inventory.get_host(label(device)).get_vars()
@@ -278,6 +276,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
         for pid in project_ids:
             if not metal_client.is_valid_uuid(pid):
                 raise AnsibleError("Invalid project id: %s" % pid)
+        import q
+        q("project_ids")
         self._build_client()
         if len(project_ids) == 0:
             return [p["id"] for p in self._get_all_projects()]

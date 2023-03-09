@@ -39,20 +39,55 @@ resources:
 
 '''
 
-import traceback
 from ansible.module_utils._text import to_native
+import traceback
+
+from ansible_specdoc.objects import (
+    SpecField,
+    FieldType,
+    SpecReturnValue,
+)
 
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
+    getSpecDocMeta,
 )
 
+module_spec = dict(
+    device_id=SpecField(
+        type=FieldType.string,
+        description="UUID of the device to list ip_assignments for.",
+        required=True,
+    ),
+)
+
+specdoc_examples = [
+    '''
+    ''',
+]
+
+result_sample = [
+    '''
+    ''',
+]
+
+SPECDOC_META = getSpecDocMeta(
+    short_description="Gather IP address assignments for a device",
+    description="Gather IP address assignments for a device",
+    examples=specdoc_examples,
+    options=module_spec,
+    return_values={
+        "resources": SpecReturnValue(
+            description='Found resources',
+            type=FieldType.dict,
+            sample=result_sample,
+        ),
+    },
+)
 
 def main():
-    argument_spec = dict(
-        device_id=dict(type='str', required=True),
-    )
     module = EquinixModule(
-        argument_spec=argument_spec,
+        argument_spec=SPECDOC_META.ansbile_spec,
         supports_check_mode=True,
     )
     try:
