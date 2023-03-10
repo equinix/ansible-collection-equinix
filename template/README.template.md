@@ -7,7 +7,7 @@ The Ansible Collection Equinix contains various plugins for managing Equinix ser
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.9.10**.
+This collection has been tested against following Ansible version **6.7.0**, core version **2.13.8**.
 
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
