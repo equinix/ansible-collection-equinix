@@ -1,0 +1,530 @@
+{
+ "files": [
+  {
+   "name": ".",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.project_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d0cbb213ac6c2d97dbc42989088243c1f148326ff46bf7284574b95a1a40f834",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.ip_subnet_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8b3bda80998c88bca241941afc1556ce53213440890a37157c0b93bf0b7f210b",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.device_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8d4d8996b0e5840709e900db4e8ff2ffdd54b8032fd82e3826914516ad68784e",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.sshkey_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3b89ebab9f63c5c9d6bc6b4ada1bf2f0aee2492ef1105d2e2f3a41382a8e8fff",
+   "format": 1
+  },
+  {
+   "name": "docs/modules",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_available_ips_info.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4536ab5eeb67bb1a4cdcbda8883d7ece50ccd908f70abce561fe14121ba8d56c",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_ip_assignment.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9c345148a9e7a20ddc53944a3bd5c00964907b8cef03f844ee70e1622e7ddc31",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_device.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f0ab7f92098bda2fa95d9dd9a6a096b1ac2b6b4bf7779e4b42fd4aafaf831d46",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_ip_assignment_info.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4df461f37a290e1495443c6d6f6dfe93e7cdeb76ff183b3a69e0ba5bcbec0a21",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_reserved_ip_block_info.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "1fa2ed1ae076ee43ec88f7f7163bf81c5209d3675c53225695949a6669acdf2a",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_reserved_ip_block.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d9f37eca01ea33325251bf80618618d84223c9b94a85e39ba3b3d48635a5bb30",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_device_info.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "2eddd0f942fc801a999ce8e1383e2ce0823a52191da95dffc05baa619ff1f863",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_project.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4f5e7257a6c66ba9f4a4a7d6de3e7b328667f50afc10c369e5bb052d40bc8e1c",
+   "format": 1
+  },
+  {
+   "name": "docs/modules/metal_project_info.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fc21476d73cf203a209970f9addeef5fa2ac0f1e71a8325d262d7b5a8a250160",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.sshkey_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "89640ef25218642df03e73b03609b0ab8347d2655f46f99c7df0bdf9437459cb",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.device_inventory.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8c40f6eb2b606d30c0b4d70808a6eb3b9952a3d4ea3ec3a2dd5c48ce6ef5ac99",
+   "format": 1
+  },
+  {
+   "name": "docs/inventory",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "docs/inventory/metal_device.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c32dc8d66d72d706f25b67ef42db8e468867f089910f47ce6cf2c5a82a9a9e74",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.operating_system_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "804bcf2c006ec576bbbc12efa3388fc44dfd4e44c4d98d76a0eab0216a2adbf0",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.org_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "33424fa81c6a8d04048a7a02e47253a6ec9038edb1740b1a818abb3266b62509",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.facility_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6060fda7763ce843c1cb4e1bd744339636d8b8ea49ec27ce8afce1c12cfc8c48",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.project_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "50d4865e034e21d833c96d76533528b699be1123f1a6b692777bdc80c3336413",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.capacity_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "19302edd6d4611da7789b3186622af4e2df46de28fcaabd1e9de1b00863f0678",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.plan_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dbdc6f2f8e713bc89c4ccd420b89d4aaa1cbd00ed27cc414ee68c76a073d4c46",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.device_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "00c62c1fdda64f9f69f1c6b98b2be8fc24273a341a2623055a60c34cec1eeaad",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.ip_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4441bccf58c90a53e08a6633df681166c07b74a8c0d4bc3533b12c54879a6439",
+   "format": 1
+  },
+  {
+   "name": "docs/equinix.metal.user_info_module.rst",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "abfb1536436d69eb42e3d2b9f18d84c345c5c2ffe79874947e436559f5064506",
+   "format": 1
+  },
+  {
+   "name": "changelogs",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "changelogs/.plugin-cache.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d7442fe475951cce047f1821de43ad58da9cf626d640adc1748c8e42d6ca5da4",
+   "format": 1
+  },
+  {
+   "name": "changelogs/README.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e71bdec7e62202457a611b00f379356bba9b6f290521f6e460c8b3f499a44a75",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/.keep",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "format": 1
+  },
+  {
+   "name": "changelogs/changelog.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3d311df3b6a024c0ac71f567e0e2e2454b23efc911554e9d184e21228f570ae5",
+   "format": 1
+  },
+  {
+   "name": "changelogs/config.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "18032509ccd4c49a54c274f1926efddc436d84bbeb2fb279191f93d939e2dfc7",
+   "format": 1
+  },
+  {
+   "name": "meta",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "meta/runtime.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "df18179bb2f5447a56ac92261a911649b96821c0b2c08eea62d5cc6b0195203f",
+   "format": 1
+  },
+  {
+   "name": "requirements-dev.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c149673c0a6c8a15681e309f51a78f0a3d1da06c51a08e166d395042ac398260",
+   "format": 1
+  },
+  {
+   "name": "tox.ini",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "b3101377c297c0ea168d077000d5f6188731a73f8fdd53f93675711698e18495",
+   "format": 1
+  },
+  {
+   "name": "cleanup.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ac36ca70e7b3ce30fb7328ccde8826afce6ce3312a20e33b9cc2b006c1a734ea",
+   "format": 1
+  },
+  {
+   "name": "LICENSE",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+   "format": 1
+  },
+  {
+   "name": "CONTRIBUTING.md",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "db707a8ea3127f34f123ca0e77c5cfea76f0b39dc226b4dc910927dbaa356ed7",
+   "format": 1
+  },
+  {
+   "name": ".mypy.ini",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0e6f5e87071a0bb5863df54fa6ec10e800cf0f345372d734466fa88f0b48c766",
+   "format": 1
+  },
+  {
+   "name": "ansible_collections",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "getbody.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "76ea0d8bd5266458606e3b1c731ee6bd8be6df468a5882085f43714cf98d9567",
+   "format": 1
+  },
+  {
+   "name": ".yamllint.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "63470fa370e77b29358623738865d8ec5cf25dd4a469fc9c0096d14b616dc7d1",
+   "format": 1
+  },
+  {
+   "name": "modlist.orig",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "78abf0e8bd6e48e9005b232176c9c97bb5ed2679102566e3e81f815a72c51007",
+   "format": 1
+  },
+  {
+   "name": "plugins",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/modules",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_project.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c83277b929c36a87f04cc3a06a51fc66465b4a59d14cc2dd7b4d90abd48d1f1b",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_available_ips_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d73c0aa0a3074b7ecb4bb2215f3639872a728358ba7471a4c871219fe7ec1874",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_reserved_ip_block.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "aea058f6e930502c7920c384b1dc449e6799505dc4c54d65f9f2255813035522",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_device.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0d2fb6f4eb092924c4ccaa99d7475fb1f2c6157685cf005982cba39b26fb274c",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_ip_assignment_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5305ef5b092c82f5feb062fce5da96e34940027f397ae17a1693ab9f73bac210",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_reserved_ip_block_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8a165fe138f1f72bfa79aa7eb43fa41f9494eb8045abeca40769e8f978bc2dd2",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_project_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "dde29724f0c2daf179bbb8aefd15926c524ab677df5261f1646cfd4dfe766e44",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_device_info.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "84cb567b433625de74cdd5329873f1353097777974fc9eb0333ca37dd32705aa",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/metal_ip_assignment.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fb084e695cd16e8309e86969031f6413a5dd572fd590a196746d8bd4ce7634ce",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/metal",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/metal/metal_api.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d50ff9c8cddc8ea5318e99e50a0a43f40932418ef3dc0cbb515b50c375c0e859",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/metal/metal_client.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6bf60b67da149285b3e8f99d21e032da9057dd6eaaa1fd568a7d3e706ed16a64",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/metal/spec_types.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5eb0f37b21f2233fc66a18d48d2904f7b6a5407d61e1c1c255fd9c8c7751d5b7",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/metal/api_routes.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7a66794ff5e74e04abd1e7874392e4c2fcfb05c1b605bcddcf7035414df0ce84",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/utils.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d1cf07554937838b8623c8539b4c8e0a1f7a57af52a83d232ccc65c4ad8fea67",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/equinix.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3387133765f1bb2a916a5ef053f008f0831769b19ef58193db45df07d9f303b7",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/__init__.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/action.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "69cc2e7493087bba3cad8a6fb29d1b3b1a92686dc7b4dc746eccbe74edaf7389",
+   "format": 1
+  },
+  {
+   "name": "plugins/module_utils/equinix_docs.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "825fc1d555785ba09bbd5feaf1426c4efe78351b0ad8b70433a4e6fbd6cd7bf1",
+   "format": 1
+  },
+  {
+   "name": "plugins/inventory",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "plugins/inventory/metal_device.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9ee14e0ff08dde017dc23d4cea0198d4c5d58e9ae3325827d9a0df8b903a2409",
+   "format": 1
+  },
+  {
+   "name": "pyproject.toml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4df12a52f8a76be8cd1286b95a32769aeabd2745a3cae9e8bc350c5b2fbd447c",
+   "format": 1
+  },
+  {
+   "name": "importlib",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "format": 1
+  },
+  {
+   "name": "requirements.txt",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ac530f009d4afc2be1f94a87aea2a5276ab9d5e7c15c64c21d8ab3a8c62bdc3f",
+   "format": 1
+  }
+ ],
+ "format": 1
+}

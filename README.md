@@ -1,169 +1,100 @@
 # Equinix Ansible Collection
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/equinix/cloud/) 
+![Tests](https://img.shields.io/github/actions/workflow/status/equinix-labs/ansible-collection-equinix/integration-tests.yml?branch=main)
 
-This is an unofficial fork of Equinix Metal collection, aiming to include other services from Equinix beyond Metal. It's still work in progress, not ready for production.
-
-The Ansible Equinix collection includes a variety of Ansible content to help automate the management of Equinix resources. (in future: This collection is maintained by the Equinix DevRel team).
-
-## Basic Usage
-
-Following example playbook shows how to create a device in an existing project.
-
-To run this example, you should have a project in Equinix Metal ready, and 
-the project ID exported in environment variable `METAL_PROJECT_ID`.
-
-You should also have you Equinix Metal API token exported in environment variable `METAL_API_TOKEN` (or `METAL_AUTH_TOKEN`).
-
-You can supply both as module parameters (`project_id` and `metal_api_token`) of equinix.cloud.metal_device, instead of from the environment.
-
-```yaml
-- hosts: localhost
-  tasks:
-    - set_fact:
-        device_hostname: my-device
-
-    - name: start a c3.small.x86 ubuntu_20_04 device in sv 
-      equinix.cloud.metal_device:
-        hostname: "{{ device_hostname }}"
-        operating_system: ubuntu_20_04
-        plan: c3.small.x86
-        metro: sv
-        state: present
-      register: my_device
-
-    - debug:
-        msg: "Device '{{ device_hostname }}' is created and its ID is {{ my_device.id }}"
-```
-
-Save the example to `example.yml` and run `$ ansible-playbook example.yml`.
+The Ansible Collection Equinix contains various plugins for managing Equinix services.
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.13.7**.
+This collection has been tested against following Ansible versions: **>=2.9.10**.
 
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
 PEP440 is the schema used to describe the versions of Ansible.
 <!--end requires_ansible-->
 
-## Python version compatibility
-
-This collection depends on:
- - [equinix_metal](https://github.com/t0mk/metal-python). This collection requires Python 3.8 or greater.
-
-## Included content
-
 <!--start collection content-->
-### Inventory plugins
-Name | Description
---- | ---
-[equinix.cloud.metal_device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_device_inventory.rst)|Equinix Metal Device inventory source
-
 ### Modules
-Name | Description
---- | ---
-[equinix.cloud.metal_device](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_device_module.rst)|Manage a bare metal server in Equinix Metal
-[equinix.cloud.metal_device_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_device_info_module.rst)|Gather information about Equinix Metal devices
-[equinix.cloud.metal_project](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_project_module.rst)|Create/delete a project in Equinix Metal
-[equinix.cloud.metal_project_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/equinix.cloud.metal_project_info_module.rst)|Gather information about Equinix Metal projects
+
+Modules for managing equinix infrastructure.
+
+Name | Description |
+--- | ------------ |
+[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment.md)|Asign reserved IPs to Equinix Metal devices.|
+[equinix.cloud.metal_project](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal. You can use *id* or *name* to lookup a project. If you want to create new project, you must provide *name*.|
+[equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block.md)|When a user provisions first device in a facility, Equinix Metal API automatically allocates IPv6/56 and private IPv4/25 blocks. The new device then gets IPv6 and private IPv4 addresses from those block. It also gets a public IPv4/31 address. Every new device in the project and facility will automatically get IPv6 and private IPv4 addresses from these pre-allocated blocks. The IPv6 and private IPv4 blocks can't be created, only imported. With this resource, it's possible to create either public IPv4 blocks or global IPv4 blocks.|
+
+
+### Info Modules
+
+Modules for retrieving information about existing equinix infrastructure.
+
+Name | Description |
+--- | ------------ |
+[equinix.cloud.metal_available_ips_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_device_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
+[equinix.cloud.metal_project_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
+[equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block_info.md)|Gather information about Equinix Metal projects|
+
+
+### Inventory Plugins
+
+Dynamically add equinix infrastructure to an Ansible inventory.
+
+Name |
+--- |
+[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/inventory/metal_device.md)|
+
 
 <!--end collection content-->
 
-## Installing this collection
+## Installation
 
-You can install the Equinix Metal collection with the Ansible Galaxy CLI:
+You can install the equinix collection with the Ansible Galaxy CLI:
 
-    ansible-galaxy collection install equinix.cloud
-
-You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
-
-```yaml
----
-collections:
-  - name: equinix.cloud
+```shell
+ansible-galaxy collection install equinix.cloud
 ```
 
-The python module dependencies are not installed by `ansible-galaxy`.  They can
+The Python module dependencies are not installed by `ansible-galaxy`.  They can
 be manually installed using pip:
 
-    pip install -r requirements.txt
-
-or:
-
-    pip install equinix_metal
-
-## Using this collection
-
-
-You can either call modules by their Fully Qualified Collection Namespace (FQCN), such as `equinix.cloud.metal_device`, or you can call modules by their short name if you list the `equinix.cloud` collection in the playbook's `collections` keyword:
-
-```yaml
----
-TODO
+```shell
+pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/0.0.1/requirements.txt
 ```
 
-### See Also:
+## Usage
+Once the equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
 
-* [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
+In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account Equinix Metal to use the `metal_*` plugins.
 
-## Contributing to this collection
+You can authenticate either by exporting auth tokens as environment variables, or by supplying `*_api_token` attributes to modules. For example, to use `metal_device`, you can export `METAL_AUTH_TOKEN` (or `METAL_API_TOKEN`), or you can supply `metal_auth_token` attribute.
 
-We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Equinix collection repository](https://github.com/FIXTHIS).
+#### Example Playbook
+```yaml
+---
+- name: create Equinix Metal device
+  hosts: localhost
+  tasks:
+    - equinix.cloud.instance:
+        project_id: "3b516842-c8b1-485e-9f76-c891bd804c5e"
+        hostname: "my new device"
+        operating_system: ubuntu_20_04
+        plan: c3.small.x86
+        metro: sv
+```
 
-If you require support, please email [support@equinixmetal.com](mailto:support@equinixmetal.com), visit the Equinix Metal IRC channel (#equinixmetal on freenode), subscribe to the [Equinix Metal Community Slack channel](https://slack.equinixmetal.com/) or post an issue within this repository.
+For more information on Ansible collection usage, see [Ansible's official usage guide](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html).
 
-If you want to develop new content for this collection or improve what is already here, the easiest way to work on the collection is to clone it into one of the configured [`COLLECTIONS_PATHS`](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#collections-paths), and work on it there.
+## Examples
 
-### Testing with `ansible-test`
-
-Running sanity tests: `ansible-test sanity --docker -v`
-Running unit tests: `ansible-test units -v --docker`
-
-Running integration tests:
-
-```sh
-cat << EOF > tests/integration/integration_config.yml
-metal_api_token: <YOUR EQUINIX METAL API TOKEN>
-EOF
- ansible-test integration -v --docker
- ```
-
-### More information about contributing
-
-- [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html) - Details on contributing to Ansible
-- [Contributing to Collections](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#contributing-to-collections) - How to check out collection git repositories correctly
-
-## Release notes
-<!--Add a link to a changelog.rst file or an external docsite to cover this information. -->
-
-## Roadmap
-
-<!-- Optional. Include the roadmap for this collection, and the proposed release/versioning strategy so users can anticipate the upgrade/update cycle. -->
-
-## Publishing New Version
-
-Prepare the release:
-- Refresh the README.md: `tox -e add_docs`
-- Refresh the changelog: `tox -e antsibull-changelog -- release --verbose --version 1.1.0`
-- Clean up the changelog fragments.
-- Commit everything and push a PR for review
-
-Push the release:
-- Tag the release: `git tag -s 1.0.0`
-- Push the tag: `git push origin 1.0.0`
-
-## More information
-
-- [Ansible Collection overview](https://github.com/ansible-collections/overview)
-- [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html)
-- [Ansible Developer guide](https://docs.ansible.com/ansible/latest/dev_guide/index.html)
-- [Ansible Collections Checklist](https://github.com/ansible-collections/overview/blob/master/collection_requirements.rst)
-- [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
-- [The Bullhorn (the Ansible Contributor newsletter)](https://us19.campaign-archive.com/home/?u=56d874e027110e35dea0e03c1&id=d6635f5420)
-- [Changes impacting Contributors](https://github.com/ansible-collections/overview/issues/45)
+Use-case examples for this collection can be found [here](./examples/README.md).
 
 ## Licensing
 
-GNU General Public License v3.0 or later.
+GNU General Public License v3.0.
 
-See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
+See [COPYING](COPYING) to see the full text.

@@ -9,18 +9,18 @@ license_file: LICENSE
 tags:
   - equinix
   - cloud
-repository: https://github.com/equinix/ansible-collection-equinix
-documentation: https://github.com/equinix/ansible-collection-metal/blob/v{{ collection_version }}/README.md
-homepage: https://github.com/equinix/ansible-collection-equinix
-issues: https://github.com/equinix/ansible-collection-equinix/issues
+repository: https://github.com/equinix-labs/ansible-collection-equinix
+documentation: https://github.com/equinix-labs/ansible-collection-metal/blob/v{{ collection_version }}/README.md
+homepage: https://github.com/equinix-labs/ansible-collection-equinix
+issues: https://github.com/equinix-labs/ansible-collection-equinix/issues
 build_ignore:
   - '.gitignore'
   - '.github'
   - '.pylintrc'
   - '*.tar.gz'
   - 'Makefile'
-  - 'template'
+#  - 'template'
   - 'tests'
-  - 'scripts'
+#  - 'scripts'
   - 'venv'
 

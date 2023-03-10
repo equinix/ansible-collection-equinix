@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import importlib
 import pathlib
 import sys
@@ -40,7 +42,8 @@ def add_ansible_collection_path():
               'below an Ansible collection: {...}/ansible_collections/{'
               'namespace}/{collection}/')
         return
-
+    
+    print(ansible_root)
     sys.path.append(ansible_root)
 
 

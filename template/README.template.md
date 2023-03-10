@@ -1,5 +1,5 @@
 # Equinix Ansible Collection
-[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/equinix-labs/cloud/) 
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/equinix/cloud/) 
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix-labs/ansible-collection-equinix/integration-tests.yml?branch=main)
 
 The Ansible Collection Equinix contains various plugins for managing Equinix services.
@@ -39,7 +39,7 @@ Dynamically add equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
-{% for name in inventory %}[equinix.cloud.{{ name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/{{ collection_version }}/docs/inventory/{{ name }}.md{% else %}./docs/inventory/{{ name }}.rst{% endif %})|
+{% for name in inventory %}[equinix.cloud.{{ name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/{{ collection_version }}/docs/inventory/{{ name }}.md{% else %}./docs/inventory/{{ name }}.md{% endif %})|
 {% endfor %}
 
 <!--end collection content-->
