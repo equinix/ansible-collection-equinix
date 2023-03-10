@@ -72,7 +72,11 @@
         that:
           - assignment.device_id == "{{ device.id }}"
           - assignment.address   == "{{ available_ips.available[0] }}"
-    # test assignment
+
+    - name: assignment info test
+      equinix.cloud.metal_ip_assignment_info:
+        device_id: "{{ device.id }}"
+      register: assignment_info
 
     - name: destroy assignment
       equinix.cloud.metal_ip_assignment:

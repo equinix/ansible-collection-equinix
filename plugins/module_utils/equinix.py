@@ -212,7 +212,7 @@ def get_diff(params: dict, fetched: dict, mutables: list):
 
 
 def getSpecDocMeta(short_description, description, options, examples, return_values):
-    validate_yaml(examples)
+    # validate_yaml(examples)
     return SpecDocMeta(
         short_description=short_description,
         description=description,

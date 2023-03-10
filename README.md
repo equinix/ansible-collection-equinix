@@ -7,7 +7,7 @@ The Ansible Collection Equinix contains various plugins for managing Equinix ser
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.9.10**.
+This collection has been tested against following Ansible version **6.7.0**, core version **2.13.8**.
 
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
@@ -22,9 +22,9 @@ Modules for managing equinix infrastructure.
 Name | Description |
 --- | ------------ |
 [equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment.md)|Asign reserved IPs to Equinix Metal devices.|
-[equinix.cloud.metal_project](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal. You can use *id* or *name* to lookup a project. If you want to create new project, you must provide *name*.|
-[equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block.md)|When a user provisions first device in a facility, Equinix Metal API automatically allocates IPv6/56 and private IPv4/25 blocks. The new device then gets IPv6 and private IPv4 addresses from those block. It also gets a public IPv4/31 address. Every new device in the project and facility will automatically get IPv6 and private IPv4 addresses from these pre-allocated blocks. The IPv6 and private IPv4 blocks can't be created, only imported. With this resource, it's possible to create either public IPv4 blocks or global IPv4 blocks.|
+[equinix.cloud.metal_ip_assignment](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
+[equinix.cloud.metal_project](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
+[equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 
 
 ### Info Modules
@@ -37,7 +37,7 @@ Name | Description |
 [equinix.cloud.metal_device_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
 [equinix.cloud.metal_ip_assignment_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
 [equinix.cloud.metal_project_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
-[equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block_info.md)|Gather information about Equinix Metal projects|
+[equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 
 
 ### Inventory Plugins

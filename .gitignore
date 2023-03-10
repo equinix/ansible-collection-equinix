@@ -389,3 +389,6 @@ $RECYCLE.BIN/
 
 .vscode
 ansible.cfg
+
+*tar.gz
+getbody.py

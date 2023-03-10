@@ -46,7 +46,12 @@ equinix.cloud.metal_available_ips_info:
     - Sample Response:
         ```json
         
-            
+        {
+            "available": [
+                "147.75.71.192/32"
+            ],
+        }
+        
         ```
 
 

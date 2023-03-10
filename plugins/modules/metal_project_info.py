@@ -88,7 +88,9 @@ specdoc_examples = ['''
                     ]
 
 result_sample = ['''
-{
+
+[  
+  {
     "backend_transfer_enabled": false,
     "customdata": {},
     "description": "",
@@ -96,7 +98,8 @@ result_sample = ['''
     "name": "ansible-integration-test-project-csle6t2y-project2",
     "organization_id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
     "payment_method_id": "845b45a3-c565-47e5-b9b6-a86204a73d29"
-}''',
+  }
+]''',
 ]
 
 SPECDOC_META = getSpecDocMeta(

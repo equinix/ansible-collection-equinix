@@ -3,102 +3,9 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = r'''
-module: metal_ip_assignment
-extends_documentation_fragment:
-    - equinix.cloud.metal_common
-    - equinix.cloud.state
-short_description: Create/delete a ip_assignment in Equinix Metal
-description:
-    - Create/delete a ip_assignment in Equinix Metal.
-options:
-    name:
-        description:
-            - The name of the ip_assignment.
-        type: str
-    id:
-        description:
-            - UUID of the ip_assignment.
-        type: str
-    organization_id:
-        description:
-            - UUID of the organization to create the ip_assignment in.
-        type: str
-    payment_method_id:
-        description:
-            - UUID of payment method to use for the ip_assignment. When blank, the API assumes default org payment method.
-        type: str
-    customdata:
-        description:
-            - Custom data about the ip_assignment to create.
-        type: str
-    backend_transfer_enabled:
-        description:
-            - Enable backend transfer for the ip_assignment.
-        type: bool
-'''
-
-EXAMPLES = r'''
-- name: Create new ip_assignment
-  hosts: localhost
-  tasks:
-      equinix.cloud.metal_ip_assignment:
-          name: "new ip_assignment"
-
-- name: Create new ip_assignment within non-default organization
-  hosts: localhost
-  tasks:
-      equinix.cloud.metal_ip_assignment:
-          name: "my org ip_assignment"
-          organization_id: a4cc87f9-e00f-48c2-9460-74aa60beb6b0
-
-- name: Remove ip_assignment by id
-  hosts: localhost
-  tasks:
-      equinix.cloud.metal_ip_assignment:
-          state: absent
-          id: eef49903-7a09-4ca1-af67-4087c29ab5b6
-
-- name: Create new ip_assignment with non-default billing method
-  hosts: localhost
-  tasks:
-      equinix.cloud.metal_ip_assignment:
-          name: "newer ip_assignment"
-          payment_method_id: "abf49903-7a09-4ca1-af67-4087c29ab343"
-'''
-
-RETURN = r'''
-id:
-    description: UUID of the ip_assignment.
-    returned: I(state=present)
-    type: str
-    sample: "eef49903-7a09-4ca1-af67-4087c29ab5b6"
-name:
-    description: Name of the ip_assignment.
-    returned: I(state=present)
-    type: str
-    sample: "new ip_assignment"
-organization_id:
-    description: UUID of the organization the ip_assignment belongs to.
-    returned: I(state=present)
-    type: str
-    sample: "a4cc87f9-e00f-48c2-9460-74aa60beb6b0"
-payment_method_id:
-    description: UUID of the payment method used for the ip_assignment.
-    returned: I(state=present)
-    type: str
-    sample: "abf49903-7a09-4ca1-af67-4087c29ab343"
-customdata:
-    description: Custom data about the ip_assignment.
-    returned: I(state=present)
-    type: str
-    sample: '{"setting": 12}'
-backend_transfer_enabled:
-    description: Whether backend transfer is enabled for the ip_assignment.
-    returned: I(state=present)
-    type: bool
-    sample: true
-'''
+DOCUMENTATION = ""
+EXAMPLES = ""   
+RETURN = ""
 
 from ansible.module_utils._text import to_native
 import traceback
@@ -177,7 +84,24 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = []
+result_sample = [
+    """
+{
+    "address": "147.75.71.192/32",
+    "address_family": 4,
+    "changed": true,
+    "cidr": 32,
+    "device_id": "a8c5dd81-9f7a-4c70-81c6-a168782931ab",
+    "id": "83b5503c-7b7f-4883-9509-b6b728b41491",
+    "management": false,
+    "metro": "sv",
+    "netmask": "255.255.255.255",
+    "network": "147.75.71.192",
+    "public": true
+}
+"""
+
+]
 
 MUTABLE_ATTRIBUTES = [
     k for k, v in module_spec.items() if v.editable

@@ -62,7 +62,7 @@ def get_module_metadata(module_file):
     module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(module)
 
-    description = getattr(module, 'SPECDOC_META').description
+    description = getattr(module, 'SPECDOC_META').short_description
     if isinstance(description, list):
         description = description[0]
 

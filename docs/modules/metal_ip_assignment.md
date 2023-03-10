@@ -75,4 +75,23 @@ Asign reserved IPs to Equinix Metal devices.
 
 - `metal_ip_assignment` - The assignment object.
 
+    - Sample Response:
+        ```json
+        
+        {
+            "address": "147.75.71.192/32",
+            "address_family": 4,
+            "changed": true,
+            "cidr": 32,
+            "device_id": "a8c5dd81-9f7a-4c70-81c6-a168782931ab",
+            "id": "83b5503c-7b7f-4883-9509-b6b728b41491",
+            "management": false,
+            "metro": "sv",
+            "netmask": "255.255.255.255",
+            "network": "147.75.71.192",
+            "public": true
+        }
+        
+        ```
+
 

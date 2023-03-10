@@ -21,16 +21,20 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 )
 
 specdoc_examples = '''
-- name: Gather information about all reserved_ip_blocks
+- name: Gather list of public_ipv4 reserved_ip_blocks in a project
   hosts: localhost
   tasks:
       - equinix.cloud.metal_reserved_ip_block_info
+            type: public_ipv4
+            project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 ''', '''
-- name: Gather information about all reserved_ip_blocks in organization
+- name: Gather list of public_ipv6 reserved_ip_blocks in a project in metro ams
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_reserved_ip_block_info:
-            organization_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+        equinix.cloud.metal_reserved_ip_block_info
+            type: public_ipv6
+            project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+            metro: ams
 '''
 
 module_spec = dict(
@@ -51,13 +55,31 @@ module_spec = dict(
     ),
 )
 
-result_sample = []
+result_sample = [
+'''
+[
+    {
+        "address_family": 4,
+        "customdata": {},
+        "details": "some desc fff",
+        "id": "16148fad-7839-4c63-b33f-0ecfec4f9e29",
+        "management": false,
+        "metro": "da",
+        "netmask": "255.255.255.255",
+        "network": "145.40.102.107",
+        "project_id": "52000fb2-ee46-4673-93a8-de2c2bdba33b",
+        "public": true,
+        "quantity": 1,
+        "tags": [],
+        "type": "public_ipv4"
+    }
+]
+'''    
+]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description="Gather information about Equinix Metal projects",
-    description=(
-        'Gather information about Equinix Metal projects'
-    ),
+    short_description="Gather list of reserved IP blocks",
+    description="Gatehr list of reserved IP blocks matching the specified criteria",
     examples=specdoc_examples,
     options=module_spec,
     return_values={
@@ -71,13 +93,6 @@ SPECDOC_META = getSpecDocMeta(
 
 
 def main():
-    argument_spec = dict(
-        type=dict(type='str', required=True, choices=[
-            'public_ipv4', 'public_ipv6', 'private_ipv4', 'global_ipv4', 'vrf',
-        ]),
-        project_id=dict(type='str', required=True),
-        metro=dict(type='str'),
-    )
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         supports_check_mode=True,

@@ -3,41 +3,9 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = r'''
-module: metal_ip_assignment_info
-extends_documentation_fragment:
-    - equinix.cloud.metal_common
-    - equinix.cloud.filters
-short_description: Gather information about Equinix Metal ip_assignments
-description:
-    - Gather information about Equinix Metal ip_assignments.
-options:
-    organization_id:
-        description:
-            - UUID of the organization to list ip_assignments for.
-        type: str
-'''
-
-EXAMPLES = r'''
-- name: Gather information about all ip_assignments
-  hosts: localhost
-  tasks:
-      - equinix.cloud.metal_ip_assignment_info
-
-- name: Gather information about all ip_assignments in organization
-  hosts: localhost
-  tasks:
-      - equinix.cloud.metal_ip_assignment_info:
-            organization_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
-'''
-
-RETURN = r'''
-resources:
-    description: List of ip_assignment resources. See docs of equinix.cloud.metal_reserved_ip_block for description of each item.
-    returned: always
-    type: list
-
-'''
+DOCUMENTATION = ""
+EXAMPLES = ""
+RETURN = ""
 
 from ansible.module_utils._text import to_native
 import traceback
@@ -63,12 +31,66 @@ module_spec = dict(
 
 specdoc_examples = [
     '''
-    ''',
+- name: assignment info 
+  equinix.cloud.metal_ip_assignment_info:
+    device_id: "{{ device.id }}"
+  register: assignment_info
+''',
 ]
 
 result_sample = [
     '''
-    ''',
+[
+    {
+        "address": "147.75.55.115/31",
+        "address_family": 4,
+        "cidr": 31,
+        "device_id": "8ea9837a-6d19-4607-b166-f7f7bb04b022",
+        "id": "38deafaa-0a1d-4e32-b8cd-417e2ba958db",
+        "management": true,
+        "metro": "da",
+        "netmask": "255.255.255.254",
+        "network": "147.75.55.114",
+        "public": true
+    },
+    {
+        "address": "145.40.102.107/32",
+        "address_family": 4,
+        "cidr": 32,
+        "device_id": "8ea9837a-6d19-4607-b166-f7f7bb04b022",
+        "id": "c30b9d28-755c-4016-8480-b90497643c29",
+        "management": false,
+        "metro": "da",
+        "netmask": "255.255.255.255",
+        "network": "145.40.102.107",
+        "public": true
+    },
+    {
+        "address": "2604:1380:4641:5b00::1/127",
+        "address_family": 6,
+        "cidr": 127,
+        "device_id": "8ea9837a-6d19-4607-b166-f7f7bb04b022",
+        "id": "ad2f9b8c-f73f-4ae7-9016-f78b316f7ad6",
+        "management": true,
+        "metro": null,
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe",
+        "network": "2604:1380:4641:5b00::",
+        "public": true
+    },
+    {
+        "address": "10.70.50.129/31",
+        "address_family": 4,
+        "cidr": 31,
+        "device_id": "8ea9837a-6d19-4607-b166-f7f7bb04b022",
+        "id": "4d81a406-3fb2-4ac4-9e03-2a498c5788e1",
+        "management": true,
+        "metro": null,
+        "netmask": "255.255.255.254",
+        "network": "10.70.50.128",
+        "public": false
+    }
+]
+''',
 ]
 
 SPECDOC_META = getSpecDocMeta(
@@ -85,16 +107,15 @@ SPECDOC_META = getSpecDocMeta(
     },
 )
 
+
 def main():
     module = EquinixModule(
-        argument_spec=SPECDOC_META.ansbile_spec,
-        supports_check_mode=True,
+        argument_spec=SPECDOC_META.ansible_spec,
+        is_info=True,
     )
     try:
         module.params_syntax_check()
-        return_value = {'resources': module.get_list(
-            "metal_ip_assignment")
-        }
+        return_value = {'resources': module.get_list("metal_ip_assignment")}
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)
