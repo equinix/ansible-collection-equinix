@@ -17,43 +17,43 @@ PEP440 is the schema used to describe the versions of Ansible.
 <!--start collection content-->
 ### Modules
 
-Modules for managing equinix infrastructure.
+Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
-[equinix.cloud.metal_project](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
-[equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
+[equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
+[equinix.cloud.metal_project](./docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
+[equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 
 
 ### Info Modules
 
-Modules for retrieving information about existing equinix infrastructure.
+Modules for retrieving information about existing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_available_ips_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
-[equinix.cloud.metal_device_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
-[equinix.cloud.metal_project_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
-[equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
+[equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
+[equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
+[equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 
 
 ### Inventory Plugins
 
-Dynamically add equinix infrastructure to an Ansible inventory.
+Dynamically add Equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
-[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/inventory/metal_device.md)|
+[equinix.cloud.metal_device](./docs/inventory/metal_device.md)|
 
 
 <!--end collection content-->
 
 ## Installation
 
-You can install the equinix collection with the Ansible Galaxy CLI:
+You can install the Equinix collection with the Ansible Galaxy CLI:
 
 ```shell
 ansible-galaxy collection install equinix.cloud
@@ -63,11 +63,11 @@ The Python module dependencies are not installed by `ansible-galaxy`.  They can
 be manually installed using pip:
 
 ```shell
-pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/0.0.1/requirements.txt
+pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/main/requirements.txt
 ```
 
 ## Usage
-Once the equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
+Once the Equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
 
 In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account Equinix Metal to use the `metal_*` plugins.
 
@@ -79,7 +79,7 @@ You can authenticate either by exporting auth tokens as environment variables, o
 - name: create Equinix Metal device
   hosts: localhost
   tasks:
-    - equinix.cloud.instance:
+    - equinix.cloud.metal_device:
         project_id: "3b516842-c8b1-485e-9f76-c891bd804c5e"
         hostname: "my new device"
         operating_system: ubuntu_20_04

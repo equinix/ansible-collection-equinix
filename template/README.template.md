@@ -17,7 +17,7 @@ PEP440 is the schema used to describe the versions of Ansible.
 <!--start collection content-->
 ### Modules
 
-Modules for managing equinix infrastructure.
+Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
@@ -26,7 +26,7 @@ Name | Description |
 
 ### Info Modules
 
-Modules for retrieving information about existing equinix infrastructure.
+Modules for retrieving information about existing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
@@ -35,7 +35,7 @@ Name | Description |
 
 ### Inventory Plugins
 
-Dynamically add equinix infrastructure to an Ansible inventory.
+Dynamically add Equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
@@ -46,7 +46,7 @@ Name |
 
 ## Installation
 
-You can install the equinix collection with the Ansible Galaxy CLI:
+You can install the Equinix collection with the Ansible Galaxy CLI:
 
 ```shell
 ansible-galaxy collection install equinix.cloud
@@ -60,7 +60,7 @@ pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection
 ```
 
 ## Usage
-Once the equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
+Once the Equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
 
 In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account Equinix Metal to use the `metal_*` plugins.
 
@@ -72,7 +72,7 @@ You can authenticate either by exporting auth tokens as environment variables, o
 - name: create Equinix Metal device
   hosts: localhost
   tasks:
-    - equinix.cloud.instance:
+    - equinix.cloud.metal_device:
         project_id: "3b516842-c8b1-485e-9f76-c891bd804c5e"
         hostname: "my new device"
         operating_system: ubuntu_20_04
