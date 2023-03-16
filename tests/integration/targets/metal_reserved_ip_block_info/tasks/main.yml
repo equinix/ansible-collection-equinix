@@ -21,6 +21,10 @@
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
     - set_fact:
         test_metro: sv
+    - set_fact:
+        test_os: nixos_22_05
+    - set_fact:
+        test_plan: c3.small.x86
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -31,8 +35,8 @@
       equinix.cloud.metal_device:
         project_id: "{{ project.id }}"
         hostname: "{{ test_prefix }}-dev1"
-        operating_system: ubuntu_20_04
-        plan: c3.small.x86
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
         metro: "{{ test_metro }}"
         state: present
       register: device

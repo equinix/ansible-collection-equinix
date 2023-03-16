@@ -23,6 +23,12 @@
         unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_os: nixos_22_05
+    - set_fact:
+        test_plan: c3.small.x86
+    - set_fact:
+        test_metro: da
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -36,7 +42,7 @@
     - name: request ip reservation
       equinix.cloud.metal_reserved_ip_block:
         type: "public_ipv4"
-        metro: "sv"
+        metro: "{{ test_metro }}"
         quantity: 1
         project_id: "{{ project.id }}"
       register: ip_reservation
@@ -56,9 +62,9 @@
       equinix.cloud.metal_device:
         project_id: "{{ project.id }}"
         hostname: "{{ test_prefix }}-dev1"
-        operating_system: ubuntu_20_04
-        plan: c3.small.x86
-        metro: sv
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ test_metro }}"
         state: present
       register: device
 

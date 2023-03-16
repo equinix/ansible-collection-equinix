@@ -15,6 +15,12 @@
         unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_os: nixos_22_05
+    - set_fact:
+        test_plan: c3.small.x86
+    - set_fact:
+        test_metro: da
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -25,9 +31,9 @@
       equinix.cloud.metal_device:
         project_id: "{{ test_project.id }}"
         hostname: "{{ test_prefix }}-dev1"
-        operating_system: ubuntu_20_04
-        plan: c3.small.x86
-        metro: sv
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ test_metro }}"
         state: present
         provisioning_wait_seconds: 600
       register: test_device_1
@@ -48,9 +54,9 @@
       equinix.cloud.metal_device:
         project_id: "{{ test_project.id }}"
         hostname: "{{ test_prefix }}-dev2"
-        operating_system: ubuntu_20_04
-        plan: c3.small.x86
-        metro: sv
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ test_metro }}"
         state: present
         provisioning_wait_seconds: 600
       register: test_device_2
