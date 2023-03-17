@@ -5,7 +5,7 @@ on:
     - cron: '0 5 * * *'
 env:
   NAMESPACE: equinix
-  COLLECTION_NAME: metal
+  COLLECTION_NAME: cloud
 jobs:
   integration:
     runs-on: ubuntu-latest
