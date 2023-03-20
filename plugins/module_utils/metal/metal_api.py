@@ -158,15 +158,8 @@ def call(resource_type, action, equinix_metal_client, params={}):
     if conf is None:
         raise NotImplementedError("No API call for resource type %s and action %s" % (resource_type, action))
 
-    import q
-    q(conf)
     call = api_routes.build_api_call(conf, params)
-    q(call.describe())
     response = call.do()
-    if response is not None:
-        import q
-        q(action, resource_type, response.to_dict())
-
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)

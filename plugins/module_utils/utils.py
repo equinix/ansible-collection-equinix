@@ -22,8 +22,6 @@ def dict_get(d, key):
     """
     Get a value from a nested dict using a dot-separated key.
     """
-    import q
-    q(d, key)
     for k in key.split("."):
         if k in d:
             d = d[k]

@@ -52,12 +52,7 @@ class ApiCall(object):
 
         param_names = set(inspect.signature(conf.func).parameters.keys())
         self.sdk_kwargs = {}
-        import q
-        q(param_names)
-        q(params)
-
         arg_mapping = self.conf.named_args_mapping or {}
-        q(arg_mapping)
         for param_name in param_names:
             lookup_name = param_name
             if param_name in arg_mapping:
@@ -77,8 +72,6 @@ class ApiCall(object):
             self.sdk_kwargs[model_arg_name] = request_model_instance
 
     def do(self):
-        import q
-        q(self.sdk_kwargs)
         sdk_function = self.conf.func
 
         result = sdk_function(**self.sdk_kwargs)

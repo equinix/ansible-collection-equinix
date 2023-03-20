@@ -276,8 +276,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
         for pid in project_ids:
             if not metal_client.is_valid_uuid(pid):
                 raise AnsibleError("Invalid project id: %s" % pid)
-        import q
-        q("project_ids")
         self._build_client()
         if len(project_ids) == 0:
             return [p["id"] for p in self._get_all_projects()]
