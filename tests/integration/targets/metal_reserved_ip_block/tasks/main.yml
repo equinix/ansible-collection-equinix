@@ -13,6 +13,8 @@
         unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_metro: sv
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -26,7 +28,7 @@
     - name: request ip reservation
       equinix.cloud.metal_reserved_ip_block:
         type: "public_ipv4"
-        metro: "sv"
+        metro: "{{ test_metro }}"
         quantity: 1
         project_id: "{{ project.id }}"
       register: ip_reservation 
@@ -34,7 +36,7 @@
     - name: idempotence check for ip reservation
       equinix.cloud.metal_reserved_ip_block:
         type: "public_ipv4"
-        metro: "sv"
+        metro: "{{ test_metro }}"
         quantity: 1
         project_id: "{{ project.id }}"
       register: ip_reservation_idem_check
