@@ -248,8 +248,6 @@ def main():
                     fetched = module.create("metal_organization_project")
                 else:
                     fetched = module.create("metal_project")
-                import q
-                q("in module", fetched)
                 if 'id' not in fetched:
                     module.fail_json(msg="UUID not found in project creation response")
                 changed = True

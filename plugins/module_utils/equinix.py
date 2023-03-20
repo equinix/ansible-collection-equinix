@@ -111,8 +111,6 @@ class EquinixModule(AnsibleModule):
             self.equinix_metal_client,
             call_params,
         )
-        import q
-        q(result)
         return result
 
     def create(self, resource_type):
