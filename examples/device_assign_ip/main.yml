@@ -1,0 +1,50 @@
+---
+- name: Equinix Metal Example Playbook
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Include the required variables
+      include_vars: "vars/equinix_metal_vars.yml"
+
+    - name: Equinix Metal integration test
+      block:
+        # Create a project
+        - name: Create a project
+          equinix.cloud.metal_project:
+            name: "{{ project_name }}"
+          register: project
+
+        # Reserve an IP block
+        - name: Reserve an IP block
+          equinix.cloud.metal_reserved_ip_block:
+            project_id: "{{ project.id }}"
+            type: public_ipv4
+            quantity: 1
+            metro: "{{ metro }}"
+          register: ip_block
+
+        # Create a device
+        - name: Create a device
+          equinix.cloud.metal_device:
+            project_id: "{{ project.id }}"
+            hostname: "{{ device_hostname }}"
+            operating_system: "{{ operating_system }}"
+            plan: "{{ plan }}"
+            metro: "{{ metro }}"
+            state: present
+          register: device
+
+        # Get available IP addresses from the reserved IP block
+        - name: Get available IP addresses from the reserved IP block
+          equinix.cloud.metal_available_ips_info:
+            reserved_ip_block_id: "{{ ip_block.id }}"
+            cidr: 32
+          register: available_ips
+
+        # Assign an available IP to the device
+        - name: Assign an available IP to the device
+          equinix.cloud.metal_ip_assignment:
+            device_id: "{{ device.id }}"
+            address: "{{ available_ips.available[0] }}"
+          register: assignment
+
