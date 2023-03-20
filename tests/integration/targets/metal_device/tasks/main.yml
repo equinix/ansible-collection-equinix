@@ -21,6 +21,8 @@
         test_plan: c3.small.x86
     - set_fact:
         test_metro: da
+    - set_fact:
+        wait_seconds: 1200
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -35,7 +37,7 @@
         plan: "{{ test_plan }}"
         metro: "{{ test_metro }}"
         state: present
-        provisioning_wait_seconds: 600
+        provisioning_wait_seconds: "{{ wait_seconds }}"
       register: test_device_1
 
     - name: start first test device again (idempotence test)
@@ -58,7 +60,7 @@
         plan: "{{ test_plan }}"
         metro: "{{ test_metro }}"
         state: present
-        provisioning_wait_seconds: 600
+        provisioning_wait_seconds: "{{ wait_seconds }}"
       register: test_device_2
     
     - name: list both devices
