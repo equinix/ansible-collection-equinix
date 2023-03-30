@@ -84,7 +84,7 @@ For more information on Ansible collection usage, see [Ansible's official usage 
 
 ## Examples
 
-Use-case examples for this collection can be found [here](./examples/README.md).
+Use-case examples for this collection can be found [here](./examples).
 
 ## Licensing
 
