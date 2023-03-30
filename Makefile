@@ -51,9 +51,11 @@ integration-test: $(INTEGRATION_CONFIG)
 test: integration-test
 
 $(INTEGRATION_CONFIG):
-	@if test "$(METAL_API_TOKEN)" = ""; then \
-	  echo "METAL_API_TOKEN must be set"; \
-	  exit 1; \
-	fi
+ifneq ("${METAL_API_TOKEN}", "")
+	@echo "metal_api_token: ${METAL_API_TOKEN}" > $(INTEGRATION_CONFIG);
+else
+	echo "METAL_API_TOKEN must be set"; \
+	exit 1;
+endif
 	echo "metal_api_token: $(METAL_API_TOKEN)" > $(INTEGRATION_CONFIG)
 	echo "metal_ua_prefix: E2E" >> $(INTEGRATION_CONFIG)
