@@ -1,8 +1,13 @@
 name: Run Integration Tests
 
 on:
-  pull_request:
-    types: [review_requested,opened,reopened,synchronize]
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'docs'
+      - LICENSE  
+#  pull_request:
+#    types: [review_requested,opened,reopened,synchronize]
 
 jobs:
   run-tests:
