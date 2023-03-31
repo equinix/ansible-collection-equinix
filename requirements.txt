@@ -1,1 +1,3 @@
-metal_python>=0.0.1
+equinix-metal>=0.1.0
+ansible-specdoc>=0.0.12
+

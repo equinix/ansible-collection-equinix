@@ -50,13 +50,12 @@ integration-test: $(INTEGRATION_CONFIG)
 
 test: integration-test
 
-testall:
-	./scripts/test_all.sh
-
 $(INTEGRATION_CONFIG):
-	@if test "$(METAL_AUTH_TOKEN)" = ""; then \
-	  echo "METAL_AUTH_TOKEN must be set"; \
-	  exit 1; \
-	fi
-	echo "metal_api_token: $(METAL_AUTH_TOKEN)" > $(INTEGRATION_CONFIG)
+ifneq ("${METAL_API_TOKEN}", "")
+	@echo "metal_api_token: ${METAL_API_TOKEN}" > $(INTEGRATION_CONFIG);
+else
+	echo "METAL_API_TOKEN must be set"; \
+	exit 1;
+endif
+	echo "metal_api_token: $(METAL_API_TOKEN)" > $(INTEGRATION_CONFIG)
 	echo "metal_ua_prefix: E2E" >> $(INTEGRATION_CONFIG)
