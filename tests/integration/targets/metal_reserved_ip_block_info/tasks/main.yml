@@ -22,9 +22,11 @@
     - set_fact:
         test_metro: sv
     - set_fact:
-        test_os: nixos_22_05
+        test_os: ubuntu_22_04
     - set_fact:
         test_plan: c3.small.x86
+    - set_fact:
+        wait_seconds: 1200
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -38,6 +40,7 @@
         operating_system: "{{ test_os }}"
         plan: "{{ test_plan }}"
         metro: "{{ test_metro }}"
+        provisioning_wait_seconds: "{{ wait_seconds }}"
         state: present
       register: device
 

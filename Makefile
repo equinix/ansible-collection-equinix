@@ -43,14 +43,15 @@ docs:
 injected-docs:
 	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_inject.sh
 
-
-
-integration-test: $(INTEGRATION_CONFIG)
-	ansible-test integration $(TEST_ARGS)
-
 test: integration-test
 
-$(INTEGRATION_CONFIG):
+testall: create-integration-config
+		./scripts/test_all.sh
+
+integration-test: create-integration-config
+	ansible-test integration $(TEST_ARGS)
+
+create-integration-config:
 ifneq ("${METAL_API_TOKEN}", "")
 	@echo "metal_api_token: ${METAL_API_TOKEN}" > $(INTEGRATION_CONFIG);
 else
