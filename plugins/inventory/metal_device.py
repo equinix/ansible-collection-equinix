@@ -32,51 +32,29 @@ description: Reads device inventories from Equinix Metal. Uses YAML configuratio
   file that ends with equinix_metal.(yml|yaml). ansible_host is set to first public
   IP address of the device.
 module: metal_device
+extends_documentation_fragment: [constructed]
 notes: []
 options:
-  keyed_groups:
-    description:
-    - List of groups to create based on the values of a variable.
-    elements: dict
-    required: false
-    suboptions:
-      key:
-        description:
-        - The key to group by.
-        required: false
-        type: str
-      prefix:
-        description:
-        - Prefix to prepend to the group name.
-        required: false
-        type: str
-      separator:
-        default: ''
-        description:
-        - Separator to use when joining the key and value.
-        required: false
-        type: str
-    type: list
-  metal_api_token:
-    description:
-    - Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment
-      variable.
-    required: false
-    type: str
   plugin:
-    choices:
-    - equinix_metal
-    - equinix.cloud.metal_device
+    choices: ['equinix_metal', 'equinix.cloud.metal_device']
     description:
     - Token that ensures this is a source file for the plugin.
     required: true
     type: str
+  metal_api_token:
+    description:
+    - Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment
+      variable.
+    required: true
+    env:
+        - name: METAL_AUTH_TOKEN
+    type: str
   project_ids:
     description:
     - List of Equinix Metal project IDs to query for devices.
+    type: list
     elements: str
     required: false
-    type: list
 requirements:
 - python >= 3
 - metal_python >= 0.0.1
@@ -220,18 +198,20 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
             :param path: the path to the inventory config file
             :return the contents of the config file
         '''
-        if super(InventoryModule, self).verify_file(path):
-            if path.endswith(('equinix.yml', 'equinix.yaml', 'device.yml', 'device.yaml')):
-                return True
+        if not super().verify_file(path):
+            return False
+        endings = ('equinix.yml', 'equinix.yaml', 'device.yml', 'device.yaml')
+        if any((path.endswith(ending) for ending in endings)):
+            return True
         self.display.debug("equinix.cloud inventory filename must end with 'equinix.yml' or 'equinix.yaml'")
         return False
 
-    def parse(self, inventory, loader, path, cache):
+    def parse(self, inventory, loader, path, cache=True):
         super().parse(inventory, loader, path)
-
         self._read_config_data(path)
+        self._build_client()
 
-        strict = self.get_option('strict')
+        strict = self.get_option("strict")
         configured_project_ids = self._get_project_ids()
         devices = self._get_devices_from_project_ids(configured_project_ids)
         projects = set([device['project_id'] for device in devices])
@@ -247,7 +227,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
             for k, v in device.items():
                 if k not in EXCLUDE_ATTRIBUTES:
                     self.inventory.set_variable(label(device), k, v)
-
 
         for device in devices:
             variables = self.inventory.get_host(label(device)).get_vars()
@@ -276,7 +255,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
         for pid in project_ids:
             if not metal_client.is_valid_uuid(pid):
                 raise AnsibleError("Invalid project id: %s" % pid)
-        self._build_client()
         if len(project_ids) == 0:
             return [p["id"] for p in self._get_all_projects()]
         return project_ids
