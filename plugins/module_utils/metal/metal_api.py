@@ -85,7 +85,7 @@ METAL_PROJECT_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
     'name': 'name',
     'organization_id': 'organization.id',
-    'payment_method_id': 'payment_method.id',
+    'payment_method_id': optional_str('payment_method.id'),
 }
 
 METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {

@@ -24,7 +24,7 @@
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
     - set_fact:
-        test_os: nixos_22_05
+        test_os: ubuntu_22_04
     - set_fact:
         test_plan: c3.small.x86
     - set_fact:
