@@ -86,6 +86,24 @@ For more information on Ansible collection usage, see [Ansible's official usage 
 
 Use-case examples for this collection can be found [here](./examples).
 
+## Releasing
+
+When releasing, make sure that the desired version number is in `COLLECTION_VERSION` variable in Makefile.
+
+Then go to [https://github.com/equinix-labs/ansible-collection-equinix/releases/new](https://github.com/ansible-collection-equinix/metal-python/releases/new) and create a new release from `main`. Don't choose an existing tag. Put `v{COLLECTION_VERSION}` to the field for "Release title". For example if COLLECTION_VERSION is "0.1.2", use "v0.1.2".
+
+Add release notes in format of [Terraform Provider Equinix](https://github.com/equinix/terraform-provider-equinix/releases), with at least one of the sections (NOTES, FEATURES, BUG FIXES, ENHANCEMENTS).
+
+Click "Publish release", and the manual part should be over.
+
+The release will create a tag, and we have a Github action in place that should create an Ansible Galaxy release for version from COLLECTION_VERSION.
+
+Verify that the [releasing Github action](https://github.com/equinix-labs/ansible-collection-equinix/actions) succeeded.
+
+Verify that new version of (equinix.cloud)[https://galaxy.ansible.com/equinix/cloud] is avaiable in Ansible Galaxy.
+
+
+
 ## Licensing
 
 GNU General Public License v3.0.
