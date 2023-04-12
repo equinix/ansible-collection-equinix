@@ -86,6 +86,27 @@ For more information on Ansible collection usage, see [Ansible's official usage 
 
 Use-case examples for this collection can be found [here](./examples).
 
+## Development
+
+If you want to develop the collecton, it's best to clone it under directory tree `ansible_collections/equinix/cloud`. That way the integration tests can be run without actually installing.
+
+```
+git clone https://github.com/equinix-labs/ansible-collection-equinix devdir/ansible_collections/equinix/cloud
+```
+
+You can try to run integration test for metal_project, that won't incur any fee.
+
+```
+cd devdir/ansible_collections/equinix/cloud
+ansible-test integration -vvv metal_project
+```
+
+You can then edit existing code, or add new modules or tests.
+
+To install the collection from local directory, do `make install` in the root of the repo.
+
+
+
 ## Releasing
 
 When releasing, make sure that the desired version number is in `COLLECTION_VERSION` variable in Makefile.
@@ -101,7 +122,6 @@ The release will create a tag, and we have a Github action in place that should 
 Verify that the [releasing Github action](https://github.com/equinix-labs/ansible-collection-equinix/actions) succeeded.
 
 Verify that new version of (equinix.cloud)[https://galaxy.ansible.com/equinix/cloud] is avaiable in Ansible Galaxy.
-
 
 
 ## Licensing
