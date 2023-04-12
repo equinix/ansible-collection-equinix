@@ -21,10 +21,10 @@ Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
-[equinix.cloud.metal_project](./docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
-[equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
+[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
+[equinix.cloud.metal_project](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
+[equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 
 
 ### Info Modules
@@ -33,11 +33,11 @@ Modules for retrieving information about existing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
-[equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
-[equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
-[equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
+[equinix.cloud.metal_available_ips_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_device_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
+[equinix.cloud.metal_project_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
+[equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 
 
 ### Inventory Plugins
@@ -46,7 +46,7 @@ Dynamically add Equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
-[equinix.cloud.metal_device](./docs/inventory/metal_device.md)|
+[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/inventory/metal_device.md)|
 
 
 <!--end collection content-->
@@ -63,7 +63,7 @@ The Python module dependencies are not installed by `ansible-galaxy`.  They can
 be manually installed using pip:
 
 ```shell
-pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/main/requirements.txt
+pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/0.0.1/requirements.txt
 ```
 
 ## Usage
