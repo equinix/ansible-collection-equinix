@@ -121,7 +121,7 @@ The release will create a tag, and we have a Github action in place that should 
 
 Verify that the [releasing Github action](https://github.com/equinix-labs/ansible-collection-equinix/actions) succeeded.
 
-Verify that new version of (equinix.cloud)[https://galaxy.ansible.com/equinix/cloud] is avaiable in Ansible Galaxy.
+Verify that new version of [equinix.cloud](https://galaxy.ansible.com/equinix/cloud) is available in Ansible Galaxy.
 
 
 ## Licensing
