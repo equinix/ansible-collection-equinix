@@ -109,15 +109,13 @@ To install the collection from local directory, do `make install` in the root of
 
 ## Releasing
 
-When releasing, make sure that the desired version number is in `COLLECTION_VERSION` variable in Makefile.
-
-Then go to [https://github.com/equinix-labs/ansible-collection-equinix/releases/new](https://github.com/ansible-collection-equinix/metal-python/releases/new) and create a new release from `main`. Don't choose an existing tag. Put `v{COLLECTION_VERSION}` to the field for "Release title". For example if COLLECTION_VERSION is "0.1.2", use "v0.1.2".
+Go to [https://github.com/equinix-labs/ansible-collection-equinix/releases/new](https://github.com/ansible-collection-equinix/metal-python/releases/new) and create a new release from `main`. Don't choose an existing tag. Put version to the field for "Release title", for example `v0.1.2`. Don't add collection number to the Makefile.
 
 Add release notes in format of [Terraform Provider Equinix](https://github.com/equinix/terraform-provider-equinix/releases), with at least one of the sections (NOTES, FEATURES, BUG FIXES, ENHANCEMENTS).
 
 Click "Publish release", and the manual part should be over.
 
-The release will create a tag, and we have a Github action in place that should create an Ansible Galaxy release for version from COLLECTION_VERSION.
+The release will create a tag, and we have a Github action in place that should create an Ansible Galaxy release. The script that creates tarball for Galay removes the first "v", so releasing `v0.1.2` should upload collection equinix.cloud version 0.1.2.
 
 Verify that the [releasing Github action](https://github.com/equinix-labs/ansible-collection-equinix/actions) succeeded.
 
