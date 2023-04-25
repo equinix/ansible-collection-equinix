@@ -3,14 +3,6 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from ansible_specdoc.objects import (
-    SpecField,
-    FieldType,
-)
-
-from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
-    getSpecDocMeta,
-)
 
 import os
 from typing import List, Dict, Any
@@ -60,100 +52,23 @@ requirements:
 - metal_python >= 0.0.1
 short_description: Equinix Metal Device inventory source
 '''
+
 EXAMPLES = '''
 plugin: equinix.cloud.metal_device
 strict: false
 keyed_groups:
-- prefix: tag
-  key: tags
-- prefix: equinix_metal_plan
-  key: plan
-- key: metro
-  prefix: equinix_metal_metro
-- key: state
-  prefix: equinix_metal_state
-'''
-RETURN = '''
-{}
-'''
-
-module_spec = dict(
-    plugin=SpecField(
-        type=FieldType.string,
-        description=['Token that ensures this is a source file for the plugin.'],
-        choices=['equinix_metal', 'equinix.cloud.metal_device'],
-        required=True,
-    ),
-    project_ids=SpecField(
-        type=FieldType.list,
-        description=['List of Equinix Metal project IDs to query for devices.'],
-        element_type=FieldType.string,
-    ),
-    metal_api_token=SpecField(
-        type=FieldType.string,
-        description=['Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment variable.'],
-        required=True,
-    ),
-    keyed_groups=SpecField(
-        type=FieldType.list,
-        description=['List of groups to create based on the values of a variable.'],
-        element_type=FieldType.dict,
-        suboptions=dict(
-            key=SpecField(
-                type=FieldType.string,
-                description=['The key to group by.'],
-            ),
-            prefix=SpecField(
-                type=FieldType.string,
-                description=['Prefix to prepend to the group name.'],
-            ),
-            separator=SpecField(
-                type=FieldType.string,
-                description=['Separator to use when joining the key and value.'],
-                default='',
-            ),
-        ),
-    ),
-)
-
-
-specdoc_examples = [
-    '''
-# Minimal example using environment var credentials
-plugin: equinix.cloud.metal_device
-
-# Example using constructed features to create groups and set ansible_host
-plugin: equinix.cloud.metal_device
-# keyed_groups may be used to create custom groups
-strict: False
-keyed_groups:
-  # Add devices to tag_Name groups for each tag
   - prefix: tag
     key: tags
-  # Add devices to e.g. equinix_metal_plan_c3_small_x86
   - prefix: equinix_metal_plan
     key: plan
-  # Create a group per region e.g. equinix_metal_metro_sv
   - key: metro
     prefix: equinix_metal_metro
-  # Create a group per device state e.g. equinix_metal_state_active
   - key: state
     prefix: equinix_metal_state
 '''
-    ]
 
-SPECDOC_META = getSpecDocMeta(
-    short_description='Equinix Metal Device inventory source',
-    description=(
-        "Reads device inventories from Equinix Metal. "
-        "Uses YAML configuration file that ends with equinix_metal.(yml|yaml). "
-        "ansible_host is set to first public IP address of the device."
-    ),
-    examples=specdoc_examples,
-    options=module_spec,
-    return_values={},
-)
-
+RETURN = '''
+'''
 
 EXCLUDE_ATTRIBUTES = [
     "ssh_keys",

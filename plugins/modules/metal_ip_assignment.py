@@ -3,9 +3,85 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = ""
-EXAMPLES = ""   
-RETURN = ""
+DOCUMENTATION = '''
+author: Equinix DevRel Team (@equinix) <support@equinix.com>
+description: Asign reserved IPs to Equinix Metal devices.
+module: metal_ip_assignment
+notes: []
+options:
+  address:
+    description:
+    - IP address to assign to the device.
+    required: false
+    type: str
+  customdata:
+    description:
+    - Custom data about the ip_assignment to create.
+    required: false
+    type: dict
+  device_id:
+    description:
+    - UUID of the device to assign the IP to.
+    required: false
+    type: str
+  id:
+    description:
+    - UUID of the ip_assignment.
+    required: false
+    type: str
+  manageable:
+    description:
+    - Whether the IP address is manageable.
+    required: false
+    type: bool
+requirements:
+- python >= 3
+- equinix_metal >= 0.0.1
+short_description: Manage Equinix Metal IP assignments
+'''
+EXAMPLES = '''
+- name: request ip reservation
+  equinix.cloud.metal_reserved_ip_block:
+    type: public_ipv4
+    metro: sv
+    quantity: 1
+    project_id: '{{ project.id }}'
+  register: ip_reservation
+- name: available addresses from reservation
+  equinix.cloud.metal_available_ips_info:
+    reserved_ip_block_id: '{{ ip_reservation.id }}'
+    cidr: 32
+  register: available_ips
+- assert:
+    that:
+    - available_ips.available | length == 1
+- name: create device
+  equinix.cloud.metal_device:
+    project_id: '{{ project.id }}'
+    hostname: device1
+    operating_system: ubuntu_20_04
+    plan: c3.small.x86
+    metro: sv
+    state: present
+  register: device
+- name: assign available IP
+  equinix.cloud.metal_ip_assignment:
+    device_id: '{{ device.id }}'
+    address: '{{ available_ips.available[0] }}'
+  register: assignment
+'''   
+RETURN = '''
+metal_ip_assignment:
+  description: The assignment object.
+  returned: always
+  sample:
+  - "\n{\n    \"address\": \"147.75.71.192/32\",\n    \"address_family\": 4,\n   \
+    \ \"changed\": true,\n    \"cidr\": 32,\n    \"device_id\": \"a8c5dd81-9f7a-4c70-81c6-a168782931ab\"\
+    ,\n    \"id\": \"83b5503c-7b7f-4883-9509-b6b728b41491\",\n    \"management\":\
+    \ false,\n    \"metro\": \"sv\",\n    \"netmask\": \"255.255.255.255\",\n    \"\
+    network\": \"147.75.71.192\",\n    \"public\": true\n}\n"
+  type: dict
+'''
 
 from ansible.module_utils._text import to_native
 import traceback

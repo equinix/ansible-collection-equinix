@@ -1,6 +1,6 @@
 # metal_reserved_ip_block_info
 
-Gatehr list of reserved IP blocks matching the specified criteria
+Gather list of reserved IP blocks matching the specified criteria
 
 
 - [Examples](#examples)
@@ -13,9 +13,9 @@ Gatehr list of reserved IP blocks matching the specified criteria
 - name: Gather list of public_ipv4 reserved_ip_blocks in a project
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_reserved_ip_block_info
-            type: public_ipv4
-            project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+  - equinix.cloud.metal_reserved_ip_block_info:
+      type: public_ipv4
+      project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 
 ```
 
@@ -23,10 +23,10 @@ Gatehr list of reserved IP blocks matching the specified criteria
 - name: Gather list of public_ipv6 reserved_ip_blocks in a project in metro ams
   hosts: localhost
   tasks:
-        equinix.cloud.metal_reserved_ip_block_info
-            type: public_ipv6
-            project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
-            metro: ams
+  - equinix.cloud.metal_reserved_ip_block_info:
+      type: public_ipv6
+      project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+      metro: ams
 
 ```
 
