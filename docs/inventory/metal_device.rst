@@ -35,7 +35,7 @@ Parameters
 
 
   **metal_api_token (Required, type=str):**
-    \• Equinix Metal API token. Can also be specified via METAL_API_TOKEN environment variable.
+    \• Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment variable.
 
 
 
