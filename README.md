@@ -71,7 +71,7 @@ Once the Equinix Ansible collection is installed, it can be referenced by its [F
 
 In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account in Equinix Metal to use the `metal_*` modules.
 
-You can authenticate either by exporting auth token as environment variables, or by supplying `*_api_token` attributes to modules. For example, to use `metal_device`, you can export `METAL_AUTH_TOKEN`, or you can supply `metal_api_token` attribute.
+You can authenticate either by exporting auth token as environment variables, or by supplying `*_api_token` attributes to modules. For example, to use `metal_device`, you can export `METAL_AUTH_TOKEN` (or `METAL_API_TOKEN`), or you can supply `metal_api_token` attribute.
 
 ### Example Playbook
 
