@@ -21,10 +21,10 @@ Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
-[equinix.cloud.metal_project](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
-[equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
+[equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
+[equinix.cloud.metal_project](./docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
+[equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 
 
 ### Info Modules
@@ -33,11 +33,11 @@ Modules for retrieving information about existing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_available_ips_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
-[equinix.cloud.metal_device_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
-[equinix.cloud.metal_project_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
-[equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.0.1/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
+[equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
+[equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
+[equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 
 
 ### Inventory Plugins
@@ -63,7 +63,7 @@ The Python module dependencies are not installed by `ansible-galaxy`.  They can
 be manually installed using pip:
 
 ```shell
-pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/0.0.1/requirements.txt
+pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/main/requirements.txt
 ```
 
 ## Usage
@@ -117,19 +117,17 @@ To install the collection from local directory, do `make install` in the root of
 
 ## Releasing
 
-When releasing, make sure that the desired version number is in `COLLECTION_VERSION` variable in Makefile.
-
-Then go to [https://github.com/equinix-labs/ansible-collection-equinix/releases/new](https://github.com/ansible-collection-equinix/metal-python/releases/new) and create a new release from `main`. Don't choose an existing tag. Put `v{COLLECTION_VERSION}` to the field for "Release title". For example if COLLECTION_VERSION is "0.1.2", use "v0.1.2".
+Go to [https://github.com/equinix-labs/ansible-collection-equinix/releases/new](https://github.com/ansible-collection-equinix/metal-python/releases/new) and create a new release from `main`. Don't choose an existing tag. Put version to the field for "Release title", for example `v0.1.2`. Don't add collection number to the Makefile.
 
 Add release notes in format of [Terraform Provider Equinix](https://github.com/equinix/terraform-provider-equinix/releases), with at least one of the sections (NOTES, FEATURES, BUG FIXES, ENHANCEMENTS).
 
 Click "Publish release", and the manual part should be over.
 
-The release will create a tag, and we have a Github action in place that should create an Ansible Galaxy release for version from COLLECTION_VERSION.
+The release will create a tag, and we have a Github action in place that should create an Ansible Galaxy release. The script that creates tarball for Galay removes the first "v", so releasing `v0.1.2` should upload collection equinix.cloud version 0.1.2.
 
 Verify that the [releasing Github action](https://github.com/equinix-labs/ansible-collection-equinix/actions) succeeded.
 
-Verify that new version of [equinix.cloud](https://galaxy.ansible.com/equinix/cloud) is avaiable in Ansible Galaxy.
+Verify that new version of [equinix.cloud](https://galaxy.ansible.com/equinix/cloud) is available in Ansible Galaxy.
 
 
 ## Licensing
