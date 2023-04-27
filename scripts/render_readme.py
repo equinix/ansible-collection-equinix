@@ -43,7 +43,6 @@ def add_ansible_collection_path():
               'namespace}/{collection}/')
         return
     
-    print(ansible_root)
     sys.path.append(ansible_root)
 
 

@@ -3,9 +3,42 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = ""
-EXAMPLES = ""
-RETURN = ""
+DOCUMENTATION = '''
+author: Equinix DevRel Team (@equinix) <support@equinix.com>
+description: Get list of avialable IP addresses from a reserved IP block
+module: metal_available_ips_info
+notes: []
+options:
+  cidr:
+    description:
+    - CIDR of the reserved IP block to list available IPs for.
+    required: false
+    type: str
+  reserved_ip_block_id:
+    description:
+    - UUID of the reserved IP block to list available IPs for.
+    required: true
+    type: str
+requirements:
+- python >= 3
+- equinix_metal >= 0.0.1
+short_description: Get list of avialable IP addresses from a reserved IP block
+'''
+EXAMPLES = '''
+name: available addresses from reservation
+equinix.cloud.metal_available_ips_info:
+  reserved_ip_block_id: '{{ ip_reservation.id }}'
+  cidr: 32
+  register: available_ips
+'''
+RETURN = '''
+available:
+  description: Available IP addresses from the reservation.
+  returned: always
+  sample:
+  - "\n{\n    \"available\": [\n        \"147.75.71.192/32\"\n    ],\n}\n"
+  type: dict
+'''
 
 from ansible.module_utils._text import to_native
 import traceback

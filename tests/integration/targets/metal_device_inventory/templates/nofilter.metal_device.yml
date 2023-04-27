@@ -1,2 +1,0 @@
-plugin: equinix.cloud.metal_device
-metal_api_token: '{{ metal_api_token }}'

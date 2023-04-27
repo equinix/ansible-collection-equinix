@@ -24,7 +24,7 @@ options:
     type: str
 requirements:
 - python >= 3
-- metal_python >= 0.0.1
+- equinix_metal >= 0.0.1
 short_description: Gather information about Equinix Metal projects
 '''
 EXAMPLES = '''
@@ -43,11 +43,11 @@ resources:
   description: Found resources
   returned: always
   sample:
-  - "\n{\n    \"backend_transfer_enabled\": false,\n    \"customdata\": {},\n    \"\
-    description\": \"\",\n    \"id\": \"31d3ae8b-bd5a-41f3-a420-055211345cc7\",\n\
-    \    \"name\": \"ansible-integration-test-project-csle6t2y-project2\",\n    \"\
-    organization_id\": \"70c2f878-9f32-452e-8c69-ab15480e1d99\",\n    \"payment_method_id\"\
-    : \"845b45a3-c565-47e5-b9b6-a86204a73d29\"\n}"
+  - "\n\n[  \n  {\n    \"backend_transfer_enabled\": false,\n    \"customdata\": {},\n\
+    \    \"description\": \"\",\n    \"id\": \"31d3ae8b-bd5a-41f3-a420-055211345cc7\"\
+    ,\n    \"name\": \"ansible-integration-test-project-csle6t2y-project2\",\n   \
+    \ \"organization_id\": \"70c2f878-9f32-452e-8c69-ab15480e1d99\",\n    \"payment_method_id\"\
+    : \"845b45a3-c565-47e5-b9b6-a86204a73d29\"\n  }\n]"
   type: dict
 '''
 

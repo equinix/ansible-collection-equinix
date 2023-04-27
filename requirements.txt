@@ -1,3 +1,2 @@
 equinix-metal>=0.1.0
-ansible-specdoc>=0.0.12
-
+ansible-specdoc>=0.0.13

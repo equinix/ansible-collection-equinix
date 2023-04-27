@@ -39,7 +39,7 @@ Dynamically add Equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
-{% for name in inventory %}[equinix.cloud.{{ name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/{{ collection_version }}/docs/inventory/{{ name }}.md{% else %}./docs/inventory/{{ name }}.md{% endif %})|
+{% for name in inventory %}[equinix.cloud.{{ name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/{{ collection_version }}/docs/inventory/{{ name }}.md{% else %}./docs/inventory/{{ name }}.rst{% endif %})|
 {% endfor %}
 
 <!--end collection content-->
@@ -62,11 +62,12 @@ pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection
 ## Usage
 Once the Equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
 
-In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account Equinix Metal to use the `metal_*` plugins.
+In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account in Equinix Metal to use the `metal_*` modules.
 
-You can authenticate either by exporting auth tokens as environment variables, or by supplying `*_api_token` attributes to modules. For example, to use `metal_device`, you can export `METAL_AUTH_TOKEN` (or `METAL_API_TOKEN`), or you can supply `metal_auth_token` attribute.
+You can authenticate either by exporting auth token in an environment variable, or by supplying `*_api_token` attributes to modules. For example, to use `metal_device`, you can export `METAL_AUTH_TOKEN` (or `METAL_API_TOKEN`), or you can supply the `metal_api_token` attribute.
 
-#### Example Playbook
+### Example Playbook
+
 ```yaml
 ---
 - name: create Equinix Metal device

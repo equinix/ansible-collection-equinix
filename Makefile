@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 COLLECTIONS_PATH ?= ~/.ansible/collections
 DOCS_PATH ?= docs
-COLLECTION_VERSION ?= 0.0.1
+COLLECTION_VERSION ?=
 
 TEST_ARGS := -v
 INTEGRATION_CONFIG := tests/integration/integration_config.yml
@@ -32,16 +32,20 @@ lint:
 	mypy plugins/inventory
 
 .PHONY: docs
-docs:
+docs: inject-module-docs
 	rm -rf $(DOCS_PATH)/modules $(DOCS_PATH)/inventory
 	mkdir -p $(DOCS_PATH)/modules $(DOCS_PATH)/inventory
 	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_generate.sh
 	python scripts/render_readme.py ${COLLECTION_VERSION}
-	#ansible-doc-extractor --template=template/module.rst.j2 $(DOCS_PATH)/inventory plugins/inventory/*.py
+	ansible-doc-extractor --template=template/module.rst.j2 $(DOCS_PATH)/inventory plugins/inventory/metal_device.py
 
-.PHONY: injected-docs
-injected-docs:
+.PHONY: inject-module-docs
+inject-module-docs:
 	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_inject.sh
+
+.PHONY: remove-module-docs
+remove-module-docs:
+	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_remove.sh
 
 test: integration-test
 
