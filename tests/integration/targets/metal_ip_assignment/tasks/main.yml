@@ -4,17 +4,17 @@
       metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_device:
       metal_api_token: '{{ metal_api_token }}'
-    equinix.cloud.metal_project_info:
+    equinix.cloud.metal_project_list:
       metal_api_token: '{{ metal_api_token }}'
-    equinix.cloud.metal_device_info:
+    equinix.cloud.metal_device_list:
       metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_reserved_ip_block:
       metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_ip_assignment:
       metal_api_token: '{{ metal_api_token }}'
-    equinix.cloud.metal_ip_assignment_info:
+    equinix.cloud.metal_ip_assignment_list:
       metal_api_token: '{{ metal_api_token }}'
-    equinix.cloud.metal_available_ips_info:
+    equinix.cloud.metal_available_ips_list:
       metal_api_token: '{{ metal_api_token }}'
   block:
     - set_fact:
@@ -50,7 +50,7 @@
       register: ip_reservation
 
     - name: available addresses from reservation
-      equinix.cloud.metal_available_ips_info:
+      equinix.cloud.metal_available_ips_list:
         reserved_ip_block_id: "{{ ip_reservation.id }}"
         cidr: 32
       register: available_ips
@@ -83,9 +83,9 @@
           - assignment.address   == "{{ available_ips.available[0] }}"
 
     - name: assignment info test
-      equinix.cloud.metal_ip_assignment_info:
+      equinix.cloud.metal_ip_assignment_list:
         device_id: "{{ device.id }}"
-      register: assignment_info
+      register: assignment_list
 
     - name: destroy assignment
       equinix.cloud.metal_ip_assignment:
@@ -114,12 +114,12 @@
         msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
 
     - name: list test projects
-      equinix.cloud.metal_project_info:
+      equinix.cloud.metal_project_list:
         name: "{{ test_prefix }}"
       register: test_projects
     
     - name: list devices in test projects
-      equinix.cloud.metal_device_info:
+      equinix.cloud.metal_device_list:
         project_id: "{{ item.id }}"
       register: "test_devices"
       loop: "{{ test_projects.resources }}"

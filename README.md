@@ -27,17 +27,17 @@ Name | Description |
 [equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 
 
-### Info Modules
+### List Modules
 
-Modules for retrieving information about existing Equinix infrastructure.
+Modules for retrieving information about existing Equinix infrastructure. Output of these modules is always a list.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
-[equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
-[equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
-[equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
-[equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
+[equinix.cloud.metal_available_ips_list](./docs/modules/metal_available_ips_list.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_device_list](./docs/modules/metal_device_list.md)|Select list of Equinix Metal devices|
+[equinix.cloud.metal_ip_assignment_list](./docs/modules/metal_ip_assignment_list.md)|Gather IP address assignments for a device|
+[equinix.cloud.metal_project_list](./docs/modules/metal_project_list.md)|Gather information about Equinix Metal projects|
+[equinix.cloud.metal_reserved_ip_block_list](./docs/modules/metal_reserved_ip_block_list.md)|Gather list of reserved IP blocks|
 
 
 ### Inventory Plugins

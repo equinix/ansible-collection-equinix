@@ -4,9 +4,9 @@
       metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_device:
       metal_api_token: '{{ metal_api_token }}'
-    equinix.cloud.metal_project_info:
+    equinix.cloud.metal_project_list:
       metal_api_token: '{{ metal_api_token }}'
-    equinix.cloud.metal_device_info:
+    equinix.cloud.metal_device_list:
       metal_api_token: '{{ metal_api_token }}'
   block:
     - set_fact:
@@ -64,7 +64,7 @@
       register: test_device_2
     
     - name: list both devices
-      equinix.cloud.metal_device_info:
+      equinix.cloud.metal_device_list:
         project_id: "{{ test_project.id }}"
       register: both_devices
 
@@ -74,7 +74,7 @@
         - "both_devices.resources|length == 2"
 
     - name: list second device
-      equinix.cloud.metal_device_info:
+      equinix.cloud.metal_device_list:
         project_id: "{{ test_project.id }}"
         hostname: dev2
       register: second_device
@@ -100,12 +100,12 @@
         msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
 
     - name: list test projects
-      equinix.cloud.metal_project_info:
+      equinix.cloud.metal_project_list:
         name: "{{ test_prefix }}"
       register: test_projects
     
     - name: list devices in test projects
-      equinix.cloud.metal_device_info:
+      equinix.cloud.metal_device_list:
         project_id: "{{ item.id }}"
       register: "test_devices"
       loop: "{{ test_projects.resources }}"

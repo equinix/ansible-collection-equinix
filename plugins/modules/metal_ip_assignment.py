@@ -48,7 +48,7 @@ EXAMPLES = '''
     project_id: '{{ project.id }}'
   register: ip_reservation
 - name: available addresses from reservation
-  equinix.cloud.metal_available_ips_info:
+  equinix.cloud.metal_available_ips_list:
     reserved_ip_block_id: '{{ ip_reservation.id }}'
     cidr: 32
   register: available_ips
@@ -132,7 +132,7 @@ specdoc_examples = [
       register: ip_reservation
 
     - name: available addresses from reservation
-      equinix.cloud.metal_available_ips_info:
+      equinix.cloud.metal_available_ips_list:
         reserved_ip_block_id: "{{ ip_reservation.id }}"
         cidr: 32
       register: available_ips

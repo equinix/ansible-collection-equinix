@@ -6,7 +6,7 @@
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Get list of avialable IP addresses from a reserved IP block
-module: metal_available_ips_info
+module: metal_available_ips_list
 notes: []
 options:
   cidr:
@@ -26,7 +26,7 @@ short_description: Get list of avialable IP addresses from a reserved IP block
 '''
 EXAMPLES = '''
 name: available addresses from reservation
-equinix.cloud.metal_available_ips_info:
+equinix.cloud.metal_available_ips_list:
   reserved_ip_block_id: '{{ ip_reservation.id }}'
   cidr: 32
   register: available_ips
@@ -69,7 +69,7 @@ module_spec = dict(
 specdoc_examples = [
     '''
 name: available addresses from reservation
-equinix.cloud.metal_available_ips_info:
+equinix.cloud.metal_available_ips_list:
   reserved_ip_block_id: "{{ ip_reservation.id }}"
   cidr: 32
   register: available_ips

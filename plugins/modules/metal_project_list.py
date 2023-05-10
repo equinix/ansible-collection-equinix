@@ -9,7 +9,7 @@
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Gather information about Equinix Metal projects
-module: metal_project_info
+module: metal_project_list
 notes: []
 options:
   name:
@@ -31,11 +31,11 @@ EXAMPLES = '''
 - name: Gather information about all projects
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_project_info
+  - equinix.cloud.metal_project_list
 - name: Gather information about all projects in an organization
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_project_info:
+  - equinix.cloud.metal_project_list:
       organization_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 '''
 RETURN = '''
@@ -77,12 +77,12 @@ specdoc_examples = ['''
 - name: Gather information about all projects
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_project_info
+      - equinix.cloud.metal_project_list
 ''', '''
 - name: Gather information about all projects in an organization
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_project_info:
+      - equinix.cloud.metal_project_list:
           organization_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 ''',
                     ]
@@ -122,7 +122,7 @@ SPECDOC_META = getSpecDocMeta(
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
-        is_info=True,
+        is_list=True,
     )
     try:
         module.params_syntax_check()

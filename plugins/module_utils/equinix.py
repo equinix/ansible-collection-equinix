@@ -60,12 +60,12 @@ class EquinixModule(AnsibleModule):
                  required_by=None,
                  required_if=None,
                  supports_check_mode=False,
-                 is_info=False,
+                 is_list=False,
                  mutually_exclusive=None,
                  ):
         metal_client.raise_if_missing_equinix_metal()
         argument_spec.update(METAL_COMMON_ARGS)
-        if not is_info:
+        if not is_list:
             argument_spec['state'] = EQUINIX_STATE_ARG
         AnsibleModule.__init__(
             self,

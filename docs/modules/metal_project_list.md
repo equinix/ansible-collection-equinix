@@ -1,4 +1,4 @@
-# metal_project_info
+# metal_project_list
 
 Gather information about Equinix Metal projects
 
@@ -13,7 +13,7 @@ Gather information about Equinix Metal projects
 - name: Gather information about all projects
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_project_info
+      - equinix.cloud.metal_project_list
 
 ```
 
@@ -21,7 +21,7 @@ Gather information about Equinix Metal projects
 - name: Gather information about all projects in an organization
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_project_info:
+      - equinix.cloud.metal_project_list:
           organization_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 
 ```

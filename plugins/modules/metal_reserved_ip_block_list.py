@@ -9,7 +9,7 @@
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Gather list of reserved IP blocks matching the specified criteria
-module: metal_reserved_ip_block_info
+module: metal_reserved_ip_block_list
 notes: []
 options:
   metro:
@@ -42,13 +42,13 @@ EXAMPLES = '''
 - name: Gather list of public_ipv4 reserved_ip_blocks in a project
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_reserved_ip_block_info:
+  - equinix.cloud.metal_reserved_ip_block_list:
       type: public_ipv4
       project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 - name: Gather list of public_ipv6 reserved_ip_blocks in a project in metro ams
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_reserved_ip_block_info:
+  - equinix.cloud.metal_reserved_ip_block_list:
       type: public_ipv6
       project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
       metro: ams
@@ -82,14 +82,14 @@ specdoc_examples = '''
 - name: Gather list of public_ipv4 reserved_ip_blocks in a project
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_reserved_ip_block_info:
+  - equinix.cloud.metal_reserved_ip_block_list:
       type: public_ipv4
       project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 ''', '''
 - name: Gather list of public_ipv6 reserved_ip_blocks in a project in metro ams
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_reserved_ip_block_info:
+  - equinix.cloud.metal_reserved_ip_block_list:
       type: public_ipv6
       project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
       metro: ams

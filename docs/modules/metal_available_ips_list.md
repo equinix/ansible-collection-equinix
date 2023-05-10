@@ -1,4 +1,4 @@
-# metal_available_ips_info
+# metal_available_ips_list
 
 Get list of avialable IP addresses from a reserved IP block
 
@@ -11,7 +11,7 @@ Get list of avialable IP addresses from a reserved IP block
 
 ```yaml
 name: available addresses from reservation
-equinix.cloud.metal_available_ips_info:
+equinix.cloud.metal_available_ips_list:
   reserved_ip_block_id: "{{ ip_reservation.id }}"
   cidr: 32
   register: available_ips

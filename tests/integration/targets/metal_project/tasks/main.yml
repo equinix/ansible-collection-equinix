@@ -4,7 +4,7 @@
       metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_device:
       metal_api_token: '{{ metal_api_token }}'
-    equinix.cloud.metal_project_info:
+    equinix.cloud.metal_project_list:
       metal_api_token: '{{ metal_api_token }}'
   block:
     - set_fact:
@@ -54,7 +54,7 @@
       register: second_project
 
     - name: list second project
-      equinix.cloud.metal_project_info:
+      equinix.cloud.metal_project_list:
         name: "{{ test_prefix }}-project2"
       register: second_project_listed
 
@@ -63,7 +63,7 @@
         - "second_project_listed.resources | length == 1"  
 
     - name: list both projects
-      equinix.cloud.metal_project_info:
+      equinix.cloud.metal_project_list:
         name: "{{ test_prefix }}"
       register: both_projects_listed
         
@@ -87,7 +87,7 @@
         msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
 
     - name: list test projects
-      equinix.cloud.metal_project_info:
+      equinix.cloud.metal_project_list:
         name: "{{ test_prefix }}"
       register: test_projects_listed
 

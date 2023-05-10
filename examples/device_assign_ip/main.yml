@@ -36,7 +36,7 @@
 
         # Get available IP addresses from the reserved IP block
         - name: Get available IP addresses from the reserved IP block
-          equinix.cloud.metal_available_ips_info:
+          equinix.cloud.metal_available_ips_list:
             reserved_ip_block_id: "{{ ip_block.id }}"
             cidr: 32
           register: available_ips

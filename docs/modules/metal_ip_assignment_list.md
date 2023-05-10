@@ -1,4 +1,4 @@
-# metal_ip_assignment_info
+# metal_ip_assignment_list
 
 Gather IP address assignments for a device
 
@@ -11,9 +11,9 @@ Gather IP address assignments for a device
 
 ```yaml
 - name: assignment info 
-  equinix.cloud.metal_ip_assignment_info:
+  equinix.cloud.metal_ip_assignment_list:
     device_id: "{{ device.id }}"
-  register: assignment_info
+  register: assignment_list
 
 ```
 

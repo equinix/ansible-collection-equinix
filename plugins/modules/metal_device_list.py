@@ -9,7 +9,7 @@ __metaclass__ = type
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Select list of Equinix Metal devices
-module: metal_device_info
+module: metal_device_list
 notes: []
 options:
   hostname:
@@ -36,21 +36,21 @@ EXAMPLES = '''
 - name: Gather information about all devices
   hosts: localhost
   tasks:
-  - equinix.metal.device_info: null
+  - equinix.metal.device_list: null
 - name: Gather information about devices in a particular project using ID
   hosts: localhost
   tasks:
-  - equinix.metal.device_info:
+  - equinix.metal.device_list:
       project_id: 173d7f11-f7b9-433e-ac40-f1571a38037a
 - name: Gather information about devices in a particular organization using ID
   hosts: localhost
   tasks:
-  - equinix.metal.device_info:
+  - equinix.metal.device_list:
       organization_id: 173d7f11-f7b9-433e-ac40-f1571a38037a
 - name: Gather information about devices with "webserver" in hostname in a project
   hosts: localhost
   tasks:
-  - equinix.metal.device_info:
+  - equinix.metal.device_list:
       project_id: 173d7f11-f7b9-433e-ac40-f1571a38037a
       hostname: webserver
 '''
@@ -164,24 +164,24 @@ specdoc_examples = [
 - name: Gather information about all devices
   hosts: localhost
   tasks:
-      - equinix.metal.device_info:
+      - equinix.metal.device_list:
 ''', '''
 - name: Gather information about devices in a particular project using ID
   hosts: localhost
   tasks:
-      - equinix.metal.device_info:
+      - equinix.metal.device_list:
             project_id: 173d7f11-f7b9-433e-ac40-f1571a38037a
 ''', '''
 - name: Gather information about devices in a particular organization using ID
   hosts: localhost
   tasks:
-      - equinix.metal.device_info:
+      - equinix.metal.device_list:
             organization_id: 173d7f11-f7b9-433e-ac40-f1571a38037a
 ''', '''
 - name: Gather information about devices with "webserver" in hostname in a project
   hosts: localhost
   tasks:
-      - equinix.metal.device_info:
+      - equinix.metal.device_list:
             project_id: 173d7f11-f7b9-433e-ac40-f1571a38037a
             hostname: webserver
 ''',

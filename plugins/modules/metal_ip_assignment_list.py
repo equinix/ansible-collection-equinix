@@ -6,7 +6,7 @@
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Gather IP address assignments for a device
-module: metal_ip_assignment_info
+module: metal_ip_assignment_list
 notes: []
 options:
   device_id:
@@ -21,9 +21,9 @@ short_description: Gather IP address assignments for a device
 '''
 EXAMPLES = '''
 - name: assignment info
-  equinix.cloud.metal_ip_assignment_info:
+  equinix.cloud.metal_ip_assignment_list:
     device_id: '{{ device.id }}'
-  register: assignment_info
+  register: assignment_list
 '''
 RETURN = '''
 resources:
@@ -78,9 +78,9 @@ module_spec = dict(
 specdoc_examples = [
     '''
 - name: assignment info 
-  equinix.cloud.metal_ip_assignment_info:
+  equinix.cloud.metal_ip_assignment_list:
     device_id: "{{ device.id }}"
-  register: assignment_info
+  register: assignment_list
 ''',
 ]
 
@@ -157,7 +157,7 @@ SPECDOC_META = getSpecDocMeta(
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
-        is_info=True,
+        is_list=True,
     )
     try:
         module.params_syntax_check()
