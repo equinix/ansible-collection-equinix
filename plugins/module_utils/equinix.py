@@ -218,10 +218,6 @@ def getSpecDocMeta(short_description, description, options, examples, return_val
         examples=examples,
         return_values=return_values,
         author='Equinix DevRel Team (@equinix) <support@equinix.com>',
-        requirements=[
-            'python >= 3',
-            'equinix_metal >= 0.0.1',
-        ]
     )
 
 
