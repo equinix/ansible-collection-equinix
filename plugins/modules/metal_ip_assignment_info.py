@@ -14,9 +14,7 @@ options:
     - UUID of the device to list ip_assignments for.
     required: true
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Gather IP address assignments for a device
 '''
 EXAMPLES = '''

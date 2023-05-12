@@ -27,9 +27,7 @@ options:
     - UUID of the project containing devices.
     required: false
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Select list of Equinix Metal devices
 ''' 
 EXAMPLES = '''

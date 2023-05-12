@@ -22,9 +22,7 @@ options:
     - UUID of the organization containing the project.
     required: false
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Gather information about Equinix Metal projects
 '''
 EXAMPLES = '''

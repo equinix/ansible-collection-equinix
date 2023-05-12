@@ -45,9 +45,7 @@ options:
     - When blank, the API assumes default org payment method.
     required: false
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Manage Projects in Equinix Metal
 '''
 EXAMPLES = '''

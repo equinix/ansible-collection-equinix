@@ -33,9 +33,7 @@ options:
     - The type of IP address to list
     required: true
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Gather list of reserved IP blocks
 '''
 EXAMPLES = '''

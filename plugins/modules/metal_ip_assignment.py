@@ -34,9 +34,7 @@ options:
     - Whether the IP address is manageable.
     required: false
     type: bool
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Manage Equinix Metal IP assignments
 '''
 EXAMPLES = '''
