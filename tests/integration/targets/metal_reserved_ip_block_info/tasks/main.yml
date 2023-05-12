@@ -20,8 +20,6 @@
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
     - set_fact:
-        test_metro: sv
-    - set_fact:
         test_os: ubuntu_22_04
     - set_fact:
         test_plan: c3.small.x86
@@ -39,7 +37,7 @@
         hostname: "{{ test_prefix }}-dev1"
         operating_system: "{{ test_os }}"
         plan: "{{ test_plan }}"
-        metro: "{{ test_metro }}"
+        metro: "{{ metal_test_metro }}"
         provisioning_wait_seconds: "{{ wait_seconds }}"
         state: present
       register: device
@@ -61,13 +59,13 @@
         that:
         - private_ipv4_reservations.resources|length > 0
         - public_ipv6_reservations.resources|length > 0
-        - private_ipv4_reservations.resources[0].metro == "{{ test_metro }}"
-        - public_ipv6_reservations.resources[0].metro == "{{ test_metro }}"
+        - private_ipv4_reservations.resources[0].metro == "{{ metal_test_metro }}"
+        - public_ipv6_reservations.resources[0].metro == "{{ metal_test_metro }}"
 
     - name: request ip reservation
       equinix.cloud.metal_reserved_ip_block:
         type: "public_ipv4"
-        metro: "{{ test_metro }}"
+        metro: "{{ metal_test_metro }}"
         quantity: 1
         project_id: "{{ project.id }}"
       register: public_ipv4_reservation
@@ -81,7 +79,7 @@
     - assert:
         that:
         - public_ipv4_reservations.resources|length == 1
-        - public_ipv4_reservations.resources[0].metro == "{{ test_metro }}"
+        - public_ipv4_reservations.resources[0].metro == "{{ metal_test_metro }}"
 
   always:
     - name: Announce teardown start

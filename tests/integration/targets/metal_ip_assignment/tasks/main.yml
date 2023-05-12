@@ -28,8 +28,6 @@
     - set_fact:
         test_plan: c3.small.x86
     - set_fact:
-        test_metro: da
-    - set_fact:
         wait_seconds: 1200
 
     - name: create project for test
@@ -44,7 +42,7 @@
     - name: request ip reservation
       equinix.cloud.metal_reserved_ip_block:
         type: "public_ipv4"
-        metro: "{{ test_metro }}"
+        metro: "{{ metal_test_metro }}"
         quantity: 1
         project_id: "{{ project.id }}"
       register: ip_reservation
@@ -66,7 +64,7 @@
         hostname: "{{ test_prefix }}-dev1"
         operating_system: "{{ test_os }}"
         plan: "{{ test_plan }}"
-        metro: "{{ test_metro }}"
+        metro: "{{ metal_test_metro }}"
         provisioning_wait_seconds: "{{ wait_seconds }}"
         state: present
       register: device
