@@ -20,8 +20,6 @@
     - set_fact:
         test_plan: c3.small.x86
     - set_fact:
-        test_metro: da
-    - set_fact:
         wait_seconds: 1200
 
     - name: create project for test
@@ -35,7 +33,7 @@
         hostname: "{{ test_prefix }}-dev1"
         operating_system: "{{ test_os }}"
         plan: "{{ test_plan }}"
-        metro: "{{ test_metro }}"
+        metro: "{{metal_test_metro }}"
         state: present
         provisioning_wait_seconds: "{{ wait_seconds }}"
       register: test_device_1
@@ -58,7 +56,7 @@
         hostname: "{{ test_prefix }}-dev2"
         operating_system: "{{ test_os }}"
         plan: "{{ test_plan }}"
-        metro: "{{ test_metro }}"
+        metro: "{{ metal_test_metro }}"
         state: present
         provisioning_wait_seconds: "{{ wait_seconds }}"
       register: test_device_2

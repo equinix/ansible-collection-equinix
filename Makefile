@@ -5,6 +5,7 @@ COLLECTION_VERSION ?=
 
 TEST_ARGS := -v
 INTEGRATION_CONFIG := tests/integration/integration_config.yml
+METAL_TEST_METRO ?= sv
 
 clean:
 	rm -f *.tar.gz && rm -rf galaxy.yml
@@ -64,3 +65,4 @@ else
 endif
 	echo "metal_api_token: $(METAL_API_TOKEN)" > $(INTEGRATION_CONFIG)
 	echo "metal_ua_prefix: E2E" >> $(INTEGRATION_CONFIG)
+	echo "metal_test_metro: $(METAL_TEST_METRO)" >> $(INTEGRATION_CONFIG)
