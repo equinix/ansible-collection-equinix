@@ -234,9 +234,7 @@ options:
       for more details.
     required: false
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Create, update, or delete Equinix Metal devices
 '''
 EXAMPLES = '''

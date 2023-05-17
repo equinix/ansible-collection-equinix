@@ -75,9 +75,7 @@ options:
     - The VRF must have an existing IP Range that contains the requested subnet.
     required: false
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Create/delete blocks of reserved IP addresses in a project.
 '''
 EXAMPLES = '''

@@ -19,9 +19,7 @@ options:
     - UUID of the reserved IP block to list available IPs for.
     required: true
     type: str
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Get list of avialable IP addresses from a reserved IP block
 '''
 EXAMPLES = '''
