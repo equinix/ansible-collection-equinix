@@ -9,9 +9,7 @@ description: Gather user SSH key resources
 module: metal_ssh_key_info
 notes: []
 options: {}
-requirements:
-- python >= 3
-- equinix_metal >= 0.0.1
+requirements: null
 short_description: Gather user SSH key resources
 '''
 EXAMPLES = '''
