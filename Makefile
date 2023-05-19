@@ -50,8 +50,8 @@ remove-module-docs:
 
 test: integration-test
 
-testall: create-integration-config
-		./scripts/test_all.sh
+testall:
+	./scripts/test_all.sh
 
 integration-test: create-integration-config
 	ansible-test integration $(TEST_ARGS)
