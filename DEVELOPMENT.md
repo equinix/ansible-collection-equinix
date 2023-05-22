@@ -1,3 +1,5 @@
+# Development Guide for the Collection
+
 <!-- vscode-markdown-toc -->
 * 1. [Running integration tests](#Runningintegrationtests)
 * 2. [Adding a new module](#Addinganewmodule)
@@ -13,7 +15,7 @@
 	numbering=true
 	autoSave=true
 	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc --># Development Guide for the Collection
+<!-- /vscode-markdown-toc -->
 
 ##  1. <a name='Runningintegrationtests'></a>Running integration tests
 
