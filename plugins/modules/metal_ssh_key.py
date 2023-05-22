@@ -8,8 +8,10 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: Manage ssh_keys in Equinix Metal. You can use *id* or *label* to lookup
-  a ssh_key. If you want to create new ssh_key, you must provide *name*.
+description: Manage personal SSH keys in Equinix Metal. Read more about personal and
+  project SSH keys in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/accounts/ssh-keys/#personal-keys-vs-project-keys).
+  You can use *id* or *label* to lookup a SSH key. If you want to create new personal
+  SSH key, you must provide a *label* and a public key in the *key* field.
 module: metal_ssh_key
 notes: []
 options:
@@ -29,7 +31,7 @@ options:
     required: false
     type: str
 requirements: null
-short_description: Manage ssh_keys in Equinix Metal
+short_description: Manage personal SSH keys in Equinix Metal
 '''
 EXAMPLES = '''
 - name: Create new ssh_key
@@ -124,11 +126,12 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description='Manage ssh_keys in Equinix Metal',
+    short_description='Manage personal SSH keys in Equinix Metal',
     description=(
-        'Manage ssh_keys in Equinix Metal. '
-        'You can use *id* or *label* to lookup a ssh_key. '
-        'If you want to create new ssh_key, you must provide *name*.'
+        'Manage personal SSH keys in Equinix Metal. '
+        'Read more about personal and project SSH keys in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/accounts/ssh-keys/#personal-keys-vs-project-keys). '
+        'You can use *id* or *label* to lookup a SSH key. '
+        'If you want to create new personal SSH key, you must provide a *label* and a public key in the *key* field.'
     ),
     examples=specdoc_examples,
     options=module_spec,

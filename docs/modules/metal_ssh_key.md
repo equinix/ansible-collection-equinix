@@ -1,6 +1,6 @@
 # metal_ssh_key
 
-Manage ssh_keys in Equinix Metal. You can use *id* or *label* to lookup a ssh_key. If you want to create new ssh_key, you must provide *name*.
+Manage personal SSH keys in Equinix Metal. Read more about personal and project SSH keys in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/accounts/ssh-keys/#personal-keys-vs-project-keys). You can use *id* or *label* to lookup a SSH key. If you want to create new personal SSH key, you must provide a *label* and a public key in the *key* field.
 
 
 - [Examples](#examples)
