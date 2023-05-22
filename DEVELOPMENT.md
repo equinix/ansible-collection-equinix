@@ -1,6 +1,21 @@
-# Development Guide for the Collection
+<!-- vscode-markdown-toc -->
+* 1. [Running integration tests](#Runningintegrationtests)
+* 2. [Adding a new module](#Addinganewmodule)
+	* 2.1. [Module structure](#Modulestructure)
+	* 2.2. [Documentation and the Specdoc fields](#DocumentationandtheSpecdocfields)
+	* 2.3. [main() function](#mainfunction)
+	* 2.4. [API routes](#APIroutes)
+	* 2.5. [Attribute maps in metal_api.py](#Attributemapsinmetal_api.py)
+* 3. [_info modules](#infomodules)
+* 4. [Generating documentation](#Generatingdocumentation)
 
-## Running integration tests
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc --># Development Guide for the Collection
+
+##  1. <a name='Runningintegrationtests'></a>Running integration tests
 
 The integration tests will only function if your repository is located in a path that concludes with `ansible_collections/equinix/cloud`. This is a requirement specific to Ansible. You can clone the repository using the following command:
 
@@ -20,7 +35,7 @@ ansible-test integration -vvvv metal_device
 You can run all the tests with `make test`. You can also run the tests in parallel (like in the CI) with `make testall`. The parallel run is faster but it's harder to read the output.
 
 
-## Adding a new module
+##  2. <a name='Addinganewmodule'></a>Adding a new module
 
 The primary task for this collection is the addition of new modules with the aim of achieving parity with the [Terraform Provider Equinix](https://github.com/equinix/terraform-provider-equinix). Each Terraform resource should have a corresponding module, and each needed datasource should have an accompanying `_info` module.
 
@@ -29,11 +44,11 @@ For instance, the [equinix_metal_device resource](https://registry.terraform.io/
 Issues have been created for every plausible existing Terraform resource and datasource within this repository. If you decide to work on a new module, please assign the corresponding issue to yourself.
 
 
-### Module structure
+###  2.1. <a name='Modulestructure'></a>Module structure
 
 The basic template for a resoruce is outlined in [template/metal_resource.py](template/metal_resource.py). 
 
-### Documentation and the Specdoc fields
+###  2.2. <a name='DocumentationandtheSpecdocfields'></a>Documentation and the Specdoc fields
 
 Ansible module documentation requires three fields in the module script: DOCUMENTATION, EXAMPLES, and RETURN. A standardized method exists to generate Sphinx docs from these fields, resulting in a format like [this](https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_disk_module.html#ansible-collections-google-cloud-gcp-compute-disk-module), which can then be incorporated into https://docs.ansible.com. 
 
@@ -58,7 +73,7 @@ SPECDOC_META has other parameters that are quite self-explanatory. Just note tha
 
 The `return_values` dictionary does not itemize every key of the module output. Instead, it includes a dictionary with the module name, and a `sample` subkey is populated with example module output. Importantly, the value of the `sample` should be in list format.
 
-### main() function
+###  2.3. <a name='mainfunction'></a>main() function
 
 The collection is structured to maintain consistency in the `main()` function across all modules. Modifications to the `main()` logic are only necessary for non-standard behavior. For instance, the `backend_transfer` attribute of the Project resource cannot be specified in the API call that creates a Project. As a result, we need to extend the `main()` function of the [metal_project module](https://github.com/equinix-labs/ansible-collection-equinix/blob/10fca6a7e1ea06b86204fd301454ab9eff254ef5/plugins/modules/metal_project.py#L256) to accommodate this.
 
@@ -66,7 +81,7 @@ The module initialization leverages the parameter specification from SPECDOC_MET
 
 As implied by the code, a module initially attempts to locate a resource by its ID or name, with only one of `id` and `name` being specifiable. If precisely one such resource is identified and the desired state is `present`, its MUTABLE_ATTRIBUTES will be examined and updated as needed. If no matching resource is found and the desired state is `present`, the module will aim to create a new resource. The `absent` state is similarly handled in both scenarios. The `changed` flag is set accordingly. The exit JSON is formatted from the processed API response.
 
-### API routes
+###  2.4. <a name='APIroutes'></a>API routes
 
 Rather than directly calling the Equinix API, the module code invokes semantic actions such as get_by_id, get_one_from_list, update_by_id, delete_by_id, create, and list. The specific API calls for each module type (resource type) are defined in separate files, with [plugins/module_utils/metal/api_routes.py](plugins/module_utils/metal/api_routes.py) being the reference for the Metal API. 
 
@@ -132,7 +147,7 @@ Note that `project_id` isn't used in `CreateDeviceRequest` but as the first posi
 For API methods that don't require a positional parameter (no parent resource), like creating a project (HTTP POST to `/projects`), an empty dict should be passed as the mapping. Additionally, there are API methods that don't have a JSON body (such as getters or delete methods). In these cases, the third parameter to Specs should be left unspecified. Examples of all these scenarios can be found in [plugins/module_utils/metal/api_routes.py](plugins/module_utils/metal/api_routes.py).
 
 
-### Attribute maps in metal_api.py
+###  2.5. <a name='Attributemapsinmetal_api.py'></a>Attribute maps in metal_api.py
 
 We convert resources from the Equinix API response to Ansible modules, which allows us to query the API and identify attribute differences for updates. API responses can contain nested dictionaries, but Ansible modules tend to be more flat. As a result, we must explicitly map attributes from API responses to module parameters.
 
@@ -140,11 +155,11 @@ The attribute mappings for the Metal API are defined in [plugins/module_utils/me
 
 If you're developing support for a new module/resource, you'll need to add a corresponding ..._RESPONSE_ATTRIBUTE_MAP and augment the `get_attribute_mapper` function.
 
-## _info modules
+##  3. <a name='infomodules'></a>_info modules
 
 Modules which end on `_info` are alternative of Terraform datasources. They query existing resources in Equinix API. You can see a __ template for info module in [template/metal_resource_info.py](template/metal_resource_info.py).
 
-## Generating documentation
+##  4. <a name='Generatingdocumentation'></a>Generating documentation
 
 Documentation is generated from the `SPECDOC_META` variable in module scripts by running the `make docs` command. This process:
 
