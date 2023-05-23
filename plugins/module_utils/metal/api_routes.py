@@ -47,6 +47,9 @@ def get_routes(mpc):
         ('metal_ip_assignment', action.GET): spec_types.Specs(
             equinix_metal.IPAddressesApi(mpc).find_ip_address_by_id,
         ),
+        ('metal_ssh_key', action.GET): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).find_ssh_key_by_id,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -76,6 +79,9 @@ def get_routes(mpc):
             equinix_metal.DevicesApi(mpc).find_ip_assignments,
             {'id': 'device_id'}
         ),
+        ('metal_ssh_key', action.LIST): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).find_ssh_keys,
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -89,6 +95,9 @@ def get_routes(mpc):
         ),
         ('metal_ip_assignment', action.DELETE): spec_types.Specs(
             equinix_metal.IPAddressesApi(mpc).delete_ip_address,
+        ),
+        ('metal_ssh_key', action.DELETE): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).delete_ssh_key,
         ),
 
 
@@ -118,6 +127,11 @@ def get_routes(mpc):
             {'id': 'device_id'},
             equinix_metal.models.IPAssignmentInput,
         ),
+        ('metal_ssh_key', action.CREATE): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).create_ssh_key,
+            {},
+            equinix_metal.SSHKeyCreateInput,
+        ),
 
         # UPDATERS
         ('metal_device', action.UPDATE): spec_types.Specs(
@@ -134,5 +148,10 @@ def get_routes(mpc):
             equinix_metal.IPAddressesApi(mpc).update_ip_address,
             {},
             equinix_metal.models.IPAssignmentUpdateInput,
+        ),
+        ('metal_ssh_key', action.UPDATE): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).update_ssh_key,
+            {},
+            equinix_metal.SSHKeyInput,
         ),
     }

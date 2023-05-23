@@ -105,7 +105,7 @@ METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'type': 'type',
 }
 
-LIST_KEYS = ['projects', 'devices', 'ip_addresses']
+LIST_KEYS = ['projects', 'devices', 'ip_addresses', 'ssh_keys']
 
 
 def get_assignment_address(resource: dict):
@@ -128,6 +128,13 @@ METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP = {
     'metro': find_metro,
 }
 
+METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'label': 'label',
+    'key': 'key',
+    'fingerprint': 'fingerprint',
+}
+
 
 def get_attribute_mapper(resource_type):
     """
@@ -137,6 +144,7 @@ def get_attribute_mapper(resource_type):
     project_resources = set(['metal_project', 'metal_organization_project'])
     ip_reservation_resources = set(['metal_ip_reservation', 'metal_available_ip'])
     ip_assignment_resources = set(['metal_ip_assignment'])
+    ssh_key_resources = set(['metal_ssh_key', 'metal_project_ssh_key'])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -145,6 +153,8 @@ def get_attribute_mapper(resource_type):
         return METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in ip_assignment_resources:
         return METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in ssh_key_resources:
+        return METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -232,7 +242,7 @@ def response_to_ansible_dict(response, attribute_mapper):
             if dv is None:
                 raise Exception("attribute '{0}' (to map to '{1}') not found in response_dict: {2}".format(v, k, response_dict))
             return_dict[k] = dv
-        elif k in response_dict:
+        elif v in response_dict:
             return_dict[k] = response_dict[v]
         else:
             raise Exception("attribute '{0}' (to map to '{1}') not found in response_dict: {2}".format(k, v, response_dict))
