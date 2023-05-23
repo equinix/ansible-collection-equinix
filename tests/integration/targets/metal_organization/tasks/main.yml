@@ -1,0 +1,69 @@
+- name: metal_organization_info
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_organization:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_organization_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-project'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+
+
+    - name: list all organizations
+      equinix.cloud.metal_organization_info:
+      register: orgs
+
+    - name: check that this account has some organizations available
+      assert:
+        that:
+        - "orgs.resources | length > 0"  
+
+    - name: create first project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project1"
+        backend_transfer_enabled: true
+        organization_id: "{{ orgs.resources[0].id }}"
+      register: project
+
+    - name: fetch project organization
+      equinix.cloud.metal_organization:
+        id: "{{ project.organization_id }}"
+      register: org
+
+    - name: check that test project is in selected org  
+      assert:
+        that:
+        - "project.id in org.projects"
+
+    - name: delete test project
+      equinix.cloud.metal_project:
+        id: "{{ project.id }}"
+        state: absent
+
+       
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes
+

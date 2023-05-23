@@ -53,6 +53,9 @@ def get_routes(mpc):
         ('metal_hardware_reservation', action.GET): spec_types.Specs(
             equinix_metal.HardwareReservationsApi(mpc).find_hardware_reservation_by_id,
         ),
+        ("metal_organization", action.GET): spec_types.Specs(
+            equinix_metal.OrganizationsApi(mpc).find_organization_by_id,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -84,6 +87,10 @@ def get_routes(mpc):
         ),
         ('metal_ssh_key', action.LIST): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).find_ssh_keys,
+        ),
+        ('metal_organization', action.LIST): spec_types.Specs(
+            equinix_metal.OrganizationsApi(mpc).find_organizations,
+            {'personal': 'personal', 'with_projects': 'with_projects'},
         ),
         ('metal_operating_system', action.LIST): spec_types.Specs(
             equinix_metal.OperatingSystemsApi(mpc).find_operating_systems,
