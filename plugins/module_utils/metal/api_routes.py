@@ -82,6 +82,9 @@ def get_routes(mpc):
         ('metal_ssh_key', action.LIST): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).find_ssh_keys,
         ),
+        ('metal_metro', action.LIST): spec_types.Specs(
+            equinix_metal.MetrosApi(mpc).find_metros,
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(

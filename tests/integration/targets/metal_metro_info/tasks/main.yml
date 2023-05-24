@@ -1,0 +1,14 @@
+- name: metal_project
+  module_defaults:
+    equinix.cloud.metal_metro_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - name: list metros
+      equinix.cloud.metal_metro_info:
+      register: metros
+
+    - assert:
+        that: "metros.resources | length > 0"
+ 
+    - assert:
+        that: "metros.resources | selectattr('code', 'equalto', 'sv') | length == 1"
