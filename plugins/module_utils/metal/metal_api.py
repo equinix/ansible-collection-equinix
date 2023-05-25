@@ -169,13 +169,8 @@ def get_attribute_mapper(resource_type):
         return METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in ssh_key_resources:
         return METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP
-<<<<<<< HEAD
-=======
-    elif resource_type == 'metal_organization':
-        return METAL_ORGANIZATION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_metro':
         return METAL_METRO_RESPONSE_ATTRIBUTE_MAP
->>>>>>> 9fa0960... nottis
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
