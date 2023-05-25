@@ -105,7 +105,7 @@ METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'type': 'type',
 }
 
-LIST_KEYS = ['projects', 'devices', 'ip_addresses', 'ssh_keys']
+LIST_KEYS = ['projects', 'devices', 'ip_addresses', 'ssh_keys', 'operating_systems']
 
 
 def get_assignment_address(resource: dict):
@@ -135,6 +135,19 @@ METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP = {
     'fingerprint': 'fingerprint',
 }
 
+METAL_OPERATING_SYSTEM_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'distro': 'distro',
+    'distro_label': 'distro_label',
+    'licensed': 'licensed',
+    'name': 'name',
+    'preinstallable': 'preinstallable',
+    'pricing': 'pricing',
+    'provisionable_on': 'provisionable_on',
+    'slug': 'slug',
+    'version': 'version',
+}
+
 
 def get_attribute_mapper(resource_type):
     """
@@ -155,6 +168,8 @@ def get_attribute_mapper(resource_type):
         return METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in ssh_key_resources:
         return METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type == 'metal_operating_system':
+        return METAL_OPERATING_SYSTEM_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
