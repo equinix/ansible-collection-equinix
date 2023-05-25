@@ -1,4 +1,4 @@
-- name: metal_project
+- name: metal_metro_info
   module_defaults:
     equinix.cloud.metal_metro_info:
       metal_api_token: '{{ metal_api_token }}'
