@@ -159,7 +159,7 @@ If you're developing support for a new module/resource, you'll need to add a cor
 
 ##  3. <a name='infomodules'></a>_info modules
 
-Modules which end on `_info` are alternative of Terraform datasources. They query existing resources in Equinix API. You can see a __ template for info module in [template/metal_resource_info.py](template/metal_resource_info.py).
+Modules which end on `_info` are alternative of Terraform datasources. They query existing resources in Equinix API. You can see template for info module in [template/metal_resource_info.py](template/metal_resource_info.py).
 
 If you add a new `_info` module, you must add an entry to variable `LIST_FIELDS` in [plugins/module_utils/metal/metal_api.py](plugins/module_utils/metal/metal_api.py). It's because responses to listing API methods have the resource lists in specifically names keys.
 
