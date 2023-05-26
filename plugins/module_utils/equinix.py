@@ -26,12 +26,6 @@ from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
 from ansible_specdoc.objects import SpecDocMeta
 
 METAL_COMMON_ARGS = dict(
-    metal_api_token=dict(
-        type='str',
-        fallback=(env_fallback, metal_client.TOKEN_ENVVARS),
-        required=True,
-        no_log=True,
-    ),
     metal_api_url=dict(
         type='str',
         default=metal_client.API_URL,
@@ -43,6 +37,14 @@ METAL_COMMON_ARGS = dict(
         default="",
         no_log=True,
     ),
+)
+
+
+METAL_API_TOKEN_ARG=dict(
+    type='str',
+    fallback=(env_fallback, metal_client.TOKEN_ENVVARS),
+    required=True,
+    no_log=True,
 )
 
 
@@ -63,9 +65,12 @@ class EquinixModule(AnsibleModule):
                  is_info=False,
                  mutually_exclusive=None,
                  required_together=None,
+                 needs_auth=True,
                  ):
         metal_client.raise_if_missing_equinix_metal()
         argument_spec.update(METAL_COMMON_ARGS)
+        if needs_auth:
+            argument_spec['metal_api_token'] = METAL_API_TOKEN_ARG
         if not is_info:
             argument_spec['state'] = EQUINIX_STATE_ARG
         AnsibleModule.__init__(
