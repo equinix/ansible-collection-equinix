@@ -111,6 +111,7 @@ LIST_KEYS = [
     'ip_addresses',
     'ssh_keys',
     'metros',
+    'operating_systems',
 ]
 
 
@@ -142,6 +143,21 @@ METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP = {
     'fingerprint': 'fingerprint',
 }
 
+
+METAL_OPERATING_SYSTEM_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'distro': 'distro',
+    'distro_label': 'distro_label',
+    'licensed': 'licensed',
+    'name': 'name',
+    'preinstallable': 'preinstallable',
+    'pricing': 'pricing',
+    'provisionable_on': 'provisionable_on',
+    'slug': 'slug',
+    'version': 'version',
+}
+
+
 METAL_METRO_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
     'code': 'code',
@@ -169,6 +185,8 @@ def get_attribute_mapper(resource_type):
         return METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in ssh_key_resources:
         return METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type == 'metal_operating_system':
+        return METAL_OPERATING_SYSTEM_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_metro':
         return METAL_METRO_RESPONSE_ATTRIBUTE_MAP
     else:
