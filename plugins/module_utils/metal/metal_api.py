@@ -105,6 +105,17 @@ METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'type': 'type',
 }
 
+METAL_HARDWARE_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'project_id': 'project.id',
+    'device_id': optional_str('device.id'),
+    'provisionable': 'provisionable',
+    'spare': 'spare',
+    'switch_uuid': 'switch_uuid',
+    'plan': 'plan.slug',
+}
+
+
 LIST_KEYS = [
     'projects',
     'devices',
@@ -112,6 +123,7 @@ LIST_KEYS = [
     'ssh_keys',
     'metros',
     'operating_systems',
+    'hardware_reservations',
 ]
 
 
@@ -175,6 +187,7 @@ def get_attribute_mapper(resource_type):
     ip_reservation_resources = set(['metal_ip_reservation', 'metal_available_ip'])
     ip_assignment_resources = set(['metal_ip_assignment'])
     ssh_key_resources = set(['metal_ssh_key', 'metal_project_ssh_key'])
+    hardware_reservation_resources = set(['metal_project_hardware_reservation', 'metal_hardware_reservation'])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -189,6 +202,8 @@ def get_attribute_mapper(resource_type):
         return METAL_OPERATING_SYSTEM_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_metro':
         return METAL_METRO_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in hardware_reservation_resources:
+        return METAL_HARDWARE_RESERVATION_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -204,6 +219,8 @@ def call(resource_type, action, equinix_metal_client, params={}):
 
     call = api_routes.build_api_call(conf, params)
     response = call.do()
+    # uncomment to check response in /tmp/q
+    #import q; q(response)
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)
