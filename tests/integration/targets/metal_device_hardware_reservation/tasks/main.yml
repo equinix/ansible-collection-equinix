@@ -1,0 +1,92 @@
+# You need hw reservation and its project ID to properly run this test.
+# The variables can be passed from envvars
+# METAL_HARDWARE_RESERVATION_ID and 
+# METAL_HARDWARE_RESERVATION_PROJET_ID
+# If you run this test without setting those, it will skip most of the tasks and exit with success, it's set like this for the CI.
+# If you set those 2 envvars, you can run this test as:
+# $ make test_target=metal_device_hardware_reservation test
+# The test can't be run immediately after successful run - the hw reservation needs a couple of minutes to be provisionable again.
+- name: metal_hardware_reservation
+  module_defaults:
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_hardware_reservation:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_hardware_reservation_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-device'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_os: ubuntu_22_04
+    - set_fact:
+        test_plan: c3.small.x86
+    - set_fact:
+        wait_seconds: 1200
+
+    - name: list hw reservation for a project
+      equinix.cloud.metal_hardware_reservation_info:
+        project_id: "{{ metal_hardware_reservation_project_id }}"    
+      register: project_reservations
+      when: metal_hardware_reservation_project_id is defined
+    
+    - assert:
+        that:
+          - "project_reservations.resources|length > 0"
+      when: metal_hardware_reservation_project_id is defined
+
+    - name: test fetch hw reservation resource 
+      equinix.cloud.metal_hardware_reservation:
+        id: "{{ metal_hardware_reservation_id }}"
+      register: hwres
+      when: metal_hardware_reservation_id is defined
+
+    - assert:
+        that:
+          - "metal_hardware_reservation_id == hwres.id"
+      when: metal_hardware_reservation_id is defined
+
+    - name: start first test device
+      equinix.cloud.metal_device:
+        project_id:  "{{ metal_hardware_reservation_project_id }}"
+        hostname: "{{ test_prefix }}-dev1"
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ metal_test_metro }}"
+        state: present
+        provisioning_wait_seconds: "{{ wait_seconds }}"
+        hardware_reservation_id: "{{ metal_hardware_reservation_id }}"
+      register: test_device_1
+      when: metal_hardware_reservation_id is defined
+
+    - name: check fail msg when hw res is occupied
+      equinix.cloud.metal_device:
+        project_id:  "{{ metal_hardware_reservation_project_id }}"
+        hostname: "{{ test_prefix }}-devfail"
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ metal_test_metro }}"
+        state: present
+        provisioning_wait_seconds: "{{ wait_seconds }}"
+        hardware_reservation_id: "{{ metal_hardware_reservation_id }}"
+      register: failed_device
+      when: metal_hardware_reservation_id is defined
+      failed_when: '"is not provisionable" not in failed_device.msg'
+
+    - name: assert device started
+      assert:
+        that:
+          - "test_device_1.metal_state == 'active'"
+      when: metal_hardware_reservation_id is defined
+
+    - name: delete first device
+      equinix.cloud.metal_device:
+        id: "{{ test_device_1.id }}"
+        state: absent
+      when: metal_hardware_reservation_id is defined

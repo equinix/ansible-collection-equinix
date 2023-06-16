@@ -3,7 +3,7 @@ COLLECTIONS_PATH ?= ~/.ansible/collections
 DOCS_PATH ?= docs
 COLLECTION_VERSION ?=
 
-TEST_ARGS := -v
+TEST_ARGS := -v ${test_target}
 INTEGRATION_CONFIG := tests/integration/integration_config.yml
 METAL_TEST_METRO ?= sv
 
@@ -63,6 +63,13 @@ else
 	echo "METAL_API_TOKEN must be set"; \
 	exit 1;
 endif
-	echo "metal_api_token: $(METAL_API_TOKEN)" > $(INTEGRATION_CONFIG)
 	echo "metal_ua_prefix: E2E" >> $(INTEGRATION_CONFIG)
 	echo "metal_test_metro: $(METAL_TEST_METRO)" >> $(INTEGRATION_CONFIG)
+
+ifneq ("${METAL_HARDWARE_RESERVATION_ID}", "")
+	echo "metal_hardware_reservation_id: ${METAL_HARDWARE_RESERVATION_ID}" >> $(INTEGRATION_CONFIG)
+endif
+ifneq ("${METAL_HARDWARE_RESERVATION_PROJECT_ID}", "")
+	echo "metal_hardware_reservation_project_id: ${METAL_HARDWARE_RESERVATION_PROJECT_ID}" >> $(INTEGRATION_CONFIG)
+endif
+
