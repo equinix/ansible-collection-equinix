@@ -99,7 +99,7 @@ You can try to run integration test for metal_project, that won't incur any fee.
 
 ```
 cd devdir/ansible_collections/equinix/cloud
-ansible-test integration -vvv metal_project
+make test_target=metal_project test
 ```
 
 You can then edit existing code, or add new modules or tests.

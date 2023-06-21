@@ -643,7 +643,6 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 
 MUTABLE_ATTRIBUTES = [a for a, v in module_spec.items() if v.editable]
 
-
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
@@ -679,6 +678,12 @@ def main():
                 operating_system = module.params.get("operating_system")
                 if (plan is None) or (operating_system is None):
                     raise Exception("plan and operating_system are required when creating a device")
+                if module.params.get("hardware_reservation_id"):
+                    hw_res = module.get_hardware_reservation()
+                    if hw_res["provisionable"] is False:
+                        module.fail_json(
+                            msg="Hardware reservation %s is not provisionable" % hw_res['id'] 
+                        )
                 fetched = module.create("metal_device")
                 if "id" not in fetched:
                     raise Exception("UUID not found in device creation response")

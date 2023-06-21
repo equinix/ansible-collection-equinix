@@ -183,7 +183,10 @@ class EquinixModule(AnsibleModule):
                 return result
             time.sleep(5)
         raise Exception(f'wait for {resource_type} {specified_id} {attribute} {target_value} timed out')
-
+    
+    def get_hardware_reservation(self):
+        params = {'id': self.params['hardware_reservation_id']}
+        return self._metal_api_call('metal_hardware_reservation', action.GET, params)
 
 def update_dict(current, fetched, mutables: list):
     d = {}
