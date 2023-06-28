@@ -49,6 +49,10 @@ def ip_address_getter(resource: dict):
     return [dict((k, ip[k]) for k in pick_keys) for ip in resource.get('ip_addresses', [])]
 
 
+def extract_ids_from_projects_hrefs(resource: dict):
+    return [href_to_id(p['href']) for p in resource.get('projects', [])]
+
+
 # Following are the mappings of the API response attributes to the
 # Ansible module attributes. The values are either a string with the
 # attribute name or a function which takes the resource dict and returns
@@ -88,6 +92,14 @@ METAL_PROJECT_RESPONSE_ATTRIBUTE_MAP = {
     'payment_method_id': optional_str('payment_method.id'),
 }
 
+METAL_ORGANIZATION_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'name': 'name',
+    'description': optional_str('description'),
+    'website': optional_str('website'),
+    'projects': extract_ids_from_projects_hrefs,
+}
+
 METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'address_family': 'address_family',
     'customdata': 'customdata',
@@ -124,6 +136,7 @@ LIST_KEYS = [
     'metros',
     'operating_systems',
     'hardware_reservations',
+    'organizations',
 ]
 
 
@@ -204,6 +217,8 @@ def get_attribute_mapper(resource_type):
         return METAL_METRO_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in hardware_reservation_resources:
         return METAL_HARDWARE_RESERVATION_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type == 'metal_organization':
+        return METAL_ORGANIZATION_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -254,8 +269,7 @@ def populate_ids_from_hrefs(response):
 
     for v in return_dict.values():
         if type(v) is dict:
-            if ('href' in v) & ('id' not in v):
-                add_id_from_href(v)
+            add_id_from_href(v)
         if type(v) is list:
             for i in v:
                 if type(i) is dict:

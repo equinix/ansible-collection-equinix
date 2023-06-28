@@ -24,6 +24,7 @@ Name | Description |
 [equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
 [equinix.cloud.metal_hardware_reservation](./docs/modules/metal_hardware_reservation.md)|Lookup a single hardware_reservation by ID in Equinix Metal|
 [equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
+[equinix.cloud.metal_organization](./docs/modules/metal_organization.md)|Lookup a single organization by ID in Equinix Metal|
 [equinix.cloud.metal_project](./docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
 [equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 [equinix.cloud.metal_ssh_key](./docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
@@ -41,6 +42,7 @@ Name | Description |
 [equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
 [equinix.cloud.metal_metro_info](./docs/modules/metal_metro_info.md)|Gather information about Equinix Metal metros|
 [equinix.cloud.metal_operating_system_info](./docs/modules/metal_operating_system_info.md)|Gather information about Operating Systems available for devices in Equinix Metal|
+[equinix.cloud.metal_organization_info](./docs/modules/metal_organization_info.md)|Gather information about Equinix Metal organizations|
 [equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
 [equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 [equinix.cloud.metal_ssh_key_info](./docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
