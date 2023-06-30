@@ -65,6 +65,12 @@ module_spec = dict(
         required=True,
         description=['UUID of the hardware_reservation.'],
     ),
+    project_id=SpecField(
+        type=FieldType.string,
+        description=["UUID of parent project containing the hardware_reservation. It can be changed."],
+        required=False,
+        editable=True,
+    ),
 )
 
 
@@ -110,6 +116,7 @@ SPECDOC_META = getSpecDocMeta(
     },
 )
 
+MUTABLE_ATTRIBUTES = [a for a, v in module_spec.items() if v.editable]
 
 def main():
     module = EquinixModule(
@@ -124,7 +131,10 @@ def main():
     try:
         module.params_syntax_check()
         fetched = module.get_by_id("metal_hardware_reservation", False)
-
+        diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
+        if diff:
+            fetched = module.update_by_id(diff, "metal_hardware_reservation")
+            changed = True
         if fetched:
             module.params['id'] = fetched['id']
         else:
