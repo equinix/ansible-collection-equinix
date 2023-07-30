@@ -1,0 +1,114 @@
+- name: metal_project_ssh_key
+  module_defaults:
+    equinix.cloud.metal_project_ssh_key:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_ssh_key_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-ssh_key'
+    - set_fact:
+        unique_id: "{{ lookup('community.general.random_string', upper=false, numbers=false, special=false) }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_key: "ssh-dss AAAAB3NzaC1kc3MAAACBAOpXVtmc0Bla98bt0o5/Zj7sb4mHIukgVFZu7F32R3VK1cEKB4rEE8uS0oLS/qMRLue45TWVJwRMYGlPjt3p/VyraelxoyJZLuITIsqa5hBc9w0oTlB5Bmbkn16umW96WCaWEoq/aitpocbRChTiP5biI6FyQTQlIHDaYzBDOi11AAAAFQDUXy7cmuzphDpJSYYTiudiUhVokwAAAIEAyUQ9m8qL/1HPkFe6jbXAvtSSmW27F4c+G2xR5HizaHQzXgBOxPcsOsY17KTU+Ddbg+OF9soWNwSpm9pyVjVmNGqH3S8R1pwvuJF/O2Asy1m6wpWhbPw8JdEBW7WHoptBpfuzJoS2LOzJUEmUu4Eb+xS237KG1d1BVny/49KAoH0AAACBAJKBSsm9Xey0fUN6vYtTQgoYeGxxj/LqAIAOs/TpCxZDntly860y/SzHYai8x48k4t7whENY1CJ41fpMcPlz8xIsrNP3326Wbr0ExwOIvJKAVN1YLYqF8NXWzaVrjo5WbSeI8PiWTYemvLAujVxZssIrApTZBhp55nnwge6K1zTG tomk@air"
+    - set_fact:
+        test_key2: "ssh-dss AAAAB3NzaC1kc3MAAACBAPWcHWkA06LxBQ67WmNsp1+aZMwNNz9v67pftePlQg94Z1cU4s/5j5S/Fknj7gapWw/ouiOYqXhC2p/hC9/1ARY15t0aHYqLjRhWzs3j8miL1YyXYjqLPLDtgNpX9E09We5ogjbYCB8CCtZrujm/MB6NWvX+T4uG8C/g66I4/bGdAAAAFQDa4SS+q9aQK/XwiqnWpFpAEY74TQAAAIEAklEfXCf1qbUvTquHhtNVKTiKm+qGRsqxnLnu7aduzU81JDFzveF/agkE5x30olTvKECb1PAziDmt63z/obO3Da8TUz0QVdqv81pNWU5JUNiTB8d3rDJU3B66DA6GI305W8qyt0AGUNGR3rDIzNpZY958faBg+TaILRg8ZFNh0PAAAACAdUhJS6bl5M5sQr6XNilHa0nOTk/PB54faGWWMq7zQvxUKJKsDklNTc0MCPjRppyuokbQ6297tq8pEEFqUAyllMvAf75X7DsBQivLzbNuzp41NqFdS/Oka+T1ypRD7mT6g0Kg8yCVYD2ti874wyTpV9riUUaoItveEF3AdC9AzmI= tomk@air"
+    - set_fact:
+        project_id: "4394a515-846c-46ed-b0f5-8bfd09f2ea06"
+
+    - name: create first project ssh_key for test
+      equinix.cloud.metal_project_ssh_key:
+        name: "{{ test_prefix }}-ssh_key1"
+        public_key: "{{ test_key }}"
+        project_id: "{{ project_id }}"
+      register: first_ssh_key
+
+    - name: create first ssh_key for test again, to check idempotence
+      equinix.cloud.metal_project_ssh_key:
+        name: "{{ test_prefix }}-ssh_key1"
+        public_key: "{{ test_key }}"
+        project_id: "{{ project_id }}"
+      register: first_ssh_key_2
+
+    - assert:
+        that:
+        - first_ssh_key.name == '{{ test_prefix }}-ssh_key1'
+        - first_ssh_key.public_key == "{{ test_key }}"
+        - first_ssh_key.project_id == "{{ project_id }}"
+        - first_ssh_key_2.changed == false
+
+    - name: update ssh_key name
+      equinix.cloud.metal_project_ssh_key:
+        id: "{{ first_ssh_key.id }}"
+        public_key: "{{ test_key }}"
+        name: "{{ test_prefix }}-ssh_key1_renamed"
+
+    - name: fetch updated ssh_key
+      equinix.cloud.metal_project_ssh_key:
+        id: "{{ first_ssh_key.id }}"
+      register: first_ssh_key_updated
+
+    - assert:
+        that:
+        - first_ssh_key_updated.name == '{{ test_prefix }}-ssh_key1_renamed'
+        - first_ssh_key.public_key == "{{ test_key }}"
+
+    - name: create second ssh_key for test
+      equinix.cloud.metal_project_ssh_key:
+        name: "{{ test_prefix }}-ssh_key2"
+        public_key: "{{ test_key2 }}"
+      register: second_ssh_key
+
+    - name: list ssh_keys
+      equinix.cloud.metal_project_ssh_key_info:
+      register: ssh_keys_listed
+
+    - debug:
+        msg: "{{ ssh_keys_listed.resources }}"
+
+    - debug:
+        msg: 'ssh_keys_listed.resources | selectattr("name", "equalto", "{{ test_prefix }}-ssh_key2")'
+
+    - assert:
+        that:
+        - 'ssh_keys_listed.resources | selectattr("name", "equalto", "{{ test_prefix }}-ssh_key2") | length == 1'
+
+    - name: list test ssh keys
+      set_fact:
+        both_ssh_keys_listed: "{{ ssh_keys_listed.resources | selectattr('name', 'match', test_prefix) }}"
+
+    - assert:
+        that:
+        - "both_ssh_keys_listed | length == 2"
+
+    - name: delete second ssh_key
+      equinix.cloud.metal_project_ssh_key:
+        id: "{{ second_ssh_key.id }}"
+        state: absent
+
+    - name: check that deleting nonexistent resource doesn't err
+      equinix.cloud.metal_project_ssh_key:
+        id: "{{ second_ssh_key.id }}"
+        state: absent
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list ssh_keys
+      equinix.cloud.metal_project_ssh_key_info:
+      register: ssh_keys_listed
+
+    - name: delete test ssh_keys
+      equinix.cloud.metal_project_ssh_key:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ ssh_keys_listed.resources }}"
+      when: "test_prefix in item.name"
+      ignore_errors: yes
+

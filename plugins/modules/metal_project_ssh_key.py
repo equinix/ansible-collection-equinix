@@ -104,7 +104,7 @@ module_spec = dict(
     project_id=SpecField(
         type=FieldType.string,
         description=["The ID of parent project."],
-        editable=True,
+        editable=False,
     ),
 )
 
