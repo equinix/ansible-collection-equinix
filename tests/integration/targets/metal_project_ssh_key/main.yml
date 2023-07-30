@@ -22,30 +22,30 @@
 
     - name: create first project ssh_key for test
       equinix.cloud.metal_project_ssh_key:
-        name: "{{ test_prefix }}-ssh_key1"
-        public_key: "{{ test_key }}"
+        label: "{{ test_prefix }}-ssh_key1"
+        key: "{{ test_key }}"
         project_id: "{{ project_id }}"
       register: first_ssh_key
 
     - name: create first ssh_key for test again, to check idempotence
       equinix.cloud.metal_project_ssh_key:
-        name: "{{ test_prefix }}-ssh_key1"
-        public_key: "{{ test_key }}"
+        label: "{{ test_prefix }}-ssh_key1"
+        key: "{{ test_key }}"
         project_id: "{{ project_id }}"
       register: first_ssh_key_2
 
     - assert:
         that:
-        - first_ssh_key.name == '{{ test_prefix }}-ssh_key1'
-        - first_ssh_key.public_key == "{{ test_key }}"
+        - first_ssh_key.label == '{{ test_prefix }}-ssh_key1'
+        - first_ssh_key.key == "{{ test_key }}"
         - first_ssh_key.project_id == "{{ project_id }}"
         - first_ssh_key_2.changed == false
 
-    - name: update ssh_key name
+    - name: update ssh_key label
       equinix.cloud.metal_project_ssh_key:
         id: "{{ first_ssh_key.id }}"
-        public_key: "{{ test_key }}"
-        name: "{{ test_prefix }}-ssh_key1_renamed"
+        key: "{{ test_key }}"
+        label: "{{ test_prefix }}-ssh_key1_renamed"
 
     - name: fetch updated ssh_key
       equinix.cloud.metal_project_ssh_key:
@@ -54,13 +54,13 @@
 
     - assert:
         that:
-        - first_ssh_key_updated.name == '{{ test_prefix }}-ssh_key1_renamed'
-        - first_ssh_key.public_key == "{{ test_key }}"
+        - first_ssh_key_updated.label == '{{ test_prefix }}-ssh_key1_renamed'
+        - first_ssh_key.key == "{{ test_key }}"
 
     - name: create second ssh_key for test
       equinix.cloud.metal_project_ssh_key:
-        name: "{{ test_prefix }}-ssh_key2"
-        public_key: "{{ test_key2 }}"
+        label: "{{ test_prefix }}-ssh_key2"
+        key: "{{ test_key2 }}"
       register: second_ssh_key
 
     - name: list ssh_keys
@@ -71,15 +71,15 @@
         msg: "{{ ssh_keys_listed.resources }}"
 
     - debug:
-        msg: 'ssh_keys_listed.resources | selectattr("name", "equalto", "{{ test_prefix }}-ssh_key2")'
+        msg: 'ssh_keys_listed.resources | selectattr("label", "equalto", "{{ test_prefix }}-ssh_key2")'
 
     - assert:
         that:
-        - 'ssh_keys_listed.resources | selectattr("name", "equalto", "{{ test_prefix }}-ssh_key2") | length == 1'
+        - 'ssh_keys_listed.resources | selectattr("label", "equalto", "{{ test_prefix }}-ssh_key2") | length == 1'
 
     - name: list test ssh keys
       set_fact:
-        both_ssh_keys_listed: "{{ ssh_keys_listed.resources | selectattr('name', 'match', test_prefix) }}"
+        both_ssh_keys_listed: "{{ ssh_keys_listed.resources | selectattr('label', 'match', test_prefix) }}"
 
     - assert:
         that:
@@ -109,6 +109,6 @@
         id: "{{ item.id }}"
         state: absent
       loop: "{{ ssh_keys_listed.resources }}"
-      when: "test_prefix in item.name"
+      when: "test_prefix in item.label"
       ignore_errors: yes
 

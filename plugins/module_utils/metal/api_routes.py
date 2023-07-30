@@ -50,6 +50,9 @@ def get_routes(mpc):
         ('metal_ssh_key', action.GET): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).find_ssh_key_by_id,
         ),
+        ('metal_project_ssh_key', action.GET): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).find_ssh_key_by_id,
+        ),
         ('metal_hardware_reservation', action.GET): spec_types.Specs(
             equinix_metal.HardwareReservationsApi(mpc).find_hardware_reservation_by_id,
         ),
@@ -88,6 +91,9 @@ def get_routes(mpc):
         ('metal_ssh_key', action.LIST): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).find_ssh_keys,
         ),
+        ('metal_project_ssh_key', action.LIST): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).find_project_ssh_keys,
+        ),
         ('metal_organization', action.LIST): spec_types.Specs(
             equinix_metal.OrganizationsApi(mpc).find_organizations,
             {'personal': 'personal', 'with_projects': 'with_projects'},
@@ -117,6 +123,9 @@ def get_routes(mpc):
             equinix_metal.IPAddressesApi(mpc).delete_ip_address,
         ),
         ('metal_ssh_key', action.DELETE): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).delete_ssh_key,
+        ),
+        ('metal_project_ssh_key', action.DELETE): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).delete_ssh_key,
         ),
 
@@ -152,6 +161,11 @@ def get_routes(mpc):
             {},
             equinix_metal.SSHKeyCreateInput,
         ),
+        ('metal_project_ssh_key', action.CREATE): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).create_project_ssh_key,
+            {},
+            equinix_metal.SSHKeyCreateInput,
+        ),
 
         # UPDATERS
         ('metal_device', action.UPDATE): spec_types.Specs(
@@ -168,6 +182,11 @@ def get_routes(mpc):
             equinix_metal.IPAddressesApi(mpc).update_ip_address,
             {},
             equinix_metal.models.IPAssignmentUpdateInput,
+        ),
+        ('metal_ssh_key', action.UPDATE): spec_types.Specs(
+            equinix_metal.SSHKeysApi(mpc).update_ssh_key,
+            {},
+            equinix_metal.SSHKeyInput,
         ),
         ('metal_ssh_key', action.UPDATE): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).update_ssh_key,

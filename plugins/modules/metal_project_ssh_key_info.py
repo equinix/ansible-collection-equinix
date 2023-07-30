@@ -61,7 +61,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 )
 
 module_spec = dict(
-    name=SpecField(
+    label=SpecField(
         type=FieldType.string,
         description=["Name to search for in existing keys."],
         required=True,
@@ -80,7 +80,7 @@ specdoc_examples = [
 
 - name: filter found ssh keys
   set_fact:
-    both_ssh_keys_listed: "{{ ssh_keys_listed.resources | selectattr('name', 'match', desired_name_substring) }}"
+    both_ssh_keys_listed: "{{ ssh_keys_listed.resources | selectattr('label', 'match', desired_name_substring) }}"
 """,
 ]
 
