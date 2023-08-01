@@ -6,7 +6,10 @@
       metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_project_ssh_key_info:
       metal_api_token: '{{ metal_api_token }}'
+      metal_ua_prefix: '{{ metal_ua_prefix }}'
     equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
       metal_api_token: '{{ metal_api_token }}'
   block:
     - set_fact:
@@ -74,6 +77,7 @@
 
     - name: list ssh_keys
       equinix.cloud.metal_project_ssh_key_info:
+        project_id: "{{ project.id }}"
       register: ssh_keys_listed
 
     - debug:
@@ -111,6 +115,7 @@
 
     - name: list ssh_keys
       equinix.cloud.metal_project_ssh_key_info:
+        project_id: "{{ project.id }}"
       register: ssh_keys_listed
 
     - name: delete test ssh_keys
@@ -121,6 +126,11 @@
       loop: "{{ ssh_keys_listed.resources }}"
       when: "test_prefix in item.label"
       ignore_errors: yes
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
 
     - name: delete test projects
       equinix.cloud.metal_project:
