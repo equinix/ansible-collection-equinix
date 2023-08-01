@@ -167,9 +167,11 @@ def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         required_one_of=[("label", "id")],
-        required_together=[("label", "key", "project_id")],
+        required_together=[("label", "key")],
     )
-
+    print("!!!!!!!!!!!!!")
+    print(module)
+    print("!!!!!!!!!!!!!")
     state = module.params.get("state")
     changed = False
 
@@ -181,7 +183,7 @@ def main():
         else:
             fetched = module.get_one_from_list(
                 MODULE_NAME,
-                ["label"],
+                ["key"],
             )
 
         if fetched:

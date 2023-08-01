@@ -111,7 +111,7 @@ SPECDOC_META = getSpecDocMeta(
         "Gather project SSH keys. Read more about project vs project SSH keys in [Equinix Metal documentation](https://metal.equinix.com/developers/docs/accounts/ssh-keys/#personal-keys-vs-project-keys)."
     ),
     examples=specdoc_examples,
-    options=module_spec,
+    options={},
     return_values={
         "resources": SpecReturnValue(
             description="Found resources",

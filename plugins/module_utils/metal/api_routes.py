@@ -93,6 +93,7 @@ def get_routes(mpc):
         ),
         ('metal_project_ssh_key', action.LIST): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).find_project_ssh_keys,
+            {'id': 'project_id'}
         ),
         ('metal_organization', action.LIST): spec_types.Specs(
             equinix_metal.OrganizationsApi(mpc).find_organizations,
@@ -163,7 +164,7 @@ def get_routes(mpc):
         ),
         ('metal_project_ssh_key', action.CREATE): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).create_project_ssh_key,
-            {},
+            {'id': 'project_id'},
             equinix_metal.SSHKeyCreateInput,
         ),
 
@@ -188,7 +189,7 @@ def get_routes(mpc):
             {},
             equinix_metal.SSHKeyInput,
         ),
-        ('metal_ssh_key', action.UPDATE): spec_types.Specs(
+        ('metal_project_ssh_key', action.UPDATE): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).update_ssh_key,
             {},
             equinix_metal.SSHKeyInput,

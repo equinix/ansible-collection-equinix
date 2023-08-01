@@ -166,7 +166,6 @@ METAL_SSH_KEY_RESPONSE_ATTRIBUTE_MAP = {
     'label': 'label',
     'key': 'key',
     'fingerprint': 'fingerprint',
-    'project_id': optional_str('project_id'),
 }
 
 
