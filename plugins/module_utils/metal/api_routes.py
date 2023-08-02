@@ -50,9 +50,6 @@ def get_routes(mpc):
         ('metal_ssh_key', action.GET): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).find_ssh_key_by_id,
         ),
-        ('metal_project_ssh_key', action.GET): spec_types.Specs(
-            equinix_metal.SSHKeysApi(mpc).find_ssh_key_by_id,
-        ),
         ('metal_hardware_reservation', action.GET): spec_types.Specs(
             equinix_metal.HardwareReservationsApi(mpc).find_hardware_reservation_by_id,
         ),
@@ -126,10 +123,6 @@ def get_routes(mpc):
         ('metal_ssh_key', action.DELETE): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).delete_ssh_key,
         ),
-        ('metal_project_ssh_key', action.DELETE): spec_types.Specs(
-            equinix_metal.SSHKeysApi(mpc).delete_ssh_key,
-        ),
-
 
         # CREATORS
         ('metal_device', action.CREATE): spec_types.Specs(

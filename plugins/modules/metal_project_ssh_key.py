@@ -46,7 +46,7 @@ EXAMPLES = '''
       name: test_key
       public_key: ssh-dss AAAAB3NzaC1kc3MAAACBAPLEVntPO3L7VUbEwWZ2ErkQJ3KJ8o9kFXJrPcpvVfdNag4jIhQDqbtAUgUy6BclhhbfH9l5nlGTprrpEFkxm/GL91qJUX6xrPkDMjMqx2wSKa4YraReOrCOfkqqEkC3o3G/gYSuvTzLgp2rmPiflypftZyzNM4JZT8jDwFGotJhAAAAFQDPk43bayONtUxjkAcOf+6zP1qb6QAAAIBZHHH0tIlth5ot+Xa/EYuB/M4qh77EkrWUbER0Kki7suskw/ffdKQ0y/v+ZhoAHtBU7BeE3HmP98Vrha1i4cOU+A7DCqV+lK/a+5LoEpua0M2M+VzNSGluYuV4qGpAOxNh3mxUi2R7yXxheN1oks1ROJ/bqkF4BJQXU9Nv49GkZgAAAIByWcsFeOitvzyDaNJOZzEHv9fqGuj0L3maRVWb6O47HGzlMzniIy8WjL2dfgm2/ek+NxVR/yFnYTKDPr6+0uqSD/cb4eHaFbIj7v+k7H8hA1Ioz+duJ1ONAjn6KwneXxOXu15bYIR49P7Go0s9jCdSAP/r9NE5TnE3yiRiQzgEzw==
         tomk@node
-      project_id: local.project_id
+      project_id: b8c6c653-3c96-446e-987e-9c4d12f25353
 - name: Remove project ssh_key by id
   hosts: localhost
   tasks:
@@ -62,7 +62,7 @@ metal_project_ssh_key:
   - "\n{\n  \"fingerprint\": \"98:9c:35:ed:f9:75:5b:52:e2:70:50:22:ea:77:5b:b6\",\n\
     \  \"id\": \"eef49903-7a09-4ca1-af67-4087c29ab5b6\",\n  \"public_key\": \"ssh-dss\
     \ AAAAB3NzaC1kc3MAAACBAPLEVntPO3L7VUbEwWZ2ErkQJ3KJ8o9kFXJrPcpvVfdNag4jIhQDqbtAUgUy6BclhhbfH9l5nlGTprrpEFkxm/GL91qJUX6xrPkDMjMqx2wSKa4YraReOrCOfkqqEkC3o3G/gYSuvTzLgp2rmPiflypftZyzNM4JZT8jDwFGotJhAAAAFQDPk43bayONtUxjkAcOf+6zP1qb6QAAAIBZHHH0tIlth5ot+Xa/EYuB/M4qh77EkrWUbER0Kki7suskw/ffdKQ0y/v+ZhoAHtBU7BeE3HmP98Vrha1i4cOU+A7DCqV+lK/a+5LoEpua0M2M+VzNSGluYuV4qGpAOxNh3mxUi2R7yXxheN1oks1ROJ/bqkF4BJQXU9Nv49GkZgAAAIByWcsFeOitvzyDaNJOZzEHv9fqGuj0L3maRVWb6O47HGzlMzniIy8WjL2dfgm2/ek+NxVR/yFnYTKDPr6+0uqSD/cb4eHaFbIj7v+k7H8hA1Ioz+duJ1ONAjn6KwneXxOXu15bYIR49P7Go0s9jCdSAP/r9NE5TnE3yiRiQzgEzw==\
-    \ tomk@xps\",\n  \"name\": \"test_key\",\n  \"project_id\": \"local.project_id\"\
+    \ tomk@xps\",\n  \"name\": \"test_key\",\n  \"project_id\": \"b8c6c653-3c96-446e-987e-9c4d12f25353\"\
     \n}\n"
   type: dict
 '''
@@ -85,6 +85,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 
 
 MODULE_NAME = "metal_project_ssh_key"
+METAL_SSH_KEY = "metal_ssh_key"
 
 module_spec = dict(
     id=SpecField(
@@ -117,7 +118,7 @@ specdoc_examples = [
   - equinix.cloud.metal_project_ssh_key:
       label: "test_key"
       key: "ssh-dss AAAAB3NzaC1kc3MAAACBAPLEVntPO3L7VUbEwWZ2ErkQJ3KJ8o9kFXJrPcpvVfdNag4jIhQDqbtAUgUy6BclhhbfH9l5nlGTprrpEFkxm/GL91qJUX6xrPkDMjMqx2wSKa4YraReOrCOfkqqEkC3o3G/gYSuvTzLgp2rmPiflypftZyzNM4JZT8jDwFGotJhAAAAFQDPk43bayONtUxjkAcOf+6zP1qb6QAAAIBZHHH0tIlth5ot+Xa/EYuB/M4qh77EkrWUbER0Kki7suskw/ffdKQ0y/v+ZhoAHtBU7BeE3HmP98Vrha1i4cOU+A7DCqV+lK/a+5LoEpua0M2M+VzNSGluYuV4qGpAOxNh3mxUi2R7yXxheN1oks1ROJ/bqkF4BJQXU9Nv49GkZgAAAIByWcsFeOitvzyDaNJOZzEHv9fqGuj0L3maRVWb6O47HGzlMzniIy8WjL2dfgm2/ek+NxVR/yFnYTKDPr6+0uqSD/cb4eHaFbIj7v+k7H8hA1Ioz+duJ1ONAjn6KwneXxOXu15bYIR49P7Go0s9jCdSAP/r9NE5TnE3yiRiQzgEzw== tomk@node"
-      project_id: "local.project_id"
+      project_id: "b8c6c653-3c96-446e-987e-9c4d12f25353"
 """,
     """
 - name: Remove project ssh_key by id
@@ -136,7 +137,7 @@ result_sample = [
   "id": "eef49903-7a09-4ca1-af67-4087c29ab5b6",
   "key": "ssh-dss AAAAB3NzaC1kc3MAAACBAPLEVntPO3L7VUbEwWZ2ErkQJ3KJ8o9kFXJrPcpvVfdNag4jIhQDqbtAUgUy6BclhhbfH9l5nlGTprrpEFkxm/GL91qJUX6xrPkDMjMqx2wSKa4YraReOrCOfkqqEkC3o3G/gYSuvTzLgp2rmPiflypftZyzNM4JZT8jDwFGotJhAAAAFQDPk43bayONtUxjkAcOf+6zP1qb6QAAAIBZHHH0tIlth5ot+Xa/EYuB/M4qh77EkrWUbER0Kki7suskw/ffdKQ0y/v+ZhoAHtBU7BeE3HmP98Vrha1i4cOU+A7DCqV+lK/a+5LoEpua0M2M+VzNSGluYuV4qGpAOxNh3mxUi2R7yXxheN1oks1ROJ/bqkF4BJQXU9Nv49GkZgAAAIByWcsFeOitvzyDaNJOZzEHv9fqGuj0L3maRVWb6O47HGzlMzniIy8WjL2dfgm2/ek+NxVR/yFnYTKDPr6+0uqSD/cb4eHaFbIj7v+k7H8hA1Ioz+duJ1ONAjn6KwneXxOXu15bYIR49P7Go0s9jCdSAP/r9NE5TnE3yiRiQzgEzw== tomk@xps",
   "label": "test_key",
-  "project_id": "local.project_id"
+  "project_id": "b8c6c653-3c96-446e-987e-9c4d12f25353"
 }
 """
 ]
@@ -169,9 +170,6 @@ def main():
         required_one_of=[("label", "id")],
         required_together=[("label", "key")],
     )
-    print("!!!!!!!!!!!!!")
-    print(module)
-    print("!!!!!!!!!!!!!")
     state = module.params.get("state")
     changed = False
 
@@ -179,10 +177,10 @@ def main():
         module.params_syntax_check()
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
-            fetched = module.get_by_id(MODULE_NAME, tolerate_not_found)
+            fetched = module.get_by_id(METAL_SSH_KEY, tolerate_not_found)
         else:
             fetched = module.get_one_from_list(
-                MODULE_NAME,
+                METAL_SSH_KEY,
                 ["key"],
             )
 
@@ -191,11 +189,11 @@ def main():
             if state == "present":
                 diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
                 if diff:
-                    fetched = module.update_by_id(diff, MODULE_NAME)
+                    fetched = module.update_by_id(diff, METAL_SSH_KEY)
                     changed = True
 
             else:
-                module.delete_by_id(MODULE_NAME)
+                module.delete_by_id(METAL_SSH_KEY)
                 changed = True
         else:
             if state == "present":
