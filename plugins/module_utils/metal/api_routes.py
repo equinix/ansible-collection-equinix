@@ -182,9 +182,4 @@ def get_routes(mpc):
             {},
             equinix_metal.SSHKeyInput,
         ),
-        ('metal_project_ssh_key', action.UPDATE): spec_types.Specs(
-            equinix_metal.SSHKeysApi(mpc).update_ssh_key,
-            {},
-            equinix_metal.SSHKeyInput,
-        ),
     }
