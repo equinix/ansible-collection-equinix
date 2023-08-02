@@ -105,7 +105,7 @@ module_spec = dict(
     project_id=SpecField(
         type=FieldType.string,
         description=["The ID of parent project."],
-        editable=False,
+        editable=True,
     ),
 )
 
@@ -180,7 +180,7 @@ def main():
             fetched = module.get_by_id(METAL_SSH_KEY, tolerate_not_found)
         else:
             fetched = module.get_one_from_list(
-                METAL_SSH_KEY,
+                MODULE_NAME,
                 ["key"],
             )
 
