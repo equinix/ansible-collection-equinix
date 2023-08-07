@@ -52,9 +52,6 @@ jobs:
       - name: install dependencies
         run: pip3 install -r requirements-dev.txt -r requirements.txt
 
-      - name: install ansible dependencies
-        run: ansible-galaxy collection install amazon.aws:==6.0.1
-
       - name: install collection
         run: make install
 
