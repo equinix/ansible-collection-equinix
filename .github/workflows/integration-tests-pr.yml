@@ -1,43 +1,35 @@
-on:
-  pull_request:
+on: 
+  pull_request_target:
+    paths:
+    - plugins
+    - tests
+    - Makefile
+    - requirements.txt
+    - requirements-dev.txt
   workflow_dispatch:
-    inputs:
-      tests:
-        description: 'The tests to run.'
-        required: true
-      sha:
-        description: 'The hash value of the commit.'
-        required: true
-      pull_request_number:
-        description: 'The number of the PR.'
-        required: false
 
-name: Integration tests on PR
+permissions:
+  pull-requests: read
+  contents: read
 
 jobs:
-  integration-fork:
+  authorize:
+    environment:
+      ${{ github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'external' || 'internal' }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .ansible/collections/ansible_collections/equinix/cloud
-    
-    if: github.event_name == 'workflow_dispatch' && inputs.sha != ''
     steps:
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: disallowed-char-check
-        with:
-          text: ${{ inputs.tests }}
-          regex: '[^a-z0-9_]'
-          flags: gi
+      - run: true
 
-      # Check out merge commit
-      - name: Checkout PR
-        uses: actions/checkout@v3
+  integration-test-pr:
+    needs: authorize
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
         with:
-          ref: ${{ inputs.sha }}
-          path: .ansible/collections/ansible_collections/equinix/cloud
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
 
-      # Install deps
       - name: update packages
         run: sudo apt-get update -y
 
@@ -58,60 +50,8 @@ jobs:
       - name: replace existing keys
         run: rm -rf ~/.ansible/test && mkdir -p ~/.ansible/test && ssh-keygen -m PEM -q -t rsa -N '' -f ~/.ansible/test/id_rsa
 
-      - run: make deps && make TEST_ARGS="-v ${{ inputs.tests }}" test
-        if: ${{ steps.disallowed-char-check.outputs.match == '' }}
+      - name: run tests
+        run: make testall
         env:
           METAL_API_TOKEN: ${{ secrets.METAL_API_TOKEN }}
-      
-      - name: Get the hash value of the latest commit from the PR branch
-        uses: octokit/graphql-action@v2.x
-        id: commit-hash
-        if: ${{ inputs.pull_request_number != '' }}
-        with:
-          query: |
-            query PRHeadCommitHash($owner: String!, $repo: String!, $pr_num: Int!) {
-              repository(owner:$owner, name:$repo) {
-                pullRequest(number: $pr_num) {
-                  headRef {
-                    target {
-                      ... on Commit {
-                        oid
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          owner: ${{ github.event.repository.owner.login }}
-          repo: ${{ github.event.repository.name }}
-          pr_num: ${{ fromJSON(inputs.pull_request_number) }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/github-script@v6
-        id: update-check-run
-        if: ${{ inputs.pull_request_number != '' && fromJson(steps.commit-hash.outputs.data).repository.pullRequest.headRef.target.oid == inputs.sha }}
-        env:
-          number: ${{ inputs.pull_request_number }}
-          job: ${{ github.job }}
-          conclusion: ${{ job.status }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { data: pull } = await github.rest.pulls.get({
-              ...context.repo,
-              pull_number: process.env.number
-            });
-            const ref = pull.head.sha;
-            const { data: checks } = await github.rest.checks.listForRef({
-              ...context.repo,
-              ref
-            });
-            const check = checks.check_runs.filter(c => c.name === process.env.job);
-            const { data: result } = await github.rest.checks.update({
-              ...context.repo,
-              check_run_id: check[0].id,
-              status: 'completed',
-              conclusion: process.env.conclusion
-            });
-            return result;
