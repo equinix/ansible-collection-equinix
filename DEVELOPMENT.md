@@ -31,7 +31,7 @@ git clone https://github.com/equinix-labs/ansible-collection-equinix ansible_col
 You also need to export your METAL_AUTH_TOKEN in the environment variables:
 
 ```
-export METAL_AUTH_TOKEN=6mLLcghoTBenIRuMLd8uDiOwm0j0phEh
+export METAL_AUTH_TOKEN=<your_auth_token>
 ```
 
 
