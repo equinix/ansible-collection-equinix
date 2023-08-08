@@ -1,0 +1,71 @@
+- name: metal_vlan
+  module_defaults:
+    equinix.cloud.metal_vlan:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vlan_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+      metal_ua_prefix: '{{ metal_ua_prefix }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-vlan'
+    - set_fact:
+        unique_id: "{{ lookup('community.general.random_string', upper=false, numbers=false, special=false) }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_metro: 'am'
+    - set_fact:
+        test_description: 'My new VLAN'
+    - set_fact:
+        test_vxlan: 123
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project"
+      register: project
+
+    - assert:
+        that:
+        - project.name == '{{ test_prefix }}-project'
+
+    - name: create first vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        description: "{{ test_description }}"
+        vxlan: "{{ test_vxlan }}"
+      register: first_vlan
+
+    - assert:
+        that:
+          - first_vlan.vxlan == {{ test_vxlan }}
+
+    - name: get vlan info
+      equinix.cloud.metal_vlan_info:
+        project_id: "{{ project.id }}"
+
+    - name: delete vlan
+      equinix.cloud.metal_vlan:
+        id: "{{ first_vlan.id }}"
+        state: absent
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes

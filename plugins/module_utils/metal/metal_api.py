@@ -137,6 +137,7 @@ LIST_KEYS = [
     'operating_systems',
     'hardware_reservations',
     'organizations',
+    'virtual_networks'
 ]
 
 
@@ -191,6 +192,14 @@ METAL_METRO_RESPONSE_ATTRIBUTE_MAP = {
 }
 
 
+VLAN_RESPONSE_ATTRIBUTE_MAP = {
+    "id": "id",
+    "description": optional_str('description'),
+    "metro": "metro",
+    "vxlan": "vxlan",
+}
+
+
 def get_attribute_mapper(resource_type):
     """
     Returns attribute mapper for the given resource type.
@@ -201,6 +210,7 @@ def get_attribute_mapper(resource_type):
     ip_assignment_resources = set(['metal_ip_assignment'])
     ssh_key_resources = set(['metal_ssh_key', 'metal_project_ssh_key'])
     hardware_reservation_resources = set(['metal_project_hardware_reservation', 'metal_hardware_reservation'])
+    vlan_resources = set(["metal_vlan"])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -219,6 +229,8 @@ def get_attribute_mapper(resource_type):
         return METAL_HARDWARE_RESERVATION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_organization':
         return METAL_ORGANIZATION_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in vlan_resources:
+        return VLAN_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -235,7 +247,7 @@ def call(resource_type, action, equinix_metal_client, params={}):
     call = api_routes.build_api_call(conf, params)
     response = call.do()
     # uncomment to check response in /tmp/q
-    #import q; q(response)
+    # import q; q(response)
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)
