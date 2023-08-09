@@ -5,7 +5,10 @@ on:
     paths-ignore:
       - '**.md'
       - 'docs'
-      - LICENSE  
+      - LICENSE
+    branches:
+      - main
+  
 #  pull_request:
 #    types: [review_requested,opened,reopened,synchronize]
 
