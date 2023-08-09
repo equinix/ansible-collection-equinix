@@ -26,7 +26,6 @@ Name | Description |
 [equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
 [equinix.cloud.metal_organization](./docs/modules/metal_organization.md)|Lookup a single organization by ID in Equinix Metal|
 [equinix.cloud.metal_project](./docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
-[equinix.cloud.metal_project_ssh_key](./docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
 [equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 [equinix.cloud.metal_ssh_key](./docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
 [equinix.cloud.metal_vlan](./docs/modules/metal_vlan.md)|Manage a VLAN resource in Equinix Metal|
@@ -46,7 +45,6 @@ Name | Description |
 [equinix.cloud.metal_operating_system_info](./docs/modules/metal_operating_system_info.md)|Gather information about Operating Systems available for devices in Equinix Metal|
 [equinix.cloud.metal_organization_info](./docs/modules/metal_organization_info.md)|Gather information about Equinix Metal organizations|
 [equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
-[equinix.cloud.metal_project_ssh_key_info](./docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys.|
 [equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 [equinix.cloud.metal_ssh_key_info](./docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
 [equinix.cloud.metal_vlan_info](./docs/modules/metal_vlan_info.md)|Gather VLANs.|
