@@ -20,7 +20,7 @@ options:
     type: str
   id:
     description:
-    - ID of parent project"
+    - ID of parent project
     required: false
     type: str
   metro:
