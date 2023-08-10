@@ -47,8 +47,18 @@
     - name: get vlan info
       equinix.cloud.metal_vlan_info:
         project_id: "{{ project.id }}"
+      register: vlan_info_listed
+
+    - assert:
+        that:
+          - "vlan_info_listed.resources | length == 1"
 
     - name: delete vlan
+      equinix.cloud.metal_vlan:
+        id: "{{ first_vlan.id }}"
+        state: absent
+
+    - name: delete vlan again to check indempotence
       equinix.cloud.metal_vlan:
         id: "{{ first_vlan.id }}"
         state: absent
