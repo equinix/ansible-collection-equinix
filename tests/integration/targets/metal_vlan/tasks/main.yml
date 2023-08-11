@@ -53,6 +53,11 @@
         that:
           - "vlan_info_listed.resources | length == 1"
 
+    - name: fetch existing vlan
+      equinix.cloud.metal_vlan:
+        id: "{{ first_vlan.id }}"
+      register: first_vlan_fetched
+
     - name: delete vlan
       equinix.cloud.metal_vlan:
         id: "{{ first_vlan.id }}"
