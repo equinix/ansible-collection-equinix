@@ -1,8 +1,8 @@
 on: 
   pull_request_target:
     paths:
-    - plugins
-    - tests
+    - plugins/**
+    - tests/**
     - Makefile
     - requirements.txt
     - requirements-dev.txt
