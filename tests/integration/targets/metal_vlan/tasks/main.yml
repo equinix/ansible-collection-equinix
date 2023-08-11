@@ -52,6 +52,7 @@
     - assert:
         that:
           - "vlan_info_listed.resources | length == 1"
+          - vlan_info_listed.resources[0].id == "{{ first_vlan.id }}"
 
     - name: fetch existing vlan
       equinix.cloud.metal_vlan:
