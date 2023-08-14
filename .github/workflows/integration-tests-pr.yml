@@ -6,6 +6,7 @@ on:
     - Makefile
     - requirements.txt
     - requirements-dev.txt
+    - .github/**
   workflow_dispatch:
 
 permissions:
@@ -25,9 +26,13 @@ jobs:
   integration-test-pr:
     needs: authorize
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .ansible/collections/ansible_collections/equinix/cloud
     steps:
       - uses: actions/checkout@v3
         with:
+          path: .ansible/collections/ansible_collections/equinix/cloud            
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
 
       - name: update packages
