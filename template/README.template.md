@@ -89,24 +89,7 @@ Use-case examples for this collection can be found [here](./examples).
 
 ## Development
 
-If you want to develop the collecton, it's best to clone it under directory tree `ansible_collections/equinix/cloud`. That way the integration tests can be run without actually installing.
-
-```
-git clone https://github.com/equinix-labs/ansible-collection-equinix devdir/ansible_collections/equinix/cloud
-```
-
-You can try to run integration test for metal_project, that won't incur any fee.
-
-```
-cd devdir/ansible_collections/equinix/cloud
-make test_target=metal_project test
-```
-
-You can then edit existing code, or add new modules or tests.
-
-To install the collection from local directory, do `make install` in the root of the repo.
-
-
+See [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Releasing
 
