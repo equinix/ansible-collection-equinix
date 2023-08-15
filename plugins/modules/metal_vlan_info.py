@@ -67,7 +67,7 @@ result_sample = ['''
     "vxlan": 1234,
     "metro": "se",
     "id": "845b45a3-c565-47e5-b9b6-a86204a73d29",
-    "description": "My VLAN."
+    "description": "My VLAN"
   }
 ]''',
 ]
