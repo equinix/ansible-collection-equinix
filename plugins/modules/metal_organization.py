@@ -10,7 +10,7 @@ DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: !!python/tuple
 - 'Lookup a single organization by ID in Equinix Metal. '
-- 'This resource only fetches a single organization resource ID. '
+- 'This resource only fetches a single organization by resource ID. '
 - It doesn't allow to create or update organizations.
 module: metal_organization
 notes: []
