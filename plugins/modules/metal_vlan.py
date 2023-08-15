@@ -164,6 +164,7 @@ def main():
 
     state = module.params.get("state")
     changed = False
+    print("NO")
     try:
         module.params_syntax_check()
         if module.params.get("id"):
