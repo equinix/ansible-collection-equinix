@@ -60,13 +60,13 @@
 
     - assert:
         that:
-        - "second_project_listed.resources | length == 1"  
+        - "second_project_listed.resources | length == 1"
 
     - name: list both projects
       equinix.cloud.metal_project_info:
         name: "{{ test_prefix }}"
       register: both_projects_listed
-        
+
     - assert:
         that:
         - "both_projects_listed.resources | length == 2"
@@ -80,7 +80,7 @@
       equinix.cloud.metal_project:
         id: "{{ second_project.id }}"
         state: absent
-       
+
   always:
     - name: Announce teardown start
       debug:
