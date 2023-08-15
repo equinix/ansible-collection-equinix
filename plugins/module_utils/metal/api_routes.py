@@ -56,6 +56,9 @@ def get_routes(mpc):
         ("metal_organization", action.GET): spec_types.Specs(
             equinix_metal.OrganizationsApi(mpc).find_organization_by_id,
         ),
+        ("metal_vlan", action.GET): spec_types.Specs(
+            equinix_metal.VLANsApi(mpc).get_virtual_network,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -106,6 +109,10 @@ def get_routes(mpc):
             equinix_metal.HardwareReservationsApi(mpc).find_project_hardware_reservations,
             {'id': 'project_id'},
         ),
+        ('metal_vlan', action.LIST): spec_types.Specs(
+            equinix_metal.VLANsApi(mpc).find_virtual_networks,
+            {'id': 'project_id'},
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -122,6 +129,9 @@ def get_routes(mpc):
         ),
         ('metal_ssh_key', action.DELETE): spec_types.Specs(
             equinix_metal.SSHKeysApi(mpc).delete_ssh_key,
+        ),
+        ('metal_vlan', action.DELETE): spec_types.Specs(
+            equinix_metal.VLANsApi(mpc).delete_virtual_network,
         ),
 
         # CREATORS
@@ -159,6 +169,11 @@ def get_routes(mpc):
             equinix_metal.SSHKeysApi(mpc).create_project_ssh_key,
             {'id': 'project_id'},
             equinix_metal.SSHKeyCreateInput,
+        ),
+        ('metal_vlan', action.CREATE): spec_types.Specs(
+            equinix_metal.VLANsApi(mpc).create_virtual_network,
+            {'id': 'project_id'},
+            equinix_metal.VirtualNetworkCreateInput,
         ),
 
         # UPDATERS
