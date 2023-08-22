@@ -2,6 +2,7 @@
 # Edit at https://www.gitignore.io/?templates=git,linux,pydev,python,windows,pycharm+all,jupyternotebook,vim,webstorm,emacs,dotenv
 
 galaxy.yml
+tests/integration/integration_config.yml
 
 ### dotenv ###
 .env
