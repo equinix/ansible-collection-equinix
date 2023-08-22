@@ -21,6 +21,7 @@ Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
+[equinix.cloud.metal_connection](./docs/modules/metal_connection.md)|Manage a interconnection in Equinix Metal|
 [equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
 [equinix.cloud.metal_hardware_reservation](./docs/modules/metal_hardware_reservation.md)|Lookup a single hardware_reservation by ID in Equinix Metal|
 [equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
@@ -41,6 +42,7 @@ Modules for retrieving information about existing Equinix infrastructure.
 Name | Description |
 --- | ------------ |
 [equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_connection_info](./docs/modules/metal_connection_info.md)|Gather information about connection|
 [equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
 [equinix.cloud.metal_hardware_reservation_info](./docs/modules/metal_hardware_reservation_info.md)|Gather information about Equinix Metal hardware_reservations|
 [equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
