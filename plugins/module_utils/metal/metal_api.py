@@ -269,7 +269,7 @@ def call(resource_type, action, equinix_metal_client, params={}):
     call = api_routes.build_api_call(conf, params)
     response = call.do()
     # uncomment to check response in /tmp/q
-    # import q; q(response)
+    import q; q(response)
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)

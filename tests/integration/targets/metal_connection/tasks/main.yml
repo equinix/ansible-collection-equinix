@@ -1,0 +1,85 @@
+- name: metal_connection
+  module_defaults:
+    equinix.cloud.metal_connection:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_connection_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vlan:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vlan_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-connection'
+    - set_fact:
+        unique_id: "{{ lookup('community.general.random_string', upper=false, numbers=false, special=false) }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_vxlan1: 123
+    - set_fact:
+        test_vxlan2: 456
+    - set_fact:
+        test_metro: 'am'
+    - set_fact:
+        test_description: 'My new VLAN'
+    - set_fact:
+        test_name: 'My test connection'
+    - set_fact:
+        test_redundancy: 'primary'
+    - set_fact:
+        test_speed: '50Mbps'
+    - set_fact:
+        test_type: 'dedicated'
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project"
+      register: project
+
+    - name: create first vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        vxlan: "{{ test_vxlan1 }}"
+      register: first_vlan
+
+    - name: create second vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        vxlan: "{{ test_vxlan2 }}"
+      register: second_vlan
+
+    - name: create connection for test
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        description: "{{ test_description }}"
+        type: "{{test_type}}"
+        name: "{{test_name}}"
+        speed: "{{test_speed}}"
+        redundancy: "{{test_redundancy}}"
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes

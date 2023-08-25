@@ -195,17 +195,17 @@ module_spec = dict(
         description=["Only used with shared connection. Type of service token to use for the connection, a_side or z_side"],
     ),
     speed=SpecField(
-        type=FieldType.integer,
+        type=FieldType.string,
         description=[f"Port speed. Required for a_side connections. Allowed values are {[s[1] for s in allowed_speeds]}"],
     ),
     tags=SpecField(
-        type=FieldType.integer,
+        type=FieldType.list,
         description=["Tags attached to the connection"],
         editable=True,
         element_type=FieldType.string,
     ),
     type=SpecField(
-        type=FieldType.integer,
+        type=FieldType.string,
         description=["Connection type - dedicated or shared"],
     ),
     vlans=SpecField(
@@ -283,10 +283,10 @@ def main():
         module.params_syntax_check()
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
-            fetched = module.get_by_id("MODULE_NAME", tolerate_not_found)
+            fetched = module.get_by_id(MODULE_NAME, tolerate_not_found)
         else:
             fetched = module.get_one_from_list(
-                "MODULE_NAME",
+                MODULE_NAME,
                 ["name"],
             )
 
@@ -295,15 +295,15 @@ def main():
             if state == "present":
                 diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
                 if diff:
-                    fetched = module.update_by_id(diff, "MODULE_NAME")
+                    fetched = module.update_by_id(diff, MODULE_NAME)
                     changed = True
 
             else:
-                module.delete_by_id("MODULE_NAME")
+                module.delete_by_id(MODULE_NAME)
                 changed = True
         else:
             if state == "present":
-                fetched = module.create("MODULE_NAME")
+                fetched = module.create(MODULE_NAME)
                 if "id" not in fetched:
                     module.fail_json(msg=f"UUID not found in {MODULE_NAME} creation response")
                 changed = True

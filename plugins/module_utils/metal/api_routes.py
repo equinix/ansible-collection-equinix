@@ -59,6 +59,9 @@ def get_routes(mpc):
         ("metal_vlan", action.GET): spec_types.Specs(
             equinix_metal.VLANsApi(mpc).get_virtual_network,
         ),
+        ("metal_connection", action.GET): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).get_interconnection,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -113,6 +116,10 @@ def get_routes(mpc):
             equinix_metal.VLANsApi(mpc).find_virtual_networks,
             {'id': 'project_id'},
         ),
+        ('metal_connection', action.LIST): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).project_list_interconnections,
+            {'id': 'project_id'},
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -132,6 +139,9 @@ def get_routes(mpc):
         ),
         ('metal_vlan', action.DELETE): spec_types.Specs(
             equinix_metal.VLANsApi(mpc).delete_virtual_network,
+        ),
+        ('metal_connection', action.DELETE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).delete_interconnection,
         ),
 
         # CREATORS
@@ -175,6 +185,11 @@ def get_routes(mpc):
             {'id': 'project_id'},
             equinix_metal.VirtualNetworkCreateInput,
         ),
+        ('metal_connection', action.CREATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).create_project_interconnection,
+            {'id': 'project_id'},
+            equinix_metal.InterconnectionCreateInput,
+        ),
 
         # UPDATERS
         ('metal_device', action.UPDATE): spec_types.Specs(
@@ -196,5 +211,10 @@ def get_routes(mpc):
             equinix_metal.SSHKeysApi(mpc).update_ssh_key,
             {},
             equinix_metal.SSHKeyInput,
+        ),
+        ('metal_connection', action.UPDATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).update_interconnection,
+            {},
+            equinix_metal.InterconnectionUpdateInput,
         ),
     }
