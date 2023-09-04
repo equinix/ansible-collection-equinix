@@ -66,6 +66,53 @@
         name: "{{test_name}}"
         speed: "{{test_speed}}"
         redundancy: "{{test_redundancy}}"
+      register: test_connection
+
+    - name: create same connection to test indepotence
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        description: "{{ test_description }}"
+        type: "{{test_type}}"
+        name: "{{test_name}}"
+        speed: "{{test_speed}}"
+        redundancy: "{{test_redundancy}}"
+
+    - name: fetch existing connection
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        name: "{{ test_connection.name }}"
+      register: test_connection_fetched
+    
+    - assert:
+        that:
+          - test_connection.name == "{{ test_name }}"
+          - test_connection.id == "{{ test_connection_fetched.id }}"
+    
+    - name: list test connections
+      equinix.cloud.metal_connection_info:
+        project_id: "{{ project.id }}"
+        name: "{{ test_name }}"
+      register: test_connections_list
+    
+    - assert:
+        that:
+          - "test_connections_list.resources | length == 2"
+          - test_connections_list.resources[0].id == "{{ test_connection.id }}"
+
+    - name: delete connection
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        name: "{{ test_name }}"
+        connection_id: "{{ test_connection.id }}"
+        state: absent
+
+    - name: delete again connection to check indepotence
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        name: "{{ test_name }}"
+        connection_id: "{{ test_connection.id }}"
+        state: absent
 
   always:
     - name: Announce teardown start

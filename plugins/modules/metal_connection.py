@@ -157,6 +157,10 @@ module_spec = dict(
         type=FieldType.string,
         description=["UUID of the connection."],
     ),
+    connection_id=SpecField(
+        type=FieldType.string,
+        description=["UUID of the connection, used for GET."],
+    ),
     project_id=SpecField(
         type=FieldType.string,
         description=["UUID of the project this connection belongs to."],
@@ -273,11 +277,14 @@ SPECDOC_META = getSpecDocMeta(
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
-        required_one_of=[("name", "id")],
+        required_one_of=[("name", "id", "connection_id")],
     )
 
     state = module.params.get("state")
     changed = False
+
+    if module.params.get("speed"):
+        module.params["speed"] = speed_str_to_int(module.params["speed"])
 
     try:
         module.params_syntax_check()
@@ -315,6 +322,13 @@ def main():
 
     fetched.update({"changed": changed})
     module.exit_json(**fetched)
+
+
+def speed_str_to_int(raw_speed):
+    for speed, speed_str in allowed_speeds:
+        if raw_speed == speed_str:
+            return speed
+    raise ValueError(f"Speed value invalid, allowed values are {[s[1] for s in allowed_speeds]}")
 
 
 if __name__ == "__main__":

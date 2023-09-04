@@ -138,7 +138,7 @@ LIST_KEYS = [
     'hardware_reservations',
     'organizations',
     'virtual_networks',
-    'connections',
+    'interconnections',
 ]
 
 
@@ -203,19 +203,19 @@ VLAN_RESPONSE_ATTRIBUTE_MAP = {
 
 METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
-    'project_id': 'project_id',
+    # 'project_id': 'project_id',
     'name': 'name',
     'metro': 'metro',
     'contact_email': 'contact_email',
     'description': optional_str('description'),
     'mode': 'mode',
     'redundancy': 'redundancy',
-    'service_token_type': 'service_token_type',
-    'speed': 'speed',
+    # 'service_token_type': 'service_token_type',
+    # 'speed': 'speed',
     'tags': 'tags',
     'type': 'type',
-    'vlans': 'vlans',
-    'vrfs': 'vrfs',
+    # 'vlans': 'vlans',
+    # 'vrfs': 'vrfs',
 }
 
 
