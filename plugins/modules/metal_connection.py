@@ -301,7 +301,7 @@ def main():
           module.fail_json(msg="You must provide 'project_id' for a 'shared' connection.")
         if module.params.get("mode") == "tunnel":
           module.fail_json(msg="A 'shared' connection doesn't support 'tunnel' mode.")
-        if module.params.get("redundancy") == "primary" and len(vlans > 1):
+        if module.params.get("redundancy") == "primary" and len(vlans) > 1:
           module.fail_json(msg="A 'shared' connection without redundancy can only have 1 vlan.")
         if not module.params.get("service_token_type"):
           module.fail_json(msg="A 'shared' connection must have a set service_token_type.")

@@ -130,7 +130,7 @@
         speed: "{{ test_speed }}"
         redundancy: "{{ test_redundancy }}"
         mode: "{{ test_mode_standard }}"
-        vlans: ["{{ first_vlan.vxlan }}", "{{ second_vlan.vxlan }}"]
+        vlans: ["{{ first_vlan.vxlan }}"]
         service_token_type: "{{ test_service_token_type }}"
 
   always:
