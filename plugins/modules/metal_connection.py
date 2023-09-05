@@ -165,6 +165,10 @@ module_spec = dict(
         type=FieldType.string,
         description=["UUID of the project this connection belongs to."],
     ),
+    organization_id=SpecField(
+        type=FieldType.string,
+        description=["UUID of the organization this connection belongs to."],
+    ),
     contact_email=SpecField(
         type=FieldType.string,
         description=["Email for the person to contact for inquires."],
@@ -183,6 +187,7 @@ module_spec = dict(
         type=FieldType.string,
         description=["Mode for connections in IBX facilities with the dedicated type - standard or tunnel"],
         editable=True,
+        choices=["standard", "tunnel"]
     ),
     name=SpecField(
         type=FieldType.string,
@@ -193,10 +198,12 @@ module_spec = dict(
         type=FieldType.string,
         description=["Connection redundancy - redundant or primary"],
         editable=True,
+        choices=["redundant", "primary"]
     ),
     service_token_type=SpecField(
         type=FieldType.string,
         description=["Only used with shared connection. Type of service token to use for the connection, a_side or z_side"],
+        choices=["a_side", "z_side"]
     ),
     speed=SpecField(
         type=FieldType.string,
@@ -211,6 +218,7 @@ module_spec = dict(
     type=SpecField(
         type=FieldType.string,
         description=["Connection type - dedicated or shared"],
+        choices=["dedicated", "shared"]
     ),
     vlans=SpecField(
         type=FieldType.list,
@@ -277,14 +285,32 @@ SPECDOC_META = getSpecDocMeta(
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
-        required_one_of=[("name", "id", "connection_id")],
+        required_one_of=[("name", "id", "connection_id"), ("project_id", "organization_id")],
     )
+
+    vlans = module.params.get("vlans") 
+    connection_type = module.params.get("type")
+
+    if connection_type == "dedicated":
+        if vlans:
+          module.fail_json(msg="A 'dedicated' connection can't have vlans.")
+        if module.params.get("service_token_type"):
+          module.fail_json(msg="A 'dedicated' connection can't have a set service_token_type.")
+    elif connection_type == "shared":
+        if not module.params.get("project_id"):
+          module.fail_json(msg="You must provide 'project_id' for a 'shared' connection.")
+        if module.params.get("mode") == "tunnel":
+          module.fail_json(msg="A 'shared' connection doesn't support 'tunnel' mode.")
+        if module.params.get("redundancy") == "primary" and len(vlans > 1):
+          module.fail_json(msg="A 'shared' connection without redundancy can only have 1 vlan.")
+        if not module.params.get("service_token_type"):
+          module.fail_json(msg="A 'shared' connection must have a set service_token_type.")
+
+    if module.params.get("speed"):
+        module.params["speed"] = speed_str_to_int(module)
 
     state = module.params.get("state")
     changed = False
-
-    if module.params.get("speed"):
-        module.params["speed"] = speed_str_to_int(module.params["speed"])
 
     try:
         module.params_syntax_check()
@@ -324,11 +350,13 @@ def main():
     module.exit_json(**fetched)
 
 
-def speed_str_to_int(raw_speed):
+def speed_str_to_int(module):
+    raw_speed = module.params["speed"]
+
     for speed, speed_str in allowed_speeds:
         if raw_speed == speed_str:
             return speed
-    raise ValueError(f"Speed value invalid, allowed values are {[s[1] for s in allowed_speeds]}")
+    raise module.fail_json(msg=f"Speed value invalid, allowed values are {[s[1] for s in allowed_speeds]}")
 
 
 if __name__ == "__main__":

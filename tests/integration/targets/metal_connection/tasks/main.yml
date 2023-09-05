@@ -36,7 +36,13 @@
     - set_fact:
         test_speed: '50Mbps'
     - set_fact:
-        test_type: 'dedicated'
+        test_type_dedicated: 'dedicated'
+    - set_fact:
+        test_type_shared: 'shared'
+    - set_fact:
+        test_mode_standard: 'standard'
+    - set_fact:
+        test_service_token_type: 'a_side'
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -62,10 +68,10 @@
         project_id: "{{ project.id }}"
         metro: "{{ test_metro }}"
         description: "{{ test_description }}"
-        type: "{{test_type}}"
-        name: "{{test_name}}"
-        speed: "{{test_speed}}"
-        redundancy: "{{test_redundancy}}"
+        type: "{{ test_type_dedicated }}"
+        name: "{{ test_name }}"
+        speed: "{{ test_speed }}"
+        redundancy: "{{ test_redundancy }}"
       register: test_connection
 
     - name: create same connection to test indepotence
@@ -73,10 +79,10 @@
         project_id: "{{ project.id }}"
         metro: "{{ test_metro }}"
         description: "{{ test_description }}"
-        type: "{{test_type}}"
-        name: "{{test_name}}"
-        speed: "{{test_speed}}"
-        redundancy: "{{test_redundancy}}"
+        type: "{{ test_type_dedicated }}"
+        name: "{{ test_name }}"
+        speed: "{{ test_speed }}"
+        redundancy: "{{ test_redundancy }}"
 
     - name: fetch existing connection
       equinix.cloud.metal_connection:
@@ -113,6 +119,19 @@
         name: "{{ test_name }}"
         connection_id: "{{ test_connection.id }}"
         state: absent
+
+    - name: create shared connection
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        description: "{{ test_description }} - shared"
+        type: "{{ test_type_shared }}"
+        name: "{{ test_name }} - shared"
+        speed: "{{ test_speed }}"
+        redundancy: "{{ test_redundancy }}"
+        mode: "{{ test_mode_standard }}"
+        vlans: ["{{ first_vlan.vxlan }}", "{{ second_vlan.vxlan }}"]
+        service_token_type: "{{ test_service_token_type }}"
 
   always:
     - name: Announce teardown start
