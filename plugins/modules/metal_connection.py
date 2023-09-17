@@ -306,7 +306,7 @@ SPECDOC_META = getSpecDocMeta(
     description=(
         "Manage the interconnection in Equinix Metal. "
         "You can use *connection_id* to lookup the resource. "
-        "If you want to create new resource, you must provide *project_id*, *name*, *type*, *redundancy* and *speed*."
+        "If you want to create a new resource, you must provide *project_id*, *name*, *type*, *redundancy*, and *speed*."
     ),
     examples=specdoc_examples,
     options=module_spec,
