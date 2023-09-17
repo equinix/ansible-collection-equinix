@@ -123,21 +123,6 @@
       debug:
         msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
 
-    - name: list connections
-      equinix.cloud.metal_connection_info:
-        project_id: "{{ project.id }}"
-        name: "{{ test_prefix }}"
-      register: test_conns_listed
-
-    - name: delete test connections
-      equinix.cloud.metal_connection:
-        project_id: "{{ project.id }}"
-        connection_id: "{{ item.id }}"
-        name: "{{ item.name }}"
-        state: absent
-      loop: "{{ test_conns_listed.resources }}"
-      ignore_errors: yes
-
     - name: list test projects
       equinix.cloud.metal_project_info:
         name: "{{ test_prefix }}"

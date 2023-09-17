@@ -19,14 +19,14 @@ options:
     type: str
   project_id:
     description:
-    - UUID of parent project containing the connection.
+    - UUID of parent project the connection is scoped to.
     required: false
     type: str
 requirements: null
-short_description: Gather information about connection
+short_description: Gather information about Interconnections
 '''
 EXAMPLES = '''
-- name: Gather information about all connection in parent project
+- name: Gather information about all connection in a project
   hosts: localhost
   tasks:
   - equinix.cloud.metal_connection_info:
@@ -62,13 +62,13 @@ module_spec = dict(
     ),
     project_id=SpecField(
         type=FieldType.string,
-        description=["UUID of parent project containing the connection."],
-    ),
+        description=["UUID of parent project the connection is scoped to."],
+    ),  
 )
 
 specdoc_examples = [
     """
-- name: Gather information about all connection in parent project
+- name: Gather information about all connection in a project
   hosts: localhost
   tasks:
       - equinix.cloud.metal_connection_info:
@@ -93,7 +93,7 @@ result_sample = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description="Gather information about connection",
+    short_description="Gather information about Interconnections",
     description=("Gather information about Interconnections"),
     examples=specdoc_examples,
     options=module_spec,

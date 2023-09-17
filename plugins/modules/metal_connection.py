@@ -8,15 +8,20 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: Manage the interconnection in Equinix Metal. You can use *id* or *name*
+description: Manage the interconnection in Equinix Metal. You can use *connection_id*
   to lookup the resource. If you want to create new resource, you must provide *project_id*,
   *name*, *type*, *redundancy* and *speed*.
 module: metal_connection
 notes: []
 options:
+  connection_id:
+    description:
+    - UUID of the connection, used for GET.
+    required: false
+    type: str
   contact_email:
     description:
-    - Email for the person to contact for inquires.
+    - Email of the person to contact for inquiries.
     required: false
     type: str
   description:
@@ -35,6 +40,9 @@ options:
     required: false
     type: str
   mode:
+    choices:
+    - standard
+    - tunnel
     description:
     - Mode for connections in IBX facilities with the dedicated type - standard or
       tunnel
@@ -45,17 +53,29 @@ options:
     - Name of the connection resource
     required: false
     type: str
+  organization_id:
+    description:
+    - ID of the organization where the connection is scoped to. Used with dedicated
+      connections
+    required: false
+    type: str
   project_id:
     description:
-    - UUID of the project this connection belongs to.
+    - ID of the project where the connection is scoped to. Required for shared connections.
     required: false
     type: str
   redundancy:
+    choices:
+    - redundant
+    - primary
     description:
     - Connection redundancy - redundant or primary
     required: false
     type: str
   service_token_type:
+    choices:
+    - a_side
+    - z_side
     description:
     - Only used with shared connection. Type of service token to use for the connection,
       a_side or z_side
@@ -66,18 +86,21 @@ options:
     - Port speed. Required for a_side connections. Allowed values are ['50Mbps', '200Mbps',
       '500Mbps', '1Gbps', '2Gbps', '5Gbps', '10Gbps']
     required: false
-    type: int
+    type: str
   tags:
     description:
     - Tags attached to the connection
     elements: str
     required: false
-    type: int
+    type: list
   type:
+    choices:
+    - dedicated
+    - shared
     description:
     - Connection type - dedicated or shared
     required: false
-    type: int
+    type: str
   vlans:
     description:
     - Only used with shared connection. VLANs to attach. Pass one vlan for Primary/Single
@@ -92,7 +115,7 @@ options:
     required: false
     type: list
 requirements: null
-short_description: Manage a interconnection in Equinix Metal
+short_description: Manage an Interconnection in Equinix Metal
 '''
 EXAMPLES = '''
 - name: Create new connection
@@ -105,6 +128,13 @@ EXAMPLES = '''
       redundancy: primary
       speed: 50Mbps
       metro: am
+- name: Fetch the connection
+  hosts: localhost
+  tasks:
+  - equinix.cloud.metal_connection:
+      project_id: Bhf47603-7a09-4ca1-af67-4087c13ab5b6
+      name: new connection
+      connection_id: 3113c6bf-b0e8-4985-8f35-3c987a0ed46e
 '''
 RETURN = '''
 metal_resource:
@@ -163,15 +193,15 @@ module_spec = dict(
     ),
     project_id=SpecField(
         type=FieldType.string,
-        description=["UUID of the project this connection belongs to."],
+        description=["ID of the project where the connection is scoped to. Required for shared connections."],
     ),
     organization_id=SpecField(
         type=FieldType.string,
-        description=["UUID of the organization this connection belongs to."],
+        description=["ID of the organization where the connection is scoped to. Used with dedicated connections"],
     ),
     contact_email=SpecField(
         type=FieldType.string,
-        description=["Email for the person to contact for inquires."],
+        description=["Email of the person to contact for inquiries."],
         editable=True,
     ),
     description=SpecField(
@@ -245,6 +275,14 @@ specdoc_examples = [
       redundancy: "primary"
       speed: "50Mbps"
       metro: "am"
+""","""
+- name: Fetch the connection
+  hosts: localhost
+  tasks:     
+  - equinix.cloud.metal_connection:
+        project_id: "Bhf47603-7a09-4ca1-af67-4087c13ab5b6"
+        name: "new connection"
+        connection_id: "3113c6bf-b0e8-4985-8f35-3c987a0ed46e"
 """,
 ]
 
@@ -264,10 +302,10 @@ result_sample = [
 MUTABLE_ATTRIBUTES = [k for k, v in module_spec.items() if v.editable]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description="Manage a interconnection in Equinix Metal",
+    short_description="Manage an Interconnection in Equinix Metal",
     description=(
         "Manage the interconnection in Equinix Metal. "
-        "You can use *id* or *name* to lookup the resource. "
+        "You can use *connection_id* to lookup the resource. "
         "If you want to create new resource, you must provide *project_id*, *name*, *type*, *redundancy* and *speed*."
     ),
     examples=specdoc_examples,
@@ -285,7 +323,7 @@ SPECDOC_META = getSpecDocMeta(
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
-        required_one_of=[("name", "id", "connection_id"), ("project_id", "organization_id")],
+        required_one_of=[("name", "connection_id"), ("project_id", "organization_id")],
     )
 
     vlans = module.params.get("vlans") 
@@ -295,7 +333,7 @@ def main():
         if vlans:
           module.fail_json(msg="A 'dedicated' connection can't have vlans.")
         if module.params.get("service_token_type"):
-          module.fail_json(msg="A 'dedicated' connection can't have a set service_token_type.")
+          module.fail_json(msg="A 'dedicated' connection can't have service_token_type set.")
     elif connection_type == "shared":
         if not module.params.get("project_id"):
           module.fail_json(msg="You must provide 'project_id' for a 'shared' connection.")

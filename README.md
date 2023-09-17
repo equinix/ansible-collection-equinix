@@ -1,5 +1,5 @@
 # Equinix Ansible Collection
-[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/equinix/cloud/)
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/equinix/cloud/) 
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix-labs/ansible-collection-equinix/integration-tests.yml?branch=main)
 
 The Ansible Collection Equinix contains various plugins for managing Equinix services.
@@ -21,7 +21,7 @@ Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_connection](./docs/modules/metal_connection.md)|Manage a interconnection in Equinix Metal|
+[equinix.cloud.metal_connection](./docs/modules/metal_connection.md)|Manage an Interconnection in Equinix Metal|
 [equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
 [equinix.cloud.metal_hardware_reservation](./docs/modules/metal_hardware_reservation.md)|Lookup a single hardware_reservation by ID in Equinix Metal|
 [equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
@@ -30,9 +30,7 @@ Name | Description |
 [equinix.cloud.metal_project_ssh_key](./docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
 [equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 [equinix.cloud.metal_ssh_key](./docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
-[equinix.cloud.metal_project_ssh_key](./docs/modules/metal_project_ssh_key.md)|Manage project SSH keys in Equinix Metal|
 [equinix.cloud.metal_vlan](./docs/modules/metal_vlan.md)|Manage a VLAN resource in Equinix Metal|
-
 
 
 ### Info Modules
@@ -42,7 +40,7 @@ Modules for retrieving information about existing Equinix infrastructure.
 Name | Description |
 --- | ------------ |
 [equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
-[equinix.cloud.metal_connection_info](./docs/modules/metal_connection_info.md)|Gather information about connection|
+[equinix.cloud.metal_connection_info](./docs/modules/metal_connection_info.md)|Gather information about Interconnections|
 [equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
 [equinix.cloud.metal_hardware_reservation_info](./docs/modules/metal_hardware_reservation_info.md)|Gather information about Equinix Metal hardware_reservations|
 [equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
@@ -52,8 +50,6 @@ Name | Description |
 [equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
 [equinix.cloud.metal_project_ssh_key_info](./docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys.|
 [equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
-[equinix.cloud.metal_ssh_key_info](./docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|list project SSH keys
-[equinix.cloud.metal_project_ssh_key_info](./docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys|
 [equinix.cloud.metal_ssh_key_info](./docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
 [equinix.cloud.metal_vlan_info](./docs/modules/metal_vlan_info.md)|Gather VLANs.|
 
