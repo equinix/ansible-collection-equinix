@@ -8,7 +8,7 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: Manage the interconnection in Equinix Metal. You can use *connection_id*
+description: Manage an Interconnection in Equinix Metal. You can use *connection_id*
   to lookup the resource. If you want to create new resource, you must provide *project_id*,
   *name*, *type*, *redundancy* and *speed*.
 module: metal_connection
