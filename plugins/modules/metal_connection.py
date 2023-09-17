@@ -304,7 +304,7 @@ MUTABLE_ATTRIBUTES = [k for k, v in module_spec.items() if v.editable]
 SPECDOC_META = getSpecDocMeta(
     short_description="Manage an Interconnection in Equinix Metal",
     description=(
-        "Manage the interconnection in Equinix Metal. "
+        "Manage an Interconnection in Equinix Metal. "
         "You can use *connection_id* to lookup the resource. "
         "If you want to create a new resource, you must provide *project_id*, *name*, *type*, *redundancy*, and *speed*."
     ),
