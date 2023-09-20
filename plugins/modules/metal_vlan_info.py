@@ -31,7 +31,7 @@ resources:
   returned: always
   sample:
   - "\n[\n  {\n    \"vxlan\": 1234,\n    \"metro\": \"se\",\n    \"id\": \"845b45a3-c565-47e5-b9b6-a86204a73d29\"\
-    ,\n    \"description\": \"My VLAN.\"\n  }\n]"
+    ,\n    \"description\": \"My VLAN\"\n  }\n]"
   type: dict
 '''
 

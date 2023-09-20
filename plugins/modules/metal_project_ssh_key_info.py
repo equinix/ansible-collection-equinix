@@ -13,10 +13,15 @@ description: Gather project SSH keys. Read more about project vs project SSH key
 module: metal_project_ssh_key_info
 notes: []
 options:
-  name:
+  label:
     description:
     - Name to search for in existing keys.
-    required: true
+    required: false
+    type: str
+  project_id:
+    description:
+    - Name of the project for listing project keys.
+    required: false
     type: str
 requirements: null
 short_description: Gather project SSH keys.
@@ -29,7 +34,7 @@ EXAMPLES = '''
   register: ssh_keys_listed
 - name: filter found ssh keys
   set_fact:
-    both_ssh_keys_listed: '{{ ssh_keys_listed.resources | selectattr(''name'', ''match'',
+    both_ssh_keys_listed: '{{ ssh_keys_listed.resources | selectattr(''label'', ''match'',
       desired_name_substring) }}'
 '''
 RETURN = '''

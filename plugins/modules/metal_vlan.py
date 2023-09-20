@@ -20,7 +20,7 @@ options:
     type: str
   id:
     description:
-    - ID of parent project
+    - UUID of vlan"
     required: false
     type: str
   metro:
@@ -30,7 +30,7 @@ options:
     type: str
   project_id:
     description:
-    - ID of parent project
+    - ID of parent project"
     required: false
     type: str
   vxlan:
