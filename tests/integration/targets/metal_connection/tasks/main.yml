@@ -87,18 +87,25 @@
         project_id: "{{ project.id }}"
         name: "{{ test_connection.name }}"
       register: test_connection_fetched
-    
+
+    - name: fetch existing connection using id
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        id: "{{ test_connection.id }}"
+      register: test_connection_fetched_with_id
+
     - assert:
         that:
           - test_connection.name == "{{ test_name }}"
           - test_connection.id == "{{ test_connection_fetched.id }}"
-    
+          - test_connection.id == "{{ test_connection_fetched_with_id.id }}"
+
     - name: list test connections
       equinix.cloud.metal_connection_info:
         project_id: "{{ project.id }}"
         name: "{{ test_name }}"
       register: test_connections_list
-    
+
     - assert:
         that:
           - "test_connections_list.resources | length >= 1"

@@ -278,7 +278,7 @@ specdoc_examples = [
 ""","""
 - name: Fetch the connection
   hosts: localhost
-  tasks:     
+  tasks:
   - equinix.cloud.metal_connection:
         project_id: "Bhf47603-7a09-4ca1-af67-4087c13ab5b6"
         name: "new connection"
@@ -323,11 +323,14 @@ SPECDOC_META = getSpecDocMeta(
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
-        required_one_of=[("name", "connection_id"), ("project_id", "organization_id")],
+        required_one_of=[("name", "connection_id", "id"), ("project_id", "organization_id")],
     )
-
-    vlans = module.params.get("vlans") 
+    vlans = module.params.get("vlans")
     connection_type = module.params.get("type")
+
+    if not module.params.get("connection_id") and module.params.get("id"):
+      module.params["connection_id"] = module.params["id"]
+
 
     if connection_type == "dedicated":
         if vlans:
