@@ -116,9 +116,13 @@ def get_routes(mpc):
             equinix_metal.VLANsApi(mpc).find_virtual_networks,
             {'id': 'project_id'},
         ),
-        ('metal_connection', action.LIST): spec_types.Specs(
+        ('metal_connection_project', action.LIST): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).project_list_interconnections,
             {'id': 'project_id'},
+        ),
+        ('metal_connection_organization', action.LIST): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).organization_list_interconnections,
+            {'id': 'organization_id'},
         ),
 
         # DELETERS
@@ -185,10 +189,25 @@ def get_routes(mpc):
             {'id': 'project_id'},
             equinix_metal.VirtualNetworkCreateInput,
         ),
-        ('metal_connection', action.CREATE): spec_types.Specs(
+        ('metal_connection_organization_dedicated', action.CREATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).create_organization_interconnection,
+            {'id': 'organization_id'},
+            equinix_metal.DedicatedPortCreateInput,
+        ),
+        ('metal_connection_project_dedicated', action.CREATE): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).create_project_interconnection,
             {'id': 'project_id'},
-            equinix_metal.InterconnectionCreateInput,
+            equinix_metal.DedicatedPortCreateInput,
+        ),
+        ('metal_connection_project_vlanfabric', action.CREATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).create_project_interconnection,
+            {'id': 'project_id'},
+            equinix_metal.VlanFabricVcCreateInput,
+        ),
+        ('metal_connection_project_vrf', action.CREATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).create_project_interconnection,
+            {'id': 'project_id'},
+            equinix_metal.VrfFabricVcCreateInput,
         ),
 
         # UPDATERS

@@ -181,6 +181,10 @@ allowed_speeds = [
     (10 * GIGA, "10Gbps"),
 ]
 MODULE_NAME = "metal_connection"
+DEDICATED_ORG_IC_SUBMODULE = "metal_connection_organization_dedicated"
+DEDICATED_PROJECT_IC_SUBMODULE = "metal_connection_project_dedicated"
+VLAN_PROJECT_IC_SUBMODULE = "metal_connection_project_vlanfabric"
+VRF_PROJECT_IC_SUBMODULE = "metal_connection_project_vrf"
 
 module_spec = dict(
     id=SpecField(
@@ -359,8 +363,9 @@ def main():
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id(MODULE_NAME, tolerate_not_found)
         else:
+            connection_list_submodule = "metal_connection_project" if module.params.get("project_id") else "metal_connection_organization"
             fetched = module.get_one_from_list(
-                MODULE_NAME,
+                connection_list_submodule,
                 ["name"],
             )
 
@@ -377,7 +382,8 @@ def main():
                 changed = True
         else:
             if state == "present":
-                fetched = module.create(MODULE_NAME)
+                connection_submodule = determine_ic_submodule(module)
+                fetched = module.create(connection_submodule)
                 if "id" not in fetched:
                     module.fail_json(msg=f"UUID not found in {MODULE_NAME} creation response")
                 changed = True
@@ -399,6 +405,22 @@ def speed_str_to_int(module):
             return speed
     raise module.fail_json(msg=f"Speed value invalid, allowed values are {[s[1] for s in allowed_speeds]}")
 
+
+def determine_ic_submodule(module):
+  type = module.params["type"]
+  is_project = "project_id" in module.params
+  vlans = module.params.get("vlans")
+  vrfs = module.params.get("vrfs")
+
+  if is_project:
+     if type == "dedicated":
+        return DEDICATED_PROJECT_IC_SUBMODULE
+     elif vlans:
+        return VLAN_PROJECT_IC_SUBMODULE
+     elif vrfs:
+        return VRF_PROJECT_IC_SUBMODULE
+  else:
+     return DEDICATED_ORG_IC_SUBMODULE
 
 if __name__ == "__main__":
     main()

@@ -103,7 +103,6 @@
     - name: list test connections
       equinix.cloud.metal_connection_info:
         project_id: "{{ project.id }}"
-        name: "{{ test_name }}"
       register: test_connections_list
 
     - assert:

@@ -62,8 +62,12 @@ module_spec = dict(
     ),
     project_id=SpecField(
         type=FieldType.string,
-        description=["UUID of parent project the connection is scoped to."],
-    ),  
+        description=["ID of the project where the connection is scoped to."],
+    ),
+    organization_id=SpecField(
+        type=FieldType.string,
+        description=["ID of the organization where the connection is scoped to."],
+    ),
 )
 
 specdoc_examples = [
@@ -111,10 +115,12 @@ def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         is_info=True,
+        required_one_of=[("project_id", "organization_id")],
     )
     try:
         module.params_syntax_check()
-        return_value = {"resources": module.get_list("metal_connection")}
+        connection_submodule = "metal_connection_project" if module.params.get("project_id") else "metal_connection_organization"
+        return_value = {"resources": module.get_list(connection_submodule)}
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)
