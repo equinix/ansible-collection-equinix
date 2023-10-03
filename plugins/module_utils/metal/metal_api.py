@@ -228,7 +228,9 @@ def get_attribute_mapper(resource_type):
     ssh_key_resources = set(['metal_ssh_key', 'metal_project_ssh_key'])
     hardware_reservation_resources = set(['metal_project_hardware_reservation', 'metal_hardware_reservation'])
     vlan_resources = set(["metal_vlan"])
-    connection_resources = set(['metal_connection', 'metal_connection_project', 'metal_connection_organization'])
+    connection_resources = set(['metal_connection', 'metal_connection_project', 'metal_connection_organization',
+                                'metal_connection_project_dedicated', 'metal_connection_organization_dedicated',
+                                'metal_connection_project_vlanfabric', 'metal_connection_project_vrf'])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
