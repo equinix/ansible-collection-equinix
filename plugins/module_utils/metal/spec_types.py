@@ -23,15 +23,22 @@ class Specs(object):
                  func: Callable,
                  named_args_mapping: Optional[Dict[str, str]] = None,
                  request_model_class: Optional[Callable] = None,
+                 request_superclass: Optional[Callable] = None,
                  ):
         self.func = func
         self.named_args_mapping = named_args_mapping
         self.request_model_class = request_model_class
+        self.request_superclass = request_superclass
         if self.request_model_class is not None:
             if not inspect.isclass(request_model_class):
                 raise ValueError('request_model_class must be a class, is {-1}'.format(type(request_model_class)))
+        if self.request_superclass is not None:
+            if request_model_class is None:
+                raise ValueError('request_superclass can only be used with request_model_class')
+            if not inspect.isclass(request_superclass):
+                raise ValueError('request_superclass must be a class, is {-1}'.format(type(request_superclass)))
 
-
+import q
 class ApiCall(object):
     """
     A class representing an API call. It holds the configuration of the
@@ -69,9 +76,14 @@ class ApiCall(object):
                            }
             request_model_instance = self.conf.request_model_class.from_dict(body_params)
             model_arg_name = snake_case(self.conf.request_model_class.__name__)
+            if self.conf.request_superclass is not None:
+                superclass_instance = self.conf.request_superclass(actual_instance=request_model_instance)
+                request_model_instance = superclass_instance
+                model_arg_name = snake_case(self.conf.request_superclass.__name__)
             self.sdk_kwargs[model_arg_name] = request_model_instance
 
     def do(self):
+        q(self.conf.func, self.sdk_kwargs)
         sdk_function = self.conf.func
 
         result = sdk_function(**self.sdk_kwargs)
