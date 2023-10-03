@@ -193,21 +193,25 @@ def get_routes(mpc):
             equinix_metal.InterconnectionsApi(mpc).create_organization_interconnection,
             {'id': 'organization_id'},
             equinix_metal.DedicatedPortCreateInput,
+            equinix_metal.CreateOrganizationInterconnectionRequest,
         ),
         ('metal_connection_project_dedicated', action.CREATE): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).create_project_interconnection,
             {'id': 'project_id'},
             equinix_metal.DedicatedPortCreateInput,
+            equinix_metal.CreateOrganizationInterconnectionRequest,
         ),
         ('metal_connection_project_vlanfabric', action.CREATE): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).create_project_interconnection,
             {'id': 'project_id'},
             equinix_metal.VlanFabricVcCreateInput,
+            equinix_metal.CreateOrganizationInterconnectionRequest,
         ),
         ('metal_connection_project_vrf', action.CREATE): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).create_project_interconnection,
             {'id': 'project_id'},
             equinix_metal.VrfFabricVcCreateInput,
+            equinix_metal.CreateOrganizationInterconnectionRequest,
         ),
 
         # UPDATERS
