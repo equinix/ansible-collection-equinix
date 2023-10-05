@@ -17,9 +17,14 @@ options:
     - Filter connections on substring in name attribute.
     required: false
     type: str
+  organization_id:
+    description:
+    - ID of the organization where the connection is scoped to.
+    required: false
+    type: str
   project_id:
     description:
-    - UUID of parent project the connection is scoped to.
+    - ID of the project where the connection is scoped to.
     required: false
     type: str
 requirements: null

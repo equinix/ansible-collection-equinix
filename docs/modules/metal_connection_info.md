@@ -32,7 +32,8 @@ Gather information about Interconnections
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
 | `name` | <center>`str`</center> | <center>Optional</center> | Filter connections on substring in name attribute.   |
-| `project_id` | <center>`str`</center> | <center>Optional</center> | UUID of parent project the connection is scoped to.   |
+| `project_id` | <center>`str`</center> | <center>Optional</center> | ID of the project where the connection is scoped to.   |
+| `organization_id` | <center>`str`</center> | <center>Optional</center> | ID of the organization where the connection is scoped to.   |
 
 
 

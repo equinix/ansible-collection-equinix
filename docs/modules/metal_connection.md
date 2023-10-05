@@ -26,7 +26,7 @@ Manage an Interconnection in Equinix Metal. You can use *connection_id* to looku
 ```yaml
 - name: Fetch the connection
   hosts: localhost
-  tasks:     
+  tasks:
   - equinix.cloud.metal_connection:
         project_id: "Bhf47603-7a09-4ca1-af67-4087c13ab5b6"
         name: "new connection"
