@@ -207,7 +207,7 @@ METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
     'metro': 'metro',
     'contact_email': 'contact_email',
     'description': optional_str('description'),
-    'mode': 'mode',
+    'mode': optional_str('mode'),
     'redundancy': 'redundancy',
     'tags': 'tags',
     'type': 'type',

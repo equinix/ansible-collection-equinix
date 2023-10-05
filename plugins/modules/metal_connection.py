@@ -408,7 +408,7 @@ def speed_str_to_int(module):
 
 def determine_ic_submodule(module):
   type = module.params["type"]
-  is_project = "project_id" in module.params
+  is_project = module.params.get("project_id")
   vlans = module.params.get("vlans")
   vrfs = module.params.get("vrfs")
 
