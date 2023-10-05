@@ -3,6 +3,9 @@
 
 galaxy.yml
 
+### avoid versioning int config where there's python interpreter path ###
+tests/integration/integration_config.yml
+
 ### dotenv ###
 .env
 
