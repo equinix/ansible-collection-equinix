@@ -38,7 +38,6 @@ class Specs(object):
             if not inspect.isclass(request_superclass):
                 raise ValueError('request_superclass must be a class, is {-1}'.format(type(request_superclass)))
 
-import q
 class ApiCall(object):
     """
     A class representing an API call. It holds the configuration of the
