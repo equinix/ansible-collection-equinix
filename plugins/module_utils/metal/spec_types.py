@@ -82,7 +82,6 @@ class ApiCall(object):
             self.sdk_kwargs[model_arg_name] = request_model_instance
 
     def do(self):
-        q(self.conf.func, self.sdk_kwargs)
         sdk_function = self.conf.func
 
         result = sdk_function(**self.sdk_kwargs)
