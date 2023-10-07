@@ -38,16 +38,26 @@ module_spec = dict(
         type=FieldType.string,
         description=['UUID of the resource.'],
     ),
-    name=SpecField(
+    project_id=SpecField(
         type=FieldType.string,
         description=['The name of the resource.'],
         editable=True,
     ),
-    some_attribute=SpecField(
+    ip_reservation_id=SpecField(
         type=FieldType.string,
         description=['Some attribute of the resource.'],
         editable=True,
     ),
+    private_ipv4_subnet_size=SpecField(
+        type=FieldType.string,
+        description=['Some attribute of the resource.'],
+        editable=True,
+    ),
+    virtual_network_id=SpecField(
+        type=FieldType.string,
+        description=['Some attribute of the resource.'],
+        editable=True,
+    )
 )
 
 
