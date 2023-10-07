@@ -20,7 +20,7 @@ options:
     type: str
   id:
     description:
-    - UUID of vlan"
+    - UUID of vlan
     required: false
     type: str
   metro:
