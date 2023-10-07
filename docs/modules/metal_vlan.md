@@ -34,8 +34,8 @@ Manage the VLAN in Equinix Metal. You can use *id* or *vxlan* to lookup the reso
 
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
-| `id` | <center>`str`</center> | <center>Optional</center> | UUID of vlan"   |
-| `project_id` | <center>`str`</center> | <center>Optional</center> | ID of parent project"   |
+| `id` | <center>`str`</center> | <center>Optional</center> | UUID of vlan   |
+| `project_id` | <center>`str`</center> | <center>Optional</center> | ID of parent project   |
 | `description` | <center>`str`</center> | <center>Optional</center> | Description of the VLAN   |
 | `metro` | <center>`str`</center> | <center>Optional</center> | Metro in which to create the VLAN   |
 | `vxlan` | <center>`int`</center> | <center>Optional</center> | VLAN ID, must be unique in metro   |
