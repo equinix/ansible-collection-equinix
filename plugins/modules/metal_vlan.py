@@ -30,7 +30,7 @@ options:
     type: str
   project_id:
     description:
-    - ID of parent project"
+    - ID of parent project
     required: false
     type: str
   vxlan:
