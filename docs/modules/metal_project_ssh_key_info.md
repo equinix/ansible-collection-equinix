@@ -20,7 +20,7 @@ Gather project SSH keys. Read more about project vs project SSH keys in [Equinix
 
 - name: filter found ssh keys
   set_fact:
-    both_ssh_keys_listed: "{{ ssh_keys_listed.resources | selectattr('name', 'match', desired_name_substring) }}"
+    both_ssh_keys_listed: "{{ ssh_keys_listed.resources | selectattr('label', 'match', desired_name_substring) }}"
 
 ```
 
@@ -37,7 +37,8 @@ Gather project SSH keys. Read more about project vs project SSH keys in [Equinix
 
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
-| `name` | <center>`str`</center> | <center>**Required**</center> | Name to search for in existing keys.   |
+| `label` | <center>`str`</center> | <center>Optional</center> | Name to search for in existing keys.   |
+| `project_id` | <center>`str`</center> | <center>Optional</center> | Name of the project for listing project keys.   |
 
 
 
@@ -57,14 +58,14 @@ Gather project SSH keys. Read more about project vs project SSH keys in [Equinix
                 "id": "6edfcbc2-17e5-4221-9eac-2f40dbe60daf",
                 "key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAt5gwVMhwcCrxyxpMEKwiS0xgit3PIIEgVXt6SQHc8eONq0mYJJ5TOBNTnySqXd9RtSv/Jbf5Aq9BzBGWeoZ6sZfKwh984Ip35StJtjXtyIOlY3skovndtupBIwlGXgX/WQzyLr+G/+Yu9/nhdxQi801PDZnDvKoeomM0rMD29nV+m0ud+GrtsAt6VFul2PxqpypZ1TYviyED6IKo7rgQsQDkE9QHcNdfT1FZWiJbfP7o8TIurQJcAXg+MtLoc8rKKcxFMeZ9FSydgtTC7nP1h558RtECGWiUgaBPI7TpBmcdMtbEfAiBoGT17GWnT8qmy2u5xnEKPD9Qft4w4fjfpw==",
                 "label": "tkarasek",
-                "project_id": local.project_id
+                "project_id": b8c6c653-3c96-446e-987e-9c4d12f25353
             },
             {
                 "fingerprint": "ba:70:af:b3:0f:0e:7f:e5:eb:97:e2:27:b1:f5:6f:94",
                 "id": "d00c596d-b42a-44a7-ac14-e299b85e73d3",
                 "key": "ssh-dss AAAAB3NzaC1kc3MAAACBAOpXVtmc0Bla98bt0o5/Zj7sb4mHIukgVFZu7F32R3VK1cEKB4rEE8uS0oLS/qMRLue45TWVJwRMYGlPjt3p/VyraelxoyJZLuITIsqa5hBc9w0oTlB5Bmbkn16umW96WCaWEoq/aitpocbRChTiP5biI6FyQTQlIHDaYzBDOi11AAAAFQDUXy7cmuzphDpJSYYTiudiUhVokwAAAIEAyUQ9m8qL/1HPkFe6jbXAvtSSmW27F4c+G2xR5HizaHQzXgBOxPcsOsY17KTU+Ddbg+OF9soWNwSpm9pyVjVmNGqH3S8R1pwvuJF/O2Asy1m6wpWhbPw8JdEBW7WHoptBpfuzJoS2LOzJUEmUu4Eb+xS237KG1d1BVny/49KAoH0AAACBAJKBSsm9Xey0fUN6vYtTQgoYeGxxj/LqAIAOs/TpCxZDntly860y/SzHYai8x48k4t7whENY1CJ41fpMcPlz8xIsrNP3326Wbr0ExwOIvJKAVN1YLYqF8NXWzaVrjo5WbSeI8PiWTYemvLAujVxZssIrApTZBhp55nnwge6K1zTG tomk@air",
                 "label": "ansible-integration-test-ssh_key-ztiapihf-ssh_key1_renamed",
-                "project_id": local.project_id
+                "project_id": b8c6c653-3c96-446e-987e-9c4d12f25353
             }
         ]
         

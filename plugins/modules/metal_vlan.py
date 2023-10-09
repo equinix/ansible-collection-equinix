@@ -20,7 +20,7 @@ options:
     type: str
   id:
     description:
-    - ID of parent project
+    - UUID of vlan
     required: false
     type: str
   metro:
@@ -89,11 +89,11 @@ MODULE_NAME = "metal_vlan"
 module_spec = dict(
     id=SpecField(
         type=FieldType.string,
-        description=['UUID of vlan"'],
+        description=["UUID of vlan"],
     ),
     project_id=SpecField(
         type=FieldType.string,
-        description=['ID of parent project"'],
+        description=["ID of parent project"],
     ),
     description=SpecField(
         type=FieldType.string,

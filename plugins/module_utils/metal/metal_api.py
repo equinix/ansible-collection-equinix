@@ -137,7 +137,8 @@ LIST_KEYS = [
     'operating_systems',
     'hardware_reservations',
     'organizations',
-    'virtual_networks'
+    'virtual_networks',
+    'interconnections',
 ]
 
 
@@ -200,6 +201,22 @@ VLAN_RESPONSE_ATTRIBUTE_MAP = {
 }
 
 
+METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'name': 'name',
+    'metro': 'metro',
+    'contact_email': 'contact_email',
+    'description': optional_str('description'),
+    'mode': optional_str('mode'),
+    'redundancy': 'redundancy',
+    'tags': 'tags',
+    'type': 'type',
+    'ports': 'ports',
+    'requested_by': 'requested_by',
+    'status': 'status',
+}
+
+
 def get_attribute_mapper(resource_type):
     """
     Returns attribute mapper for the given resource type.
@@ -211,6 +228,9 @@ def get_attribute_mapper(resource_type):
     ssh_key_resources = set(['metal_ssh_key', 'metal_project_ssh_key'])
     hardware_reservation_resources = set(['metal_project_hardware_reservation', 'metal_hardware_reservation'])
     vlan_resources = set(["metal_vlan"])
+    connection_resources = set(['metal_connection', 'metal_connection_project', 'metal_connection_organization',
+                                'metal_connection_project_dedicated', 'metal_connection_organization_dedicated',
+                                'metal_connection_project_vlanfabric', 'metal_connection_project_vrf'])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -227,6 +247,8 @@ def get_attribute_mapper(resource_type):
         return METAL_METRO_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in hardware_reservation_resources:
         return METAL_HARDWARE_RESERVATION_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in connection_resources:
+        return METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_organization':
         return METAL_ORGANIZATION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in vlan_resources:
