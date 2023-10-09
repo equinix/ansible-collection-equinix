@@ -1,6 +1,7 @@
 # Development Guide for the Collection
 
 <!-- vscode-markdown-toc -->
+* 0. [Development environment setup](#Developmentenvironmentsetup)
 * 1. [Running integration tests](#Runningintegrationtests)
 * 2. [Adding a new module](#Addinganewmodule)
 	* 2.1. [Module structure](#Modulestructure)
@@ -17,15 +18,26 @@
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
 
-##  1. <a name='Runningintegrationtests'></a>Running integration tests
+##  0. <a name="Developmentenvironmentsetup"></a>Development environment setup
 
-The integration tests will only function if your repository is located in a path that concludes with `ansible_collections/equinix/cloud`. This is a requirement specific to Ansible. You can clone the repository using the following command:
+We use Python 3.8 for the collection development.
+
+Development of the collection is best done if your repository is located in a path that concludes with `ansible_collections/equinix/cloud`. This is a requirement specific to Ansible. You can clone the repository using the following command:
 
 ```
 git clone https://github.com/equinix-labs/ansible-collection-equinix ansible_collections/equinix/cloud
 ```
 
-To utilize the Ansible collection, first export your METAL_AUTH_TOKEN in the environment variables. Then, at the repository's root, execute `make create-integration-config`. This generates a YAML config file in tests/integration/integration_config.yml with your auth token and other test configurations.
+You also need to export your METAL_AUTH_TOKEN in the environment variables:
+
+```
+export METAL_AUTH_TOKEN=<your_auth_token>
+```
+
+
+##  1. <a name='Runningintegrationtests'></a>Running integration tests
+
+At the repository root, execute `make create-integration-config`. This generates a YAML config file in tests/integration/integration_config.yml with your auth token and other test configurations.
 
 After that, you can run individual tests as, for example:
 ```
