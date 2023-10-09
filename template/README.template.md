@@ -1,5 +1,5 @@
 # Equinix Ansible Collection
-[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/equinix/cloud/) 
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix-labs/ansible-collection-equinix/integration-tests.yml?branch=main)
 
 The Ansible Collection Equinix contains various plugins for managing Equinix services.
@@ -103,7 +103,7 @@ The release will create a tag, and we have a Github action in place that should 
 
 Verify that the [releasing Github action](https://github.com/equinix-labs/ansible-collection-equinix/actions) succeeded.
 
-Verify that new version of [equinix.cloud](https://galaxy.ansible.com/equinix/cloud) is available in Ansible Galaxy.
+Verify that new version of [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/) is available in Ansible Galaxy.
 
 
 ## Licensing
@@ -111,3 +111,4 @@ Verify that new version of [equinix.cloud](https://galaxy.ansible.com/equinix/cl
 GNU General Public License v3.0.
 
 See [COPYING](COPYING) to see the full text.
+
