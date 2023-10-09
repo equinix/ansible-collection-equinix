@@ -1,5 +1,5 @@
 # Equinix Ansible Collection
-[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/) 
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix-labs/ansible-collection-equinix/integration-tests.yml?branch=main)
 
 The Ansible Collection Equinix contains various plugins for managing Equinix services.
@@ -111,3 +111,4 @@ Verify that new version of [equinix.cloud](https://galaxy.ansible.com/ui/repo/pu
 GNU General Public License v3.0.
 
 See [COPYING](COPYING) to see the full text.
+
