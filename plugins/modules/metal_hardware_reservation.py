@@ -20,6 +20,11 @@ options:
     - UUID of the hardware_reservation.
     required: true
     type: str
+  project_id:
+    description:
+    - UUID of parent project containing the hardware_reservation. It can be changed.
+    required: false
+    type: str
 requirements: null
 short_description: Lookup a single hardware_reservation by ID in Equinix Metal
 '''
@@ -29,6 +34,22 @@ EXAMPLES = '''
   tasks:
   - equinix.cloud.metal_hardware_reservation:
       id: 7624f0f7-75b6-4271-bc64-632b80f87de2
+- name: fetch hw reservation resource
+  equinix.cloud.metal_hardware_reservation:
+    id: '{{ metal_hardware_reservation_id }}'
+    register: hwres
+- name: create new project to move the hw res to
+  equinix.cloud.metal_project:
+    name: destination-project
+    register: project
+- name: move hw reservation to new project
+  equinix.cloud.metal_hardware_reservation:
+    id: '{{ metal_hardware_reservation_id }}'
+    project_id: '{{ project.id }}'
+- name: move hw reservation to original project
+  equinix.cloud.metal_hardware_reservation:
+    id: '{{ metal_hardware_reservation_id }}'
+    project_id: '{{ hwres.project_id }}'
 '''
 RETURN = '''
 metal_hardware_reservation:
@@ -65,6 +86,12 @@ module_spec = dict(
         required=True,
         description=['UUID of the hardware_reservation.'],
     ),
+    project_id=SpecField(
+        type=FieldType.string,
+        description=["UUID of parent project containing the hardware_reservation. It can be changed."],
+        required=False,
+        editable=True,
+    ),
 )
 
 
@@ -76,6 +103,28 @@ specdoc_examples = [
   - equinix.cloud.metal_hardware_reservation:
       id: 7624f0f7-75b6-4271-bc64-632b80f87de2
 ''',
+'''
+# Move hardware reservation between projects
+- name: fetch hw reservation resource 
+  equinix.cloud.metal_hardware_reservation:
+    id: "{{ metal_hardware_reservation_id }}"
+    register: hwres
+
+- name: create new project to move the hw res to
+  equinix.cloud.metal_project:
+    name: "destination-project"
+    register: project
+
+- name: move hw reservation to new project
+  equinix.cloud.metal_hardware_reservation:
+    id: "{{ metal_hardware_reservation_id }}"
+    project_id: "{{ project.id }}"
+
+- name: move hw reservation to original project
+  equinix.cloud.metal_hardware_reservation:
+    id: "{{ metal_hardware_reservation_id }}"
+    project_id: "{{ hwres.project_id }}"     
+'''
 ]
 
 result_sample = ['''
@@ -110,6 +159,7 @@ SPECDOC_META = getSpecDocMeta(
     },
 )
 
+MUTABLE_ATTRIBUTES = [a for a, v in module_spec.items() if v.editable]
 
 def main():
     module = EquinixModule(
@@ -124,7 +174,10 @@ def main():
     try:
         module.params_syntax_check()
         fetched = module.get_by_id("metal_hardware_reservation", False)
-
+        diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
+        if diff:
+            fetched = module.update_by_id(diff, "metal_hardware_reservation")
+            changed = True
         if fetched:
             module.params['id'] = fetched['id']
         else:

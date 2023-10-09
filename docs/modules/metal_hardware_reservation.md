@@ -22,6 +22,30 @@ It doesn't allow to create or update hardware_reservations.
 
 ```
 
+```yaml
+# Move hardware reservation between projects
+- name: fetch hw reservation resource 
+  equinix.cloud.metal_hardware_reservation:
+    id: "{{ metal_hardware_reservation_id }}"
+    register: hwres
+
+- name: create new project to move the hw res to
+  equinix.cloud.metal_project:
+    name: "destination-project"
+    register: project
+
+- name: move hw reservation to new project
+  equinix.cloud.metal_hardware_reservation:
+    id: "{{ metal_hardware_reservation_id }}"
+    project_id: "{{ project.id }}"
+
+- name: move hw reservation to original project
+  equinix.cloud.metal_hardware_reservation:
+    id: "{{ metal_hardware_reservation_id }}"
+    project_id: "{{ hwres.project_id }}"     
+
+```
+
 
 
 
@@ -36,6 +60,7 @@ It doesn't allow to create or update hardware_reservations.
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
 | `id` | <center>`str`</center> | <center>**Required**</center> | UUID of the hardware_reservation.   |
+| `project_id` | <center>`str`</center> | <center>Optional</center> | UUID of parent project containing the hardware_reservation. It can be changed.  **(Updatable)** |
 
 
 

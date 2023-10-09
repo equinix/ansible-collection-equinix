@@ -1,0 +1,91 @@
+# You need a hw reservation to properly run this test.
+# The variable can be passed from envvar METAL_HARDWARE_RESERVATION_ID 
+# If you run this test without setting it, it will skip most of the tasks and exit with success, it's set like this for the CI.
+# If you set those it, you can run this test as:
+# $ make test_target=metal_hardware_reservation_move test
+- name: metal_hardware_reservation_move
+  module_defaults:
+    equinix.cloud.metal_hardware_reservation:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-hw-res-move'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: test fetch hw reservation resource 
+      equinix.cloud.metal_hardware_reservation:
+        id: "{{ metal_hardware_reservation_id }}"
+      register: hwres
+      when: metal_hardware_reservation_id is defined
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project1"
+      register: project
+      when: metal_hardware_reservation_id is defined
+
+    - name: check that hw reservation is not in the test project
+      assert:
+        that:
+          - "metal_hardware_reservation_id == hwres.id"
+          - "project.id != hwres.project_id"
+      when: metal_hardware_reservation_id is defined
+
+    
+    - name: move hardware reservation to new project
+      equinix.cloud.metal_hardware_reservation:
+        id: "{{ metal_hardware_reservation_id }}"
+        project_id: "{{ project.id }}"
+      register: hwres_moved
+      when: metal_hardware_reservation_id is defined
+
+    - name: assert that hw reservation has been moved  
+      assert:
+        that:
+          - "metal_hardware_reservation_id == hwres_moved.id"
+          - "project.id == hwres_moved.project_id"
+      when: metal_hardware_reservation_id is defined
+
+    - name: move reservation to original project
+      equinix.cloud.metal_hardware_reservation:
+        id: "{{ metal_hardware_reservation_id }}"
+        project_id: "{{ hwres.project_id }}"
+      register: hwres_moved_back
+      when: metal_hardware_reservation_id is defined
+      
+    - name: assert that hw reservation has been moved back 
+      assert:
+        that:
+          - "hwres_moved_back.project_id == hwres.project_id"
+      when: metal_hardware_reservation_id is defined
+
+    - name: delete test project
+      equinix.cloud.metal_project:
+        id: "{{ project.id }}"
+        state: absent
+      when: metal_hardware_reservation_id is defined
+    
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes
+

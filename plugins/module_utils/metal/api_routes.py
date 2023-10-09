@@ -240,4 +240,9 @@ def get_routes(mpc):
             {},
             equinix_metal.InterconnectionUpdateInput,
         ),
+        ('metal_hardware_reservation', action.UPDATE): spec_types.Specs(
+            equinix_metal.HardwareReservationsApi(mpc).move_hardware_reservation,
+            {},
+            equinix_metal.MoveHardwareReservationRequest,
+        ),
     }
