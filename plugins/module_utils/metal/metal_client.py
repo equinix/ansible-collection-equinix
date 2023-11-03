@@ -44,13 +44,13 @@ def raise_if_missing_equinix_metal():
 
 def get_equinix_metal_client(api_token, api_url=API_URL, ua_prefix=""):
     raise_if_missing_equinix_metal()
-    ua = ua_prefix + USER_AGENT
+    ua = ua_prefix + " " + USER_AGENT
     conf = equinix_metal.Configuration(
         host=api_url,
     )
     conf.api_key['x_auth_token'] = api_token
     mpc = equinix_metal.ApiClient(conf)
-    mpc.user_agent = ua
+    mpc.user_agent = ua + " " + mpc.user_agent
     return mpc
 
 
