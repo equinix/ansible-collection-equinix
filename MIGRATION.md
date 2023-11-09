@@ -30,6 +30,7 @@ export METAL_AUTH_TOKEN=your_api_token_here
 
 | equinix.metal Module                                                                                              | equinix.cloud Equivalent                                                                                              |
 |-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| [equinix.metal.capacity_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.capacity_info_module.rst)                     | Not present in the new collection                                                                                      |
 | [equinix.metal.device](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.device_module.rst)                              | [equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/main/docs/modules/metal_device.md)                              |
 | [equinix.metal.device_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.device_info_module.rst)                        | [equinix.cloud.metal_device_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/main/docs/modules/metal_device_info.md)                         |
 | [equinix.metal.facility_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.facility_info_module.rst)                      | Not present in the new collection                                                                                      |
@@ -43,10 +44,6 @@ export METAL_AUTH_TOKEN=your_api_token_here
 | [equinix.metal.sshkey](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.sshkey_module.rst)                                   | [equinix.cloud.metal_ssh_key](https://github.com/equinix-labs/ansible-collection-equinix/blob/main/docs/modules/metal_ssh_key.md)                                   |
 | [equinix.metal.sshkey_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.sshkey_info_module.rst)                         | [equinix.cloud.metal_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/main/docs/modules/metal_ssh_key_info.md)                         |
 | [equinix.metal.user_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.user_info_module.rst)                             | Not present in the new collection                                                                                      |
-| [equinix.metal.capacity_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.capacity_info_module.rst)                     | Not present in the new collection                                                                                      |
-| [equinix.metal.operating_system_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.operating_system_info_module.rst)     | Not present in the new collection                                                                                      |
-
-
 
 
 ## Testing
