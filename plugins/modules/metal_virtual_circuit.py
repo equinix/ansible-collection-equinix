@@ -36,17 +36,103 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 module_spec = dict(
     id=SpecField(
         type=FieldType.string,
-        description=['UUID of the resource.'],
+        description=['UUID of the Virtual Circuit.'],
     ),
     name=SpecField(
         type=FieldType.string,
-        description=['The name of the resource.'],
+        description=['Name of the Virtual Circuit resource.'],
         editable=True,
     ),
-    some_attribute=SpecField(
+    connection_id=SpecField(
         type=FieldType.string,
-        description=['Some attribute of the resource.'],
-        editable=True,
+        description=[
+            'UUID of Connection where the VC is scoped to.'
+        ],
+    ),
+    project_id=SpecField(
+        type=FieldType.string,
+        description=[
+            'UUID of the Project where the VC is scoped to.'
+        ],
+    ),
+    port_id=SpecField(
+        type=FieldType.string,
+        description=[
+            'UUID of the Connection Port where the VC is scoped to.'
+        ],
+    ),
+    nni_vlan=SpecField(
+        type=FieldType.string,
+        description=[
+            'Equinix Metal network-to-network VLAN ID.'
+        ],
+    ),
+    vlan_id=SpecField(
+        type=FieldType.string,
+        description=[
+            'UUID of the VLAN to associate.'
+        ],
+    ),
+    description=SpecField(
+        type=FieldType.string,
+        description=[
+            'Description for the Virtual Circuit resource.'
+        ],
+    ),
+    tags=SpecField(
+        type=FieldType.string,
+        description=[
+            'Tags for the Virtual Circuit resource.'
+        ],
+    ),
+    speed=SpecField(
+        type=FieldType.string,
+        description=[
+            'Speed of the Virtual Circuit resource.'
+        ],
+    ),
+    vrf_id=SpecField(
+        type=FieldType.string,
+        description=[
+            'UUID of the VRF to associate.'
+        ],
+    ),
+    peer_asn=SpecField(
+        type=FieldType.string,
+        description=[
+            'The BGP ASN of the peer.',
+            'The same ASN may be the used across several VCs, but it cannot be the same as the local_asn of the VRF.'
+        ],
+    ),
+    subnet=SpecField(
+        type=FieldType.string,
+        description=[
+            'A subnet from one of the IP blocks associated with the VRF that we will help create an IP reservation for.',
+            'Can only be either a /30 or /31.',
+            'For a /31 block, it will only have two IP addresses, which will be used for the metal_ip and customer_ip.',
+            'For a /30 block, it will have four IP addresses, but the first and last IP addresses are not usable.',
+            'We will default to the first usable IP address for the metal_ip.',
+        ],
+    ),
+    metal_ip=SpecField(
+        type=FieldType.string,
+        description=[
+            'The Metal IP address for the SVI (Switch Virtual Interface) of the VirtualCircuit.',
+            'Will default to the first usable IP in the subnet.'
+        ],
+    ),
+    customer_ip=SpecField(
+        type=FieldType.string,
+        description=[
+            'The Customer IP address which the CSR switch will peer with.',
+            'Will default to the other usable IP in the subnet.'
+        ],
+    ),
+    md5=SpecField(
+        type=FieldType.string,
+        description=[
+            'The password that can be set for the VRF BGP peer'
+        ],
     ),
 )
 
@@ -95,6 +181,9 @@ SPECDOC_META = getSpecDocMeta(
 
 
 def main():
+    #import pydevd_pycharm
+    #pydevd_pycharm.settrace('localhost', port=5555, stdoutToServer=True, stderrToServer=True)
+
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         required_one_of=[("name", "id")],
