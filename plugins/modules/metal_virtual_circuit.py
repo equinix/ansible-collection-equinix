@@ -56,7 +56,7 @@ specdoc_examples = [
 - name: Create new resource
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_resource:
+  - equinix.cloud.metal_virtual_circuit:
       name: "new resource"
       some_attribute: 42
 ''',
@@ -85,7 +85,7 @@ SPECDOC_META = getSpecDocMeta(
     examples=specdoc_examples,
     options=module_spec,
     return_values={
-        "metal_resource": SpecReturnValue(
+        "metal_virtual_circuit": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
             sample=result_sample,
@@ -107,10 +107,10 @@ def main():
         module.params_syntax_check()
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
-            fetched = module.get_by_id("metal_resource", tolerate_not_found)
+            fetched = module.get_by_id("metal_virtual_circuit", tolerate_not_found)
         else:
             fetched = module.get_one_from_list(
-                "metal_resource",
+                "metal_virtual_circuit",
                 ["name"],
             )
 
@@ -119,15 +119,15 @@ def main():
             if state == "present":
                 diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
                 if diff:
-                    fetched = module.update_by_id(diff, "metal_resource")
+                    fetched = module.update_by_id(diff, "metal_virtual_circuit")
                     changed = True
 
             else:
-                module.delete_by_id("metal_resource")
+                module.delete_by_id("metal_virtual_circuit")
                 changed = True
         else:
             if state == "present":
-                fetched = module.create("metal_resource")
+                fetched = module.create("metal_virtual_circuit")
                 if 'id' not in fetched:
                     module.fail_json(msg="UUID not found in resource creation response")
                 changed = True
@@ -135,7 +135,7 @@ def main():
                 fetched = {}
     except Exception as e:
         tb = traceback.format_exc()
-        module.fail_json(msg="Error in metal_resource: {0}".format(to_native(e)),
+        module.fail_json(msg="Error in metal_virtual_circuit: {0}".format(to_native(e)),
                          exception=tb)
 
     fetched.update({'changed': changed})
