@@ -1,0 +1,147 @@
+# https://registry.terraform.io/providers/equinix/equinix/latest/docs/resources/equinix_metal_virtual_circuit
+# potrebuju connection_id, project_id, port_id, vlan_id, nni_vlan
+- name: metal_virtual_circuit
+  module_defaults:
+    equinix.cloud.metal_virtual_circuit:
+      metal_api_token: '{{ metal_api_token }}'
+#    equinix.cloud.metal_device:
+#      metal_api_token: '{{ metal_api_token }}'
+#    equinix.cloud.metal_project_info:
+#      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-project'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - set_fact:
+        # virtualcircuit
+        test_virtual_circuit_name: "test_virtual_circuit"
+
+
+    # requirement connection 1/5
+    - name: create connection for test
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        description: "{{ test_description }}"
+        type: "{{ test_type_dedicated }}"
+        name: "{{ test_name }}"
+        speed: "{{ test_speed }}"
+        redundancy: "{{ test_redundancy }}"
+      register: test_connection
+
+          #  - equinix.cloud.metal_connection:
+          #      project_id: "Bhf47603-7a09-4ca1-af67-4087c13ab5b6"
+          #      name: "new connection"
+          #      type: "dedicated"
+          #      redundancy: "primary"
+          #      speed: "50Mbps"
+          #      metro: "am"
+
+    # requirement project_id 2/5
+    - name: create first project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project1"
+        backend_transfer_enabled: true
+      register: test_project
+
+
+    # requirements 3
+    - name: get VLAN
+      equinix.cloud.metal_vlan_info:
+        project_id: "{{ test_project.id }}"
+        metro: "{{ test_metro }}"
+      register: test_vlan
+
+
+    - name: create first virtual circuit for test
+      equinix.cloud.metal_virtual_circuit:
+        connection_id: "{{ test_connection.id }}"
+        project_id: "{{ test_project.id }}"
+        port_id: "{{ test_connection.ports[0].id }}"
+        vlan_id: "{{ test_vlan.id }}"
+        nni_vlan: 1056
+        name: "{{ test_virtual_circuit_name }}"
+      register: first_virtual_circuit
+#
+#    - name: create first project for test again, to check idempotence
+#      equinix.cloud.metal_project:
+#        name: "{{ test_prefix }}-project1"
+#        backend_transfer_enabled: true
+#      register: first_project_2
+
+    - assert:
+        that:
+        - first_virtual_circuit.test_virtual_circuit_name == "{{ test_virtual_circuit_name }}"
+        - first_project.nni_vlan == 1056
+#        - first_project_2.changed == false
+
+#    - name: update project name
+#      equinix.cloud.metal_project:
+#        id: "{{ first_project.id }}"
+#        name: "{{ test_prefix }}-project1_renamed"
+#        backend_transfer_enabled: false
+
+#    - name: fetch updated project
+#      equinix.cloud.metal_project:
+#        id: "{{ first_project.id }}"
+#      register: first_project_updated
+
+#    - assert:
+#        that:
+#        - first_project_updated.name == '{{ test_prefix }}-project1_renamed'
+#        - first_project_updated.backend_transfer_enabled == false
+
+#    - name: create second project for test
+#      equinix.cloud.metal_project:
+#        name: "{{ test_prefix }}-project2"
+#      register: second_project
+
+#    - name: list second project
+#      equinix.cloud.metal_project_info:
+#        name: "{{ test_prefix }}-project2"
+#      register: second_project_listed
+
+#    - assert:
+#        that:
+#        - "second_project_listed.resources | length == 1"
+
+#    - name: list both projects
+#      equinix.cloud.metal_project_info:
+#        name: "{{ test_prefix }}"
+#      register: both_projects_listed
+
+#    - assert:
+#        that:
+#        - "both_projects_listed.resources | length == 2"
+
+#    - name: delete second project
+#      equinix.cloud.metal_project:
+#        id: "{{ second_project.id }}"
+#        state: absent
+
+#    - name: check that deleting nonexistent resource doesn't err
+#      equinix.cloud.metal_project:
+#        id: "{{ second_project.id }}"
+#        state: absent
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_virtual_circuit_info:
+        name: "{{ test_virtual_circuit_name }}"
+      register: test_circuits_listed
+
+    - name: delete test circuits
+      equinix.cloud.metal_virtual_circuit:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_circuits_listed.resources }}"
+      ignore_errors: yes
+
