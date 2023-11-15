@@ -12,6 +12,11 @@ description: Gather information about Equinix Metal VLAN resources
 module: metal_vlan_info
 notes: []
 options:
+  metro:
+    description:
+    - ' (Optional) Metro where the VLAN is deployed.'
+    required: false
+    type: str
   project_id:
     description:
     - Filter vlans by Project UUID.
@@ -50,6 +55,11 @@ module_spec = dict(
     project_id=SpecField(
         type=FieldType.string,
         description=['Filter vlans by Project UUID.'],
+        required=False,
+    ),
+    metro=SpecField(
+        type=FieldType.string,
+        description=[' (Optional) Metro where the VLAN is deployed.'],
         required=False,
     ),
 )

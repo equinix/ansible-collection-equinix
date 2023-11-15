@@ -30,6 +30,7 @@ Gather information about Equinix Metal VLAN resources
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
 | `project_id` | <center>`str`</center> | <center>Optional</center> | Filter vlans by Project UUID.   |
+| `metro` | <center>`str`</center> | <center>Optional</center> |  (Optional) Metro where the VLAN is deployed.   |
 
 
 
