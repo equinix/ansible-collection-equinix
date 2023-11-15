@@ -168,7 +168,7 @@ Sometimes it's not enough to specify only a class for request body. For example,
 input = CreateOrganizationInterconnectionRequest(actual_instance=VrfFabricVcCreateInput())
 ```
 
-That's why we had to add the fourth parameters of `spec_types.Specs`. The fourth parameter ("superclass") is a wrappign class for the input class (specified in the third parameters). It shouldn't be necessary to use tit too much.
+That's why we had to add the fourth parameters of `spec_types.Specs`. The fourth parameter ("superclass") is a wrapping class for the input class (specified in the third parameters). It shouldn't be frequently needed.
 
 
 
