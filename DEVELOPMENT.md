@@ -118,6 +118,7 @@ The arguments in spec_types.Specs constructor are
 - client method for the resource action
 - mapping of Ansible-module arguments to HTTP Path variables (or positional arguments in the client method)
 - (optional) class for HTTP request body
+- (optional) superclass for HTTP request body (see next subsection)
 
 For example, method `create_device` is defined as:
 
@@ -159,6 +160,16 @@ create_device(
 Note that `project_id` isn't used in `CreateDeviceRequest` but as the first positional parameter `id` of `create_device`. This is due to the second parameter (mapping dict) of `spec_types.Specs`.
 
 For API methods that don't require a positional parameter (no parent resource), like creating a project (HTTP POST to `/projects`), an empty dict should be passed as the mapping. Additionally, there are API methods that don't have a JSON body (such as getters or delete methods). In these cases, the third parameter to Specs should be left unspecified. Examples of all these scenarios can be found in [plugins/module_utils/metal/api_routes.py](plugins/module_utils/metal/api_routes.py).
+
+#### 2.4.1 Superclass for HTTP request body of an API call
+
+Sometimes it's not enough to specify only a class for request body. For example, there's only one API route to create dedicated interconnection, VLAN Fabric interconnection and VRF interconnection. In other words, all the connection types are created in the same API endpoint, and it's the request body json that distinguishes which type of interconnection should be created. The generated Python SDK then offers separate classes for the different types. For interconnection it's `DedicatedPortCreateInput`, `VlanFabricVcCreateInput`, `VrfFabricVcCreateInput`. However, we can't pass instances of these classes to the `InterconnectionsApi.create_project_interconnection`, we need to wrap it in an instance of `CreateOrganizationInterconnectionRequest`, created like 
+```python
+input = CreateOrganizationInterconnectionRequest(actual_instance=VrfFabricVcCreateInput())
+```
+
+That's why we had to add the fourth parameters of `spec_types.Specs`. The fourth parameter ("superclass") is a wrapping class for the input class (specified in the third parameters). It shouldn't be frequently needed.
+
 
 
 ###  2.5. <a name='Attributemapsinmetal_api.py'></a>Attribute maps in metal_api.py
