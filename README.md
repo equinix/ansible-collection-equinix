@@ -4,7 +4,7 @@
 
 This is repository for Ansible collection registered in Ansible Galaxy as [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/). The collection contains various plugins for managing Equinix services.
 
-For users transitioning from the [equinix.metal collection](https://github.com/equinix/ansible-collection-metal), please refer to our [Migration Guide](MIGRATION.MD) for detailed instructions on migrating to this collection (`equinix.cloud`).
+For users transitioning from the [equinix.metal collection](https://github.com/equinix/ansible-collection-metal), please refer to our [Migration Guide](MIGRATION.md) for detailed instructions on migrating to this collection (`equinix.cloud`).
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
