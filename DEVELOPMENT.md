@@ -3,6 +3,7 @@
 <!-- vscode-markdown-toc -->
 * 0. [Development environment setup](#Developmentenvironmentsetup)
 * 1. [Running integration tests](#Runningintegrationtests)
+    * 1.1. [Debugging](#Debugging)
 * 2. [Adding a new module](#Addinganewmodule)
 	* 2.1. [Module structure](#Modulestructure)
 	* 2.2. [Documentation and the Specdoc fields](#DocumentationandtheSpecdocfields)
@@ -47,6 +48,20 @@ ansible-test integration -vvvv metal_device
 ```
 
 You can run all the tests with `make test`. You can also run the tests in parallel (like in the CI) with `make testall`. The parallel run is faster but it's harder to read the output.
+
+### 1.1. <a name='Debugging'></a>Debugging
+
+Since Ansible is supressing stdout, it's really hard to debug values of variables in module code.
+
+Ansbile devs recommend [the "q" debugging library](https://github.com/zestyping/q) installed like `pip install -U q`, which is simple to use and logs to `/tmp/q`. For example:
+
+(open `tail -f /tmp/q` in a terminal)
+
+```python
+import q; q(some_var)
+```
+
+Just make sure you remove all the "q" calls before merging to main.
 
 
 ##  2. <a name='Addinganewmodule'></a>Adding a new module
