@@ -4,42 +4,27 @@
   module_defaults:
     equinix.cloud.metal_virtual_circuit:
       metal_api_token: '{{ metal_api_token }}'
-#    equinix.cloud.metal_device:
-#      metal_api_token: '{{ metal_api_token }}'
-#    equinix.cloud.metal_project_info:
-#      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_connection:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vlan_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vlan:
+      metal_api_token: '{{ metal_api_token }}'
   block:
     - set_fact:
-        test_resource_name_prefix: 'ansible-integration-test-project'
+        test_resource_name_prefix: 'ansible-integration-test-project-ar'
     - set_fact:
         unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
-
     - set_fact:
         # virtualcircuit
         test_virtual_circuit_name: "test_virtual_circuit"
 
-
-    # requirement connection 1/5
-    - name: create connection for test
-      equinix.cloud.metal_connection:
-        project_id: "{{ project.id }}"
-        metro: "{{ test_metro }}"
-        description: "{{ test_description }}"
-        type: "{{ test_type_dedicated }}"
-        name: "{{ test_name }}"
-        speed: "{{ test_speed }}"
-        redundancy: "{{ test_redundancy }}"
-      register: test_connection
-
-          #  - equinix.cloud.metal_connection:
-          #      project_id: "Bhf47603-7a09-4ca1-af67-4087c13ab5b6"
-          #      name: "new connection"
-          #      type: "dedicated"
-          #      redundancy: "primary"
-          #      speed: "50Mbps"
-          #      metro: "am"
 
     # requirement project_id 2/5
     - name: create first project for test
@@ -48,21 +33,83 @@
         backend_transfer_enabled: true
       register: test_project
 
+    - set_fact:
+        test_metro: 'am'
+        test_metro_2: 'fr'
+        test_description: 'My new VLAN'
+        test_type_dedicated: 'dedicated'
+        test_name: "{{ test_prefix }}-TestConn"
+        test_speed: '50Mbps'
+        test_redundancy: 'primary'
+
+    # requirement connection 1/5
+    - name: create connection for test
+      equinix.cloud.metal_connection:
+        project_id: "{{ test_project.id }}"
+        metro: "{{ test_metro }}"
+        description: "{{ test_description }}"
+        type: "{{ test_type_dedicated }}"
+        name: "{{ test_name }}"
+        speed: "{{ test_speed }}"
+        redundancy: "{{ test_redundancy }}"
+      register: test_connection
+
+    - name: Display test_connection
+      debug:
+        var: test_connection
+
+    - set_fact:
+        # virtualcircuit
+        test_metro_id: "{{ test_connection['metro']['id'] }}"
+
+    - name: Display test_metro_id
+      debug:
+        var: test_metro_id
+
+
+    # ---
+
+    - name: create VLAN resource no.1
+      equinix.cloud.metal_vlan:
+        description: "This is my new VLAN 1."
+        metro: "{{ test_metro }}"
+        vxlan: 1234
+        project_id: "{{ test_project.id }}"
+      register: test_vlan
+
+    - name: create VLAN resource no.2
+      equinix.cloud.metal_vlan:
+        description: "This is my new VLAN 2."
+        metro: "{{ test_metro_2 }}"
+        vxlan: 1234
+        project_id: "{{ test_project.id }}"
+
+
+    - name: Display test_metro_id
+      debug:
+        var: first_virtual_circuit
 
     # requirements 3
-    - name: get VLAN
+    - name: get VLAN info
       equinix.cloud.metal_vlan_info:
         project_id: "{{ test_project.id }}"
         metro: "{{ test_metro }}"
       register: test_vlan
 
+    - name: Display test_vlan
+      debug:
+        var: test_vlan
+
+    - assert:
+        that:
+        - test_vlan.resources | length == 1       # frankfurt is out
 
     - name: create first virtual circuit for test
       equinix.cloud.metal_virtual_circuit:
         connection_id: "{{ test_connection.id }}"
         project_id: "{{ test_project.id }}"
         port_id: "{{ test_connection.ports[0].id }}"
-        vlan_id: "{{ test_vlan.id }}"
+        vlan_id: "{{ test_vlan.resources[0].id }}"
         nni_vlan: 1056
         name: "{{ test_virtual_circuit_name }}"
       register: first_virtual_circuit
@@ -132,16 +179,29 @@
     - name: Announce teardown start
       debug:
         msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+#
+#    - name: list test VCs
+#      equinix.cloud.metal_virtual_circuit_info:
+#        name: "{{ test_virtual_circuit_name }}"
+#      register: test_circuits_listed
+#
+#    - name: delete test VCs
+#      equinix.cloud.metal_virtual_circuit:
+#        id: "{{ item.id }}"
+#        state: absent
+#      loop: "{{ test_circuits_listed.resources }}"
+#      ignore_errors: yes
 
     - name: list test projects
-      equinix.cloud.metal_virtual_circuit_info:
-        name: "{{ test_virtual_circuit_name }}"
-      register: test_circuits_listed
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
 
-    - name: delete test circuits
-      equinix.cloud.metal_virtual_circuit:
+    - name: delete test projects
+      equinix.cloud.metal_project:
         id: "{{ item.id }}"
         state: absent
-      loop: "{{ test_circuits_listed.resources }}"
+      loop: "{{ test_projects_listed.resources }}"
       ignore_errors: yes
+
 
