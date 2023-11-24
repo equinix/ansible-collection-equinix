@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from equinix_metal.exceptions import NotFoundException
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -296,9 +297,6 @@ SPECDOC_META = getSpecDocMeta(
 
 
 def main():
-    #import pydevd_pycharm
-    #pydevd_pycharm.settrace('localhost', port=5555, stdoutToServer=True, stderrToServer=True)
-
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         required_one_of=[("name", "id")],
@@ -307,8 +305,11 @@ def main():
     state = module.params.get("state")
     changed = False
 
+    import pydevd_pycharm
+    pydevd_pycharm.settrace('localhost', port=5555, stdoutToServer=True, stderrToServer=True)
     try:
         module.params_syntax_check()
+        fetched = None
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id("metal_virtual_circuit", tolerate_not_found)
@@ -318,6 +319,15 @@ def main():
                 ["name"],
             )
 
+    except NotFoundException as e:
+        pass
+
+    except Exception as e:
+        tb = traceback.format_exc()
+        module.fail_json(msg="Error in metal_virtual_circuit: {0}".format(to_native(e)),
+                         exception=tb)
+
+    try:
         if fetched:
             module.params['id'] = fetched['id']
             if state == "present":
@@ -331,12 +341,14 @@ def main():
                 changed = True
         else:
             if state == "present":
+                # tested
                 fetched = module.create("metal_virtual_circuit")
                 if 'id' not in fetched:
                     module.fail_json(msg="UUID not found in resource creation response")
                 changed = True
             else:
                 fetched = {}
+
     except Exception as e:
         tb = traceback.format_exc()
         module.fail_json(msg="Error in metal_virtual_circuit: {0}".format(to_native(e)),
