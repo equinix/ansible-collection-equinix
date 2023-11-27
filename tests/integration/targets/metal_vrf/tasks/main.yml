@@ -53,11 +53,6 @@
     - name: get VRF info
       equinix.cloud.metal_vrf_info:
         project_id: "{{ test_project.id }}"
-      register: test_vrf_info
-
-    - name: show VRF info
-      debug:
-        var: test_vrf_info
 
     - name: delete test VRF
       equinix.cloud.metal_vrf:
