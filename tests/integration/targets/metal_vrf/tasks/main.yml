@@ -2,6 +2,8 @@
   module_defaults:
     equinix.cloud.metal_vrf:
       metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vrf_info:
+      metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_project:
       metal_api_token: '{{ metal_api_token }}'
     equinix.cloud.metal_project_info:
@@ -47,6 +49,15 @@
         that:
           - "test_vrf.local_asn == 65000"
           - "test_vrf_2.changed == false"
+
+    - name: get VRF info
+      equinix.cloud.metal_vrf_info:
+        project_id: "{{ test_project.id }}"
+      register: test_vrf_info
+
+    - name: show VRF info
+      debug:
+        var: test_vrf_info
 
     - name: delete test VRF
       equinix.cloud.metal_vrf:
