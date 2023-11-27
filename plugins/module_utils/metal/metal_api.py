@@ -216,6 +216,13 @@ METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
     'status': 'status',
 }
 
+METAL_GATEWAY_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'ip_reservation_id': 'ip_reservation_id',
+    'private_ipv4_subnet_size': 'private_ipv4_subnet_size',
+    'virtual_network_id': 'virtual_network_id',
+}
+
 
 def get_attribute_mapper(resource_type):
     """
@@ -231,6 +238,7 @@ def get_attribute_mapper(resource_type):
     connection_resources = set(['metal_connection', 'metal_connection_project', 'metal_connection_organization',
                                 'metal_connection_project_dedicated', 'metal_connection_organization_dedicated',
                                 'metal_connection_project_vlanfabric', 'metal_connection_project_vrf'])
+    gateway_resources = set(["metal_gateway", "metal_gateway_vrf"])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -253,6 +261,8 @@ def get_attribute_mapper(resource_type):
         return METAL_ORGANIZATION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in vlan_resources:
         return VLAN_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in gateway_resources:
+        return METAL_GATEWAY_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -269,7 +279,7 @@ def call(resource_type, action, equinix_metal_client, params={}):
     call = api_routes.build_api_call(conf, params)
     response = call.do()
     # uncomment to check response in /tmp/q
-    # import q; q(response)
+    import q; q(response)
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)

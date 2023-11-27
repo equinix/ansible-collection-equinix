@@ -62,6 +62,9 @@ def get_routes(mpc):
         ("metal_connection", action.GET): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).get_interconnection,
         ),
+        ("metal_gateway", action.GET): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).find_metal_gateway_by_id,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -124,6 +127,10 @@ def get_routes(mpc):
             equinix_metal.InterconnectionsApi(mpc).organization_list_interconnections,
             {'id': 'organization_id'},
         ),
+        ('metal_gateway', action.LIST): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).find_metal_gateways_by_project,
+            {'id': 'project_id'},
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -146,6 +153,9 @@ def get_routes(mpc):
         ),
         ('metal_connection', action.DELETE): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).delete_interconnection,
+        ),
+        ('metal_gateway', action.DELETE): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).delete_metal_gateway,
         ),
 
         # CREATORS
@@ -212,6 +222,12 @@ def get_routes(mpc):
             {'id': 'project_id'},
             equinix_metal.VrfFabricVcCreateInput,
             equinix_metal.CreateOrganizationInterconnectionRequest,
+        ),
+        ('metal_gateway', action.CREATE): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).create_metal_gateway,
+            {'id': 'project_id'},
+            equinix_metal.MetalGatewayCreateInput,
+            equinix_metal.CreateMetalGatewayRequest,
         ),
 
         # UPDATERS

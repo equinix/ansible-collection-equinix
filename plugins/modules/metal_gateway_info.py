@@ -22,22 +22,18 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 )
 
 module_spec = dict(
-    name=SpecField(
+    project_id=SpecField(
         type=FieldType.string,
-        description=['Filter resource on substring in name attribute.'],
-    ),
-    parent_resource_id=SpecField(
-        type=FieldType.string,
-        description=['UUID of parent resource containing the resource.'],
+        description=['UUID of parent project the gateway is scoped to.'],
     ),
 )
 
 specdoc_examples = ['''
-- name: Gather information about all resources in parent resource
+- name: Gather information about all gateways in parent project
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_resource_info
-          parent_resource_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+      - equinix.cloud.metal_gateway_info
+          project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 ''', '''
 ''',
                     ]
@@ -47,22 +43,23 @@ result_sample = ['''
 [  
   {
     "id": "31d3ae8b-bd5a-41f3-a420-055211345cc7",
-    "name": "ansible-integration-test-resource-csle6t2y-resource2",
-    "parent_resource_id": "845b45a3-c565-47e5-b9b6-a86204a73d29"
+    "virtual_network_id": "eef49903-7a09-4ca1-af67-4087c29ab5b6",
+    "project_id": "845b45a3-c565-47e5-b9b6-a86204a73d29",
+    "private_ipv4_subnet_size": 32
   }
 ]''',
 ]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description="Gather information about Equinix Metal resources",
+    short_description="Gather information about Equinix Metal gateways",
     description=(
-        'Gather information about Equinix Metal resources'
+        'Gather information about Equinix Metal gateways'
     ),
     examples=specdoc_examples,
     options=module_spec,
     return_values={
         "resources": SpecReturnValue(
-            description='Found resources',
+            description='Found gateways',
             type=FieldType.dict,
             sample=result_sample,
         ),
@@ -77,7 +74,7 @@ def main():
     )
     try:
         module.params_syntax_check()
-        return_value = {'resources': module.get_list("metal_resource")}
+        return_value = {'resources': module.get_list("metal_gateway")}
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)

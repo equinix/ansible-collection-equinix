@@ -1,0 +1,92 @@
+- name: metal_gateway
+  module_defaults:
+    equinix.cloud.metal_gateway:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_gateway_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vlan:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-gateway'
+    - set_fact:
+        unique_id: "{{ lookup('community.general.random_string', upper=false, numbers=false, special=false) }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_vxlan: 123
+    
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project"
+      register: project
+
+    - name: create vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        vxlan: "{{ test_vxlan }}"
+        metro: "am"
+      register: vlan
+    
+    - name: create gateway for test
+      equinix.cloud.metal_gateway:
+        project_id: "{{ project.id }}"
+        virtual_network_id: "{{ vlan.id }}"
+        private_ipv4_subnet_size: 8
+      register: gateway
+    
+    - name: create gateway again to test indepotence
+      equinix.cloud.metal_gateway:
+        project_id: "{{ project.id }}"
+        virtual_network_id: "{{ vlan.id }}"
+        private_ipv4_subnet_size: 8
+    
+    - name: fetch gateway
+      equinix.cloud.metal_gateway:
+        id: "{{ gateway.id }}"
+      register: fetched_gateway
+    
+    - assert:
+        that:
+          - fetched_gateway.id == "{{ gateway.id }}"
+    
+    - name: list gateways
+      equinix.cloud.metal_gateway_info:
+        project_id: "{{ project.id }}"
+      register: listed_gateways
+    
+    - assert:
+        that:
+          - "listed_gateways.resources | length == 2"
+          - listed_gateways.resources[0].id == "{{ gateway.id }}"
+
+    - name: delete gateways
+      equinix.cloud.metal_gateway:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ listed_gateways.resources }}"
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes
+
+

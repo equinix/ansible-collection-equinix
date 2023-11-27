@@ -32,43 +32,41 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     getSpecDocMeta,
 )
 
+MODULE_NAME = "metal_gateway"
 
 module_spec = dict(
     id=SpecField(
         type=FieldType.string,
-        description=['UUID of the resource.'],
+        description=['UUID of the gateway.'],
     ),
     project_id=SpecField(
         type=FieldType.string,
-        description=['The name of the resource.'],
-        editable=True,
+        description=['UUID of the project where the gateway is scoped to.'],
     ),
     ip_reservation_id=SpecField(
         type=FieldType.string,
-        description=['Some attribute of the resource.'],
-        editable=True,
+        description=['UUID of Public or VRF IP Reservation to associate with the gateway, the reservation must be in the same metro as the VLAN, conflicts with private_ipv4_subnet_size.'],
     ),
     private_ipv4_subnet_size=SpecField(
-        type=FieldType.string,
-        description=['Some attribute of the resource.'],
-        editable=True,
+        type=FieldType.integer,
+        description=['Size of the private IPv4 subnet to create for this metal gateway, must be one of 8, 16, 32, 64, 128. Conflicts with ip_reservation_id.'],
     ),
     virtual_network_id=SpecField(
         type=FieldType.string,
-        description=['Some attribute of the resource.'],
-        editable=True,
+        description=['UUID of the VLAN where the gateway is scoped to.'],
     )
 )
 
 
 specdoc_examples = [
     '''
-- name: Create new resource
+- name: Create new gateway
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_resource:
-      name: "new resource"
-      some_attribute: 42
+  - equinix.cloud.metal_gateway:
+      project_id: "a4cc87f9-e00f-48c2-9460-74aa60beb6b0"
+      ip_reservation_id: "83b5503c-7b7f-4883-9509-b6b728b41491"
+      virtual_network_id: "eef49903-7a09-4ca1-af67-4087c29ab5b6"
 ''',
 ]
 
@@ -76,9 +74,9 @@ result_sample = ['''
 {
   "changed": false,
   "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
-  "name": "new resource",
-  "some_attribute": "42"
-}
+  "project_id": "a4cc87f9-e00f-48c2-9460-74aa60beb6b0",
+  "virtual_network_id": "eef49903-7a09-4ca1-af67-4087c29ab5b6",
+y}
 ''']
 
 MUTABLE_ATTRIBUTES = [
@@ -86,16 +84,16 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description='Manage a particular resource type in Equinix Metal',
+    short_description='Manage a gateway in Equinix Metal',
     description=(
-        'Manage the resource kind in Equinix Metal. '
-        'You can use *id* or *name* to lookup the resource. '
-        'If you want to create new resource, you must provide *name*.'
+        'Manage a gateway in Equinix Metal. '
+        'You can use *id* to lookup the gateway. '
+        'If you want to create new gateway, you must provide *project_id* and *virtual_network_id*.'
     ),
     examples=specdoc_examples,
     options=module_spec,
     return_values={
-        "metal_resource": SpecReturnValue(
+        "metal_gateway": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
             sample=result_sample,
@@ -107,45 +105,45 @@ SPECDOC_META = getSpecDocMeta(
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
-        required_one_of=[("name", "id")],
+        mutually_exclusive=[("private_ipv4_subnet_size", "ip_reservation_id")],
     )
 
     state = module.params.get("state")
     changed = False
+    fetched = False
 
     try:
         module.params_syntax_check()
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
-            fetched = module.get_by_id("metal_resource", tolerate_not_found)
-        else:
-            fetched = module.get_one_from_list(
-                "metal_resource",
-                ["name"],
-            )
+            fetched = module.get_by_id(MODULE_NAME, tolerate_not_found)
 
         if fetched:
             module.params['id'] = fetched['id']
             if state == "present":
                 diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
                 if diff:
-                    fetched = module.update_by_id(diff, "metal_resource")
-                    changed = True
+                    module.fail_json(msg="Metal_gateway isn't mutable.")
 
             else:
-                module.delete_by_id("metal_resource")
+                module.delete_by_id(MODULE_NAME)
                 changed = True
         else:
             if state == "present":
-                fetched = module.create("metal_resource")
+                if not any((module.params.get("private_ipv4_subnet_size"), module.params.get("ip_reservation_id"))):
+                    module.fail_json(msg="You must set either ip_reservation_id or private_ipv4_subnet_size!")
+                import q
+                q(module.params)
+                module.params.pop("ip_reservation_id")
+                fetched = module.create(MODULE_NAME)
                 if 'id' not in fetched:
-                    module.fail_json(msg="UUID not found in resource creation response")
+                    module.fail_json(msg="UUID not found in gateway creation response")
                 changed = True
             else:
                 fetched = {}
     except Exception as e:
         tb = traceback.format_exc()
-        module.fail_json(msg="Error in metal_resource: {0}".format(to_native(e)),
+        module.fail_json(msg=f"Error in metal_gateway: {to_native(e)}",
                          exception=tb)
 
     fetched.update({'changed': changed})
