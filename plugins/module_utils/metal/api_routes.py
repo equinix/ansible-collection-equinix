@@ -62,6 +62,9 @@ def get_routes(mpc):
         ("metal_connection", action.GET): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).get_interconnection,
         ),
+        ('metal_vrf', action.GET): spec_types.Specs(
+            equinix_metal.VRFsApi(mpc).find_vrf_by_id,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -124,6 +127,10 @@ def get_routes(mpc):
             equinix_metal.InterconnectionsApi(mpc).organization_list_interconnections,
             {'id': 'organization_id'},
         ),
+        ('metal_vrf', action.LIST): spec_types.Specs(
+            equinix_metal.VRFsApi(mpc).find_vrfs,
+            {'id': 'project_id'},
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -146,6 +153,9 @@ def get_routes(mpc):
         ),
         ('metal_connection', action.DELETE): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).delete_interconnection,
+        ),
+        ('metal_vrf', action.DELETE): spec_types.Specs(
+            equinix_metal.VRFsApi(mpc).delete_vrf,
         ),
 
         # CREATORS
@@ -213,6 +223,11 @@ def get_routes(mpc):
             equinix_metal.VrfFabricVcCreateInput,
             equinix_metal.CreateOrganizationInterconnectionRequest,
         ),
+        ('metal_vrf', action.CREATE): spec_types.Specs(
+            equinix_metal.VRFsApi(mpc).create_vrf,
+            {'id': 'project_id'},
+            equinix_metal.VrfCreateInput,
+        ),
 
         # UPDATERS
         ('metal_device', action.UPDATE): spec_types.Specs(
@@ -244,5 +259,10 @@ def get_routes(mpc):
             equinix_metal.HardwareReservationsApi(mpc).move_hardware_reservation,
             {},
             equinix_metal.MoveHardwareReservationRequest,
+        ),
+        ('metal_vrf', action.UPDATE): spec_types.Specs(
+            equinix_metal.VRFsApi(mpc).update_vrf,
+            {},
+            equinix_metal.VrfUpdateInput,
         ),
     }
