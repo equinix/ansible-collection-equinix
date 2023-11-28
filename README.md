@@ -53,6 +53,7 @@ Name | Description |
 [equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 [equinix.cloud.metal_ssh_key_info](./docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
 [equinix.cloud.metal_vlan_info](./docs/modules/metal_vlan_info.md)|Gather VLANs.|
+[equinix.cloud.metal_vrf_info](./docs/modules/metal_vrf_info.md)|Gather information about Equinix Metal resources|
 
 
 ### Inventory Plugins
