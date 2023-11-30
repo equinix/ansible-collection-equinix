@@ -15,6 +15,8 @@ from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
     api_routes,
 )
 
+def ip_count_from_mask(mask: int):
+    return 2 ** (32 - mask)
 
 def optional(key: str):
     return lambda resource: utils.dict_get(resource, key)
@@ -39,9 +41,8 @@ def optional_bool(key: str):
 def optional_float(key: str):
     return lambda resource: resource.get(key, 0.0)
 
-
 def cidr_to_quantity(key: str):
-    return lambda resource: 2 ** (32 - resource.get(key))
+    return lambda resource: ip_count_from_mask(resource.get(key))
 
 
 def ip_address_getter(resource: dict):
@@ -149,6 +150,7 @@ LIST_KEYS = [
     'virtual_networks',
     'interconnections',
     'vrfs',
+    'metal_gateways',
 ]
 
 
@@ -226,6 +228,34 @@ METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
     'status': 'status',
 }
 
+def private_ipv4_subnet_size(resource: dict):
+    """
+    Computes the private_ipv4_subnet_size from the ip_reservation.cidr field in the API response.
+    Returns None if the ip_reservation is public.
+    """
+    ip_reservation = resource.get('ip_reservation')
+    if ip_reservation is None:
+        raise Exception("ip_reservation is not present in API response")
+    is_public = ip_reservation.get('public')
+    if is_public is None:
+        raise Exception("'public' is not present in ip_reservation field in API response (maybe we need to explicitly include ip_reservation in request kwargs?)")
+    if is_public:
+        return None
+    cidr = ip_reservation.get('cidr')
+    if cidr is None:
+        raise Exception("'cidr' is not present in ip_reservation field in API response (maybe we need to explicitly include ip_reservation through request kwargs?)")
+    return ip_count_from_mask(cidr)
+
+
+METAL_GATEWAY_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'ip_reservation_id': 'ip_reservation.id',
+    'private_ipv4_subnet_size': private_ipv4_subnet_size,
+    'virtual_network_id': 'virtual_network.id',
+    'project_id': 'project.id',
+    'metal_state': optional_str('state'),
+}
+
 
 def get_attribute_mapper(resource_type):
     """
@@ -242,6 +272,7 @@ def get_attribute_mapper(resource_type):
                                 'metal_connection_project_dedicated', 'metal_connection_organization_dedicated',
                                 'metal_connection_project_vlanfabric', 'metal_connection_project_vrf'])
     vrf_resources = set(['metal_vrf'])
+    gateway_resources = set(["metal_gateway", "metal_gateway_vrf"])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -266,6 +297,8 @@ def get_attribute_mapper(resource_type):
         return VLAN_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in vrf_resources:
         return METAL_VRF_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in gateway_resources:
+        return METAL_GATEWAY_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -281,8 +314,6 @@ def call(resource_type, action, equinix_metal_client, params={}):
 
     call = api_routes.build_api_call(conf, params)
     response = call.do()
-    # uncomment to check response in /tmp/q
-    # import q; q(response)
     if action == action.DELETE:
         return None
     attribute_mapper = get_attribute_mapper(resource_type)

@@ -65,6 +65,10 @@ def get_routes(mpc):
         ('metal_vrf', action.GET): spec_types.Specs(
             equinix_metal.VRFsApi(mpc).find_vrf_by_id,
         ),
+        ("metal_gateway", action.GET): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).find_metal_gateway_by_id,
+            extra_kwargs={"include": ["ip_reservation"]},
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -131,6 +135,11 @@ def get_routes(mpc):
             equinix_metal.VRFsApi(mpc).find_vrfs,
             {'id': 'project_id'},
         ),
+        ('metal_gateway', action.LIST): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).find_metal_gateways_by_project,
+            {'project_id': 'project_id'},
+            extra_kwargs={"include": ["ip_reservation"]},
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -156,6 +165,10 @@ def get_routes(mpc):
         ),
         ('metal_vrf', action.DELETE): spec_types.Specs(
             equinix_metal.VRFsApi(mpc).delete_vrf,
+        ),
+        ('metal_gateway', action.DELETE): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).delete_metal_gateway,
+            extra_kwargs={"include": ["ip_reservation"]},
         ),
 
         # CREATORS
@@ -228,6 +241,14 @@ def get_routes(mpc):
             {'id': 'project_id'},
             equinix_metal.VrfCreateInput,
         ),
+        ('metal_gateway', action.CREATE): spec_types.Specs(
+            equinix_metal.MetalGatewaysApi(mpc).create_metal_gateway,
+            {'project_id': 'project_id'},
+            equinix_metal.MetalGatewayCreateInput,
+            equinix_metal.CreateMetalGatewayRequest,
+            {"include": ["ip_reservation"]},
+        ),
+
 
         # UPDATERS
         ('metal_device', action.UPDATE): spec_types.Specs(

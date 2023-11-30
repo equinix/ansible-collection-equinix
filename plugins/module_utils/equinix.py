@@ -171,11 +171,16 @@ class EquinixModule(AnsibleModule):
         update_dict['id'] = specified_id
         return self._metal_api_call(resource_type, action.UPDATE, update_dict)
 
-    def wait_for_resource_condition(self, resource_type: str,
-                                    attribute: str, target_value: str, timeout: int):
+    def _get_id_safe(self):
         specified_id = self.params.get('id')
         if specified_id is None:
-            raise Exception('no id in module when waiting for condition, this is a module bug')
+            raise Exception('no id in module when about to poll for a condition, this is a module bug')
+        return specified_id
+
+
+    def wait_for_resource_condition(self, resource_type: str,
+                                    attribute: str, target_value: str, timeout: int):
+        specified_id = self._get_id_safe()
         stop_time = time.time() + timeout
         while time.time() < stop_time:
             result = self._metal_api_call(resource_type, action.GET, self.params.copy())
@@ -184,6 +189,17 @@ class EquinixModule(AnsibleModule):
             time.sleep(5)
         raise Exception(f'wait for {resource_type} {specified_id} {attribute} {target_value} timed out')
     
+    def wait_for_resource_removal(self, resource_type: str, timeout: int):
+        specified_id = self._get_id_safe()
+        stop_time = time.time() + timeout
+        while time.time() < stop_time:
+            try:
+                self._metal_api_call(resource_type, action.GET, self.params.copy())
+            except metal_client.NotFoundException:
+                return
+            time.sleep(5)
+        raise Exception(f'wait for {resource_type} {specified_id} removal timed out')
+
     def get_hardware_reservation(self):
         params = {'id': self.params['hardware_reservation_id']}
         return self._metal_api_call('metal_hardware_reservation', action.GET, params)
