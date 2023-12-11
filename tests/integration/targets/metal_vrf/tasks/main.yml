@@ -54,6 +54,13 @@
       equinix.cloud.metal_vrf_info:
         vrf_id: "{{ test_vrf.id }}"
         project_id: "{{ test_project.id }}"
+      register: vrf_list
+
+    - name: assert vrf_list contains only this vrf
+      assert:
+        that:
+        - "vrf_list.resources|length == 1"
+        - "vrf_list.resources[0].id == '{{ test_vrf.id }}'"
 
     - name: delete test VRF
       equinix.cloud.metal_vrf:

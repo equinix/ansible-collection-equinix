@@ -94,11 +94,6 @@ metal_vrf:
 
 # End of generated documentation
 
-# This is a template for a new module. It is not meant to be used as is.
-# It is meant to be copied and modified to create a new module.
-# Replace all occurrences of "metal_resource" with the name of the new
-# module, for example "metal_vlan".
-
 
 from ansible.module_utils._text import to_native
 from ansible_specdoc.objects import (
@@ -217,7 +212,7 @@ MUTABLE_ATTRIBUTES = [
 SPECDOC_META = getSpecDocMeta(
     short_description='Use this resource to manage a VRF.',
     description=(
-        'Create a VRF in your desired metro and project with any IP ranges that you want the VRF to route and forward.'
+        'Create a VRF in a metro, with IP ranges that you want the VRF to route and forward.'
     ),
     examples=specdoc_examples,
     options=module_spec,

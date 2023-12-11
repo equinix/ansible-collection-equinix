@@ -72,13 +72,9 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 )
 
 module_spec = dict(
-    name=SpecField(
-        type=FieldType.string,
-        description=['Filter VRF on substring in name attribute.'],
-    ),
     project_id=SpecField(
         type=FieldType.string,
-        description=['Project ID where the VRF will be deployed.'],
+        description=['Project ID where to look up VRFs.'],
         required=True
     ),
     vrf_id=SpecField(
@@ -88,7 +84,7 @@ module_spec = dict(
 )
 
 specdoc_examples = ['''
-- name: Gather VRF information for a specific project
+- name: Gather information about VRFs in a project
   hosts: localhost
   tasks:
       - equinix.cloud.metal_vrf_info:
