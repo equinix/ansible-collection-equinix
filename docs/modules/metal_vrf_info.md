@@ -10,7 +10,7 @@ Gather information about Equinix VRFs
 ## Examples
 
 ```yaml
-- name: Gather VRF information for a specific project
+- name: Gather information about VRFs in a project
   hosts: localhost
   tasks:
       - equinix.cloud.metal_vrf_info:
@@ -41,8 +41,7 @@ Gather information about Equinix VRFs
 
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
-| `project_id` | <center>`str`</center> | <center>**Required**</center> | Project ID where the VRF will be deployed.   |
-| `name` | <center>`str`</center> | <center>Optional</center> | Filter VRF on substring in name attribute.   |
+| `project_id` | <center>`str`</center> | <center>**Required**</center> | Project ID where to look up VRFs.   |
 | `vrf_id` | <center>`str`</center> | <center>Optional</center> | ID of the VRF resource   |
 
 

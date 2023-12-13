@@ -8,11 +8,26 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: Create a VRF in your desired metro and project with any IP ranges that
-  you want the VRF to route and forward.
+description: Create a VRF in a metro, with IP ranges that you want the VRF to route
+  and forward.
 module: metal_vrf
 notes: []
 options:
+  bgp_dynamic_neighbors_bfd_enabled:
+    description:
+    - Toggle BFD on dynamic bgp neighbors sessions.
+    required: false
+    type: bool
+  bgp_dynamic_neighbors_enabled:
+    description:
+    - Toggle to enable the dynamic bgp neighbors feature on the VRF.
+    required: false
+    type: bool
+  bgp_dynamic_neighbors_export_route_map:
+    description:
+    - Toggle to export the VRF route-map to the dynamic bgp neighbors.
+    required: false
+    type: bool
   description:
     description:
     - Description of the VRF.
@@ -52,7 +67,7 @@ options:
     required: false
     type: str
 requirements: null
-short_description: Use this resource to manage a VRF.
+short_description: Manage a VRF resource in Equinix Metal
 '''
 EXAMPLES = '''
 - name: Create new Equinix Metal VRF
@@ -67,6 +82,19 @@ EXAMPLES = '''
       - 192.168.100.0/25
       - 192.168.200.0/25
       project_id: your_project_id_here
+- name: Create new Equinix Metal VRF
+  hosts: localhost
+  tasks:
+  - equinix.cloud.metal_vrf:
+      name: example-vrf
+      description: VRF with ASN 65000 and a pool of address space that includes 192.168.100.0/25
+      metro: da
+      local_asn: 65000
+      ip_ranges:
+      - 192.168.100.0/25
+      - 192.168.200.0/25
+      project_id: your_project_id_here
+      bgp_dynamic_neighbors_bfd_enabled: null
 '''
 RETURN = '''
 metal_vrf:
@@ -241,7 +269,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description='Use this resource to manage a VRF.',
+    short_description='Manage a VRF resource in Equinix Metal',
     description=(
         'Create a VRF in a metro, with IP ranges that you want the VRF to route and forward.'
     ),

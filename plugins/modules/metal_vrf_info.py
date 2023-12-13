@@ -12,14 +12,9 @@ description: Gather information about Equinix VRFs
 module: metal_vrf_info
 notes: []
 options:
-  name:
-    description:
-    - Filter VRF on substring in name attribute.
-    required: false
-    type: str
   project_id:
     description:
-    - Project ID where the VRF will be deployed.
+    - Project ID where to look up VRFs.
     required: true
     type: str
   vrf_id:
@@ -31,7 +26,7 @@ requirements: null
 short_description: Gather VRFs
 '''
 EXAMPLES = '''
-- name: Gather VRF information for a specific project
+- name: Gather information about VRFs in a project
   hosts: localhost
   tasks:
   - equinix.cloud.metal_vrf_info:

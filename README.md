@@ -31,7 +31,7 @@ Name | Description |
 [equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 [equinix.cloud.metal_ssh_key](./docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
 [equinix.cloud.metal_vlan](./docs/modules/metal_vlan.md)|Manage a VLAN resource in Equinix Metal|
-[equinix.cloud.metal_vrf](./docs/modules/metal_vrf.md)|Use this resource to manage a VRF.|
+[equinix.cloud.metal_vrf](./docs/modules/metal_vrf.md)|Manage a VRF resource in Equinix Metal|
 
 
 ### Info Modules
