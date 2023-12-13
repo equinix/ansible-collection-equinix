@@ -13,21 +13,6 @@ description: Create a VRF in a metro, with IP ranges that you want the VRF to ro
 module: metal_vrf
 notes: []
 options:
-  bgp_dynamic_neighbors_bfd_enabled:
-    description:
-    - Toggle BFD on dynamic bgp neighbors sessions.
-    required: false
-    type: bool
-  bgp_dynamic_neighbors_enabled:
-    description:
-    - Toggle to enable the dynamic bgp neighbors feature on the VRF.
-    required: false
-    type: bool
-  bgp_dynamic_neighbors_export_route_map:
-    description:
-    - Toggle to export the VRF route-map to the dynamic bgp neighbors.
-    required: false
-    type: bool
   description:
     description:
     - Description of the VRF.
@@ -82,19 +67,6 @@ EXAMPLES = '''
       - 192.168.100.0/25
       - 192.168.200.0/25
       project_id: your_project_id_here
-- name: Create new Equinix Metal VRF
-  hosts: localhost
-  tasks:
-  - equinix.cloud.metal_vrf:
-      name: example-vrf
-      description: VRF with ASN 65000 and a pool of address space that includes 192.168.100.0/25
-      metro: da
-      local_asn: 65000
-      ip_ranges:
-      - 192.168.100.0/25
-      - 192.168.200.0/25
-      project_id: your_project_id_here
-      bgp_dynamic_neighbors_bfd_enabled: null
 '''
 RETURN = '''
 metal_vrf:
@@ -102,17 +74,8 @@ metal_vrf:
   returned: always
   sample:
   - "\n{\n    \"changed\": false,\n    \"description\": \"Test VRF with ASN 65000\"\
-    ,\n    \"id\": \"f4a7863c-fcbf-419c-802c-3c6d3ad9529e\",\n    \"invocation\":\
-    \ {\n        \"module_args\": {\n            \"description\": null,\n        \
-    \    \"id\": \"f4a7863c-fcbf-419c-802c-3c6d3ad9529e\",\n            \"ip_ranges\"\
-    : [\n                \"192.168.100.0/25\",\n                \"192.168.200.0/25\"\
-    \n            ],\n            \"local_asn\": 65000,\n            \"metal_api_token\"\
-    : \"VALUE_SPECIFIED_IN_NO_LOG_PARAMETER\",\n            \"metal_api_url\": \"\
-    VALUE_SPECIFIED_IN_NO_LOG_PARAMETER\",\n            \"metal_ua_prefix\": \"\"\
-    ,\n            \"metro\": \"am\",\n            \"name\": \"ansible-integration-test-vrf-6yww6pyz\"\
-    ,\n            \"project_id\": \"9934e474-04a1-46a3-842b-5f3dc0ed0eba\",\n   \
-    \         \"state\": \"present\"\n        }\n    },\n    \"ip_ranges\": [\n  \
-    \      \"192.168.100.0/25\",\n        \"192.168.200.0/25\"\n    ],\n    \"local_asn\"\
+    ,\n    \"id\": \"f4a7863c-fcbf-419c-802c-3c6d3ad9529e\",\n    \"ip_ranges\": [\n\
+    \        \"192.168.100.0/25\",\n        \"192.168.200.0/25\"\n    ],\n    \"local_asn\"\
     : 65000,\n    \"metro\": {\n        \"href\": \"/metal/v1/locations/metros/108b2cfb-246b-45e3-885a-bf3e82fce1a0\"\
     ,\n        \"id\": \"108b2cfb-246b-45e3-885a-bf3e82fce1a0\"\n    },\n    \"name\"\
     : \"ansible-integration-test-vrf-6yww6pyz\",\n    \"project_id\": \"9934e474-04a1-46a3-842b-5f3dc0ed0eba\"\
@@ -178,21 +141,6 @@ module_spec = dict(
         type=FieldType.string,
         description=['Project ID where the VRF will be deployed.'],
     ),
-    bgp_dynamic_neighbors_bfd_enabled=SpecField(
-        type=FieldType.bool,
-        description=["Toggle BFD on dynamic bgp neighbors sessions.",],
-        editable=True,
-    ),
-    bgp_dynamic_neighbors_enabled=SpecField(
-        type=FieldType.bool,
-        description=["Toggle to enable the dynamic bgp neighbors feature on the VRF.",],
-        editable=True,
-    ),
-    bgp_dynamic_neighbors_export_route_map=SpecField(
-        type=FieldType.bool,
-        description=["Toggle to export the VRF route-map to the dynamic bgp neighbors.",],
-        editable=True,
-    ),
 )
 
 
@@ -210,20 +158,6 @@ specdoc_examples = [
           - "192.168.100.0/25"
           - "192.168.200.0/25"
         project_id: "your_project_id_here"
-''',    '''
-- name: Create new Equinix Metal VRF
-  hosts: localhost
-  tasks:
-    - equinix.cloud.metal_vrf:
-        name: "example-vrf"
-        description: "VRF with ASN 65000 and a pool of address space that includes 192.168.100.0/25"
-        metro: "da"
-        local_asn: 65000
-        ip_ranges:
-          - "192.168.100.0/25"
-          - "192.168.200.0/25"
-        project_id: "your_project_id_here"
-        bgp_dynamic_neighbors_bfd_enabled: 
 ''',
 ]
 
@@ -232,24 +166,6 @@ result_sample = ['''
     "changed": false,
     "description": "Test VRF with ASN 65000",
     "id": "f4a7863c-fcbf-419c-802c-3c6d3ad9529e",
-    "invocation": {
-        "module_args": {
-            "description": null,
-            "id": "f4a7863c-fcbf-419c-802c-3c6d3ad9529e",
-            "ip_ranges": [
-                "192.168.100.0/25",
-                "192.168.200.0/25"
-            ],
-            "local_asn": 65000,
-            "metal_api_token": "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER",
-            "metal_api_url": "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER",
-            "metal_ua_prefix": "",
-            "metro": "am",
-            "name": "ansible-integration-test-vrf-6yww6pyz",
-            "project_id": "9934e474-04a1-46a3-842b-5f3dc0ed0eba",
-            "state": "present"
-        }
-    },
     "ip_ranges": [
         "192.168.100.0/25",
         "192.168.200.0/25"

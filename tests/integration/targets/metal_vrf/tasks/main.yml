@@ -31,9 +31,6 @@
           - "192.168.100.0/25"
           - "192.168.200.0/25"
         project_id: "{{ test_project.id }}"
-        bgp_dynamic_neighbors_bfd_enabled: false
-        bgp_dynamic_neighbors_enabled: false
-        bgp_dynamic_neighbors_export_route_map: false
       register: test_vrf
 
     - name: create test VRF again (idempotence test)

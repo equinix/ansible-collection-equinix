@@ -135,9 +135,6 @@ METAL_VRF_RESPONSE_ATTRIBUTE_MAP = {
     'description': 'description',
     'local_asn': 'local_asn',
     'ip_ranges': 'ip_ranges',
-    'bgp_dynamic_neighbors_bfd_enabled': 'bgp_dynamic_neighbors_bfd_enabled',
-    'bgp_dynamic_neighbors_enabled': 'bgp_dynamic_neighbors_enabled',
-    'bgp_dynamic_neighbors_export_route_map': 'bgp_dynamic_neighbors_export_route_map',
 }
 
 LIST_KEYS = [
