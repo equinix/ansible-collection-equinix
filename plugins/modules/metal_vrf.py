@@ -133,6 +133,7 @@ module_spec = dict(
         type=FieldType.integer,
         description=['The 4-byte ASN set on the VRF.'],
         required=False,
+        editable=True,
     ),
     ip_ranges=SpecField(
         type=FieldType.list,
@@ -143,10 +144,26 @@ module_spec = dict(
             'Ranges must not overlap other ranges within the VRF.'
         ],
         required=False,
+        editable=True,
     ),
     project_id=SpecField(
         type=FieldType.string,
         description=['Project ID where the VRF will be deployed.'],
+    ),
+    bgp_dynamic_neighbors_bfd_enabled=SpecField(
+        type=FieldType.bool,
+        description=["Toggle BFD on dynamic bgp neighbors sessions.",],
+        editable=True,
+    ),
+    bgp_dynamic_neighbors_enabled=SpecField(
+        type=FieldType.bool,
+        description=["Toggle to enable the dynamic bgp neighbors feature on the VRF.",],
+        editable=True,
+    ),
+    bgp_dynamic_neighbors_export_route_map=SpecField(
+        type=FieldType.bool,
+        description=["Toggle to export the VRF route-map to the dynamic bgp neighbors.",],
+        editable=True,
     ),
 )
 
@@ -165,6 +182,20 @@ specdoc_examples = [
           - "192.168.100.0/25"
           - "192.168.200.0/25"
         project_id: "your_project_id_here"
+''',    '''
+- name: Create new Equinix Metal VRF
+  hosts: localhost
+  tasks:
+    - equinix.cloud.metal_vrf:
+        name: "example-vrf"
+        description: "VRF with ASN 65000 and a pool of address space that includes 192.168.100.0/25"
+        metro: "da"
+        local_asn: 65000
+        ip_ranges:
+          - "192.168.100.0/25"
+          - "192.168.200.0/25"
+        project_id: "your_project_id_here"
+        bgp_dynamic_neighbors_bfd_enabled: 
 ''',
 ]
 
