@@ -127,6 +127,15 @@ METAL_HARDWARE_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'plan': 'plan.slug',
 }
 
+METAL_VRF_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'name': 'name',
+    'metro': 'metro',
+    'project_id': 'project.id',
+    'description': 'description',
+    'local_asn': 'local_asn',
+    'ip_ranges': 'ip_ranges',
+}
 
 LIST_KEYS = [
     'projects',
@@ -139,6 +148,7 @@ LIST_KEYS = [
     'organizations',
     'virtual_networks',
     'interconnections',
+    'vrfs',
 ]
 
 
@@ -231,6 +241,7 @@ def get_attribute_mapper(resource_type):
     connection_resources = set(['metal_connection', 'metal_connection_project', 'metal_connection_organization',
                                 'metal_connection_project_dedicated', 'metal_connection_organization_dedicated',
                                 'metal_connection_project_vlanfabric', 'metal_connection_project_vrf'])
+    vrf_resources = set(['metal_vrf'])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -253,6 +264,8 @@ def get_attribute_mapper(resource_type):
         return METAL_ORGANIZATION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in vlan_resources:
         return VLAN_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in vrf_resources:
+        return METAL_VRF_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 

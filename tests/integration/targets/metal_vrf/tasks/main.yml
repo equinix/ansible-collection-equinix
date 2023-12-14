@@ -1,0 +1,90 @@
+- name: metal_vrf
+  module_defaults:
+    equinix.cloud.metal_vrf:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vrf_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-vrf'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}"
+      register: test_project
+
+    - name: create test VRF
+      equinix.cloud.metal_vrf:
+        name: "{{ test_prefix }}"
+        description: "Test VRF with ASN 65000"
+        metro: "am"
+        local_asn: 65000
+        ip_ranges:
+          - "192.168.100.0/25"
+          - "192.168.200.0/25"
+        project_id: "{{ test_project.id }}"
+      register: test_vrf
+
+    - name: create test VRF again (idempotence test)
+      equinix.cloud.metal_vrf:
+        name: "{{ test_prefix }}"
+        project_id: "{{ test_project.id }}"
+        metro: "am"
+        local_asn: 65000
+        ip_ranges:
+          - "192.168.100.0/25"
+          - "192.168.200.0/25"
+      register: test_vrf_2
+
+    - name: assert VRF created
+      assert:
+        that:
+          - "test_vrf.local_asn == 65000"
+          - "test_vrf_2.changed == false"
+
+    - name: get VRF info
+      equinix.cloud.metal_vrf_info:
+        vrf_id: "{{ test_vrf.id }}"
+        project_id: "{{ test_project.id }}"
+      register: vrf_list
+
+    - name: assert vrf_list contains only this vrf
+      assert:
+        that:
+        - "vrf_list.resources|length == 1"
+        - "vrf_list.resources[0].id == '{{ test_vrf.id }}'"
+
+    - name: delete test VRF
+      equinix.cloud.metal_vrf:
+        id: "{{ test_vrf.id }}"
+        state: absent
+
+    - name: delete test VRF again (idempotence check)
+      equinix.cloud.metal_vrf:
+        id: "{{ test_vrf_2.id }}"
+        state: absent
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"
