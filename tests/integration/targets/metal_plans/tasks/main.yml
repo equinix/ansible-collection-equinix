@@ -1,0 +1,56 @@
+- name: metal_plan_info
+  module_defaults:
+    equinix.cloud.metal_plans_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+      metal_ua_prefix: '{{ metal_ua_prefix }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-plan'
+
+    - set_fact:
+        unique_id: "{{ lookup('community.general.random_string', upper=false, numbers=false, special=false) }}"
+
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project"
+      register: project
+
+    - assert:
+        that:
+        - project.name == '{{ test_prefix }}-project'
+
+    - name: get metal plan info
+      equinix.cloud.metal_plans_info:
+      register: plans
+
+
+    - debug:
+        msg: "Actualy there is {{ plans.resources|length }} plans"
+
+    - assert:
+        that:
+        - "plans.resources|length > 1"
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes

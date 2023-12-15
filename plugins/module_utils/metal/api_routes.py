@@ -75,6 +75,9 @@ def get_routes(mpc):
         ('metal_project_bgp_config', action.GET): spec_types.Specs(
             equinix_metal.BGPApi(mpc).find_bgp_config_by_project,
         ),
+        ("metal_plans", action.GET): spec_types.Specs(
+            equinix_metal.PlansApi(mpc).find_plans_by_project,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -153,6 +156,10 @@ def get_routes(mpc):
         ('metal_bgp_session_by_project', action.LIST): spec_types.Specs(
             equinix_metal.BGPApi(mpc).find_bgp_config_by_project,
             {'id': 'project_id'},
+        ),
+        ('metal_plans', action.LIST): spec_types.Specs(
+            equinix_metal.PlansApi(mpc).find_plans,
+            {},
         ),
 
         # DELETERS
