@@ -187,10 +187,6 @@ def main():
     )
     try:
         module.params_syntax_check()
-
-        category = module.params.get('category')
-        module.params['categories'] = category
-
         return_value = {'resources': module.get_list("metal_plans")}
     except Exception as e:
         tr = traceback.format_exc()
