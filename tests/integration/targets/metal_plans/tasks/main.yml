@@ -26,13 +26,25 @@
         that:
         - project.name == '{{ test_prefix }}-project'
 
-    - name: get metal plan info
+    - name: list metal plans info by slug
       equinix.cloud.metal_plans_info:
         slug: c3.medium
+
+    - name: list metal plans info by project
+      equinix.cloud.metal_plans_info:
+        project_id: "{{ project.id }}"
+
+    - name: list metal plans info by organization
+      equinix.cloud.metal_plans_info:
+        organization_id: "{{ project.organization_id }}"
+
+    - name: list all metal plans
+      equinix.cloud.metal_plans_info:
+        organization_id: "{{ project.organization_id }}"
       register: plans
 
     - debug:
-        msg: "Actualy there is {{ plans.resources|length }} plans"
+        msg: "Actually there is {{ plans.resources|length }} plans"
 
     - assert:
         that:

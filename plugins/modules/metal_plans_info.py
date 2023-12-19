@@ -31,6 +31,16 @@ options:
     - Attribute names can be dotted (up to 3 levels) to included deeply nested objects.
     required: false
     type: list
+  organization_id:
+    description:
+    - UUID of the organization containing the plan.
+    required: false
+    type: str
+  project_id:
+    description:
+    - ID of the project where the plan is scoped to.
+    required: false
+    type: str
   slug:
     description:
     - Filter plans by slug.
@@ -118,6 +128,14 @@ module_spec = dict(
             'Attribute names can be dotted (up to 3 levels) to exclude deeply nested objects.',
         ],
     ),
+    organization_id=SpecField(
+        type=FieldType.string,
+        description=['UUID of the organization containing the plan.'],
+    ),
+    project_id=SpecField(
+        type=FieldType.string,
+        description="ID of the project where the plan is scoped to.",
+    ),
 )
 
 specdoc_examples = ['''
@@ -187,7 +205,12 @@ def main():
     )
     try:
         module.params_syntax_check()
-        return_value = {'resources': module.get_list("metal_plans")}
+        if module.params.get('organization_id'):
+            return_value = {'resources': module.get_list("metal_organization_plans")}
+        elif  module.params.get('project_id'):
+            return_value = {'resources': module.get_list("metal_project_plans")}
+        else:
+            return_value = {'resources': module.get_list("metal_plans")}
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)
