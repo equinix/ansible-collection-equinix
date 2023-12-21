@@ -275,7 +275,7 @@ METAL_PROJECT_BGP_CONFIG_RESPONSE_ATTRIBUTE_MAP = {
 
 METAL_PLAN_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
-    'category': 'categories',
+    'categories': 'categories',
     'name': 'name',
     'slug': 'slug',
     'description': 'description',

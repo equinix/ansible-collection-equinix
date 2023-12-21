@@ -39,7 +39,7 @@ Gather information about Equinix Metal plans
 
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
-| `category` | <center>`list`</center> | <center>Optional</center> | Filter plans by its category.   |
+| `categories` | <center>`list`</center> | <center>Optional</center> | Filter plans by its categories.   |
 | `type` | <center>`str`</center> | <center>Optional</center> | Filter plans by its plan type.   |
 | `slug` | <center>`str`</center> | <center>Optional</center> | Filter plans by slug.   |
 | `include` | <center>`list`</center> | <center>Optional</center> | Nested attributes to include. Included objects will return their full attributes. Attribute names can be dotted (up to 3 levels) to included deeply nested objects.   |

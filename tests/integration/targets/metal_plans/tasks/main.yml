@@ -41,6 +41,10 @@
     - name: list all metal plans
       equinix.cloud.metal_plans_info:
         organization_id: "{{ project.organization_id }}"
+
+    - name: list metal plans info by slug
+      equinix.cloud.metal_plans_info:
+        categories: ['storage']
       register: plans
 
     - debug:

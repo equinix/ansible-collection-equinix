@@ -12,9 +12,9 @@ description: Gather information about Equinix Metal plans
 module: metal_plans_info
 notes: []
 options:
-  category:
+  categories:
     description:
-    - Filter plans by its category.
+    - Filter plans by its categories.
     required: false
     type: list
   exclude:
@@ -100,9 +100,9 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 )
 
 module_spec = dict(
-    category=SpecField(
+    categories=SpecField(
         type=FieldType.list,
-        description=['Filter plans by its category.'],
+        description=['Filter plans by its categories.'],
     ),
     type=SpecField(
         type=FieldType.string,
@@ -202,6 +202,7 @@ def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         is_info=True,
+        mutually_exclusive=[('project_id', 'organization_id')],
     )
     try:
         module.params_syntax_check()
