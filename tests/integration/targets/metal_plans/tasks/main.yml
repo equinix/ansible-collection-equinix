@@ -44,7 +44,11 @@
 
     - name: list metal plans info by slug
       equinix.cloud.metal_plans_info:
-        categories: ['storage']
+        categories: [ 'storage' ]
+
+    - name: list metal plans info by type
+      equinix.cloud.metal_plans_info:
+        type: spot_market
       register: plans
 
     - debug:

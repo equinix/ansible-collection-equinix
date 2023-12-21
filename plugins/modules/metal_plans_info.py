@@ -17,20 +17,6 @@ options:
     - Filter plans by its categories.
     required: false
     type: list
-  exclude:
-    description:
-    - Nested attributes to exclude.
-    - Excluded objects will return only the href attribute.
-    - Attribute names can be dotted (up to 3 levels) to exclude deeply nested objects.
-    required: false
-    type: list
-  include:
-    description:
-    - Nested attributes to include.
-    - Included objects will return their full attributes.
-    - Attribute names can be dotted (up to 3 levels) to included deeply nested objects.
-    required: false
-    type: list
   organization_id:
     description:
     - UUID of the organization containing the plan.
@@ -111,22 +97,6 @@ module_spec = dict(
     slug=SpecField(
         type=FieldType.string,
         description=['Filter plans by slug.'],
-    ),
-    include=SpecField(
-        type=FieldType.list,
-        description=[
-            'Nested attributes to include.',
-            'Included objects will return their full attributes.',
-            'Attribute names can be dotted (up to 3 levels) to included deeply nested objects.',
-        ],
-    ),
-    exclude=SpecField(
-        type=FieldType.list,
-        description=[
-            'Nested attributes to exclude.',
-            'Excluded objects will return only the href attribute.',
-            'Attribute names can be dotted (up to 3 levels) to exclude deeply nested objects.',
-        ],
     ),
     organization_id=SpecField(
         type=FieldType.string,

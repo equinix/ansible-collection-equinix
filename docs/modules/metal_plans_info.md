@@ -42,8 +42,6 @@ Gather information about Equinix Metal plans
 | `categories` | <center>`list`</center> | <center>Optional</center> | Filter plans by its categories.   |
 | `type` | <center>`str`</center> | <center>Optional</center> | Filter plans by its plan type.   |
 | `slug` | <center>`str`</center> | <center>Optional</center> | Filter plans by slug.   |
-| `include` | <center>`list`</center> | <center>Optional</center> | Nested attributes to include. Included objects will return their full attributes. Attribute names can be dotted (up to 3 levels) to included deeply nested objects.   |
-| `exclude` | <center>`list`</center> | <center>Optional</center> | Nested attributes to exclude. Excluded objects will return only the href attribute. Attribute names can be dotted (up to 3 levels) to exclude deeply nested objects.   |
 | `organization_id` | <center>`str`</center> | <center>Optional</center> | UUID of the organization containing the plan.   |
 | `project_id` | <center>`str`</center> | <center>Optional</center> | ID of the project where the plan is scoped to.   |
 
