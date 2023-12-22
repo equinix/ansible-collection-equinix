@@ -68,18 +68,18 @@ def get_routes(mpc):
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
-            equinix_metal.DevicesApi(mpc).find_project_devices,
+            equinix_metal.DevicesApi(mpc).find_project_devices_all_pages,
             {'id': 'project_id'},
         ),
         ('metal_organization_device', action.LIST): spec_types.Specs(
-            equinix_metal.DevicesApi(mpc).find_organization_devices,
+            equinix_metal.DevicesApi(mpc).find_organization_devices_all_pages,
             {'id': 'organization_id'},
         ),
         ('metal_project', action.LIST): spec_types.Specs(
-            equinix_metal.ProjectsApi(mpc).find_projects,
+            equinix_metal.ProjectsApi(mpc).find_projects_all_pages,
         ),
         ('metal_organization_project', action.LIST): spec_types.Specs(
-            equinix_metal.OrganizationsApi(mpc).find_organization_projects,
+            equinix_metal.OrganizationsApi(mpc).find_organization_projects_all_pages,
             {'id': 'organization_id'},
         ),
         ('metal_ip_reservation', action.LIST): spec_types.Specs(
@@ -102,7 +102,7 @@ def get_routes(mpc):
             {'id': 'project_id'}
         ),
         ('metal_organization', action.LIST): spec_types.Specs(
-            equinix_metal.OrganizationsApi(mpc).find_organizations,
+            equinix_metal.OrganizationsApi(mpc).find_organizations_all_pages,
             {'personal': 'personal', 'with_projects': 'with_projects'},
         ),
         ('metal_operating_system', action.LIST): spec_types.Specs(
@@ -112,7 +112,7 @@ def get_routes(mpc):
             equinix_metal.MetrosApi(mpc).find_metros,
         ),
         ('metal_project_hardware_reservation', action.LIST): spec_types.Specs(
-            equinix_metal.HardwareReservationsApi(mpc).find_project_hardware_reservations,
+            equinix_metal.HardwareReservationsApi(mpc).find_project_hardware_reservations_all_pages,
             {'id': 'project_id'},
         ),
         ('metal_vlan', action.LIST): spec_types.Specs(
@@ -120,7 +120,7 @@ def get_routes(mpc):
             {'id': 'project_id'},
         ),
         ('metal_connection_project', action.LIST): spec_types.Specs(
-            equinix_metal.InterconnectionsApi(mpc).project_list_interconnections,
+            equinix_metal.InterconnectionsApi(mpc).project_list_interconnections_all_pages,
             {'id': 'project_id'},
         ),
         ('metal_connection_organization', action.LIST): spec_types.Specs(
