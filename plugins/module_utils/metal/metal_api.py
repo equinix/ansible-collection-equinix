@@ -77,7 +77,6 @@ METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP = {
     'spot_instance': optional_bool('spot_instance'),
     'spot_price_max': optional_float('spot_price_max'),
     'ssh_keys': 'ssh_keys',
-    'ssh_keys': 'ssh_keys',
     'tags': 'tags',
     'userdata': 'userdata',
 }
@@ -111,7 +110,6 @@ METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'network': 'network',
     'project_id': 'project.id',
     'public': 'public',
-    'quantity': 'quantity',
     'quantity': cidr_to_quantity('cidr'),
     'tags': 'tags',
     'type': 'type',
@@ -160,7 +158,6 @@ def get_assignment_address(resource: dict):
 
 METAL_IP_ASSIGNMENT_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
-    # 'customdata': 'customdata',
     'management': 'management',
     'address': get_assignment_address,
     'cidr': 'cidr',
