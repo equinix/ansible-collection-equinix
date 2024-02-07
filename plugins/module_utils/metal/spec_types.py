@@ -24,11 +24,13 @@ class Specs(object):
                  named_args_mapping: Optional[Dict[str, str]] = None,
                  request_model_class: Optional[Callable] = None,
                  request_superclass: Optional[Callable] = None,
+                 extra_kwargs: Optional[Dict] = None,
                  ):
         self.func = func
         self.named_args_mapping = named_args_mapping
         self.request_model_class = request_model_class
         self.request_superclass = request_superclass
+        self.extra_kwargs = extra_kwargs
         if self.request_model_class is not None:
             if not inspect.isclass(request_model_class):
                 raise ValueError('request_model_class must be a class, is {-1}'.format(type(request_model_class)))
@@ -58,6 +60,8 @@ class ApiCall(object):
 
         param_names = set(inspect.signature(conf.func).parameters.keys())
         self.sdk_kwargs = {}
+        if conf.extra_kwargs is not None:
+            self.sdk_kwargs.update(conf.extra_kwargs)
         arg_mapping = self.conf.named_args_mapping or {}
         for param_name in param_names:
             lookup_name = param_name
