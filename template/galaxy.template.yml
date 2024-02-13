@@ -1,4 +1,4 @@
-namespace: equinix
+namespace: t0mk
 name: cloud
 version: {{ collection_version }}
 readme: README.md
@@ -7,12 +7,12 @@ authors:
   - Equinix DevRel Team <support@equinix.com>
 license_file: LICENSE
 tags:
-  - equinix
+  - t0mk
   - cloud
-repository: https://github.com/equinix-labs/ansible-collection-equinix
-documentation: https://github.com/equinix-labs/ansible-collection-metal/blob/v{{ collection_version }}/README.md
-homepage: https://github.com/equinix-labs/ansible-collection-equinix
-issues: https://github.com/equinix-labs/ansible-collection-equinix/issues
+repository: https://github.com/t0mk/ansible-collection-equinix
+documentation: https://github.com/t0mk/ansible-collection-metal/blob/v{{ collection_version }}/README.md
+homepage: https://github.com/t0mk/ansible-collection-equinix
+issues: https://github.com/t0mk/ansible-collection-equinix/issues
 build_ignore:
   - '.gitignore'
   - '.github'
