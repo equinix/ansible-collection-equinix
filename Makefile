@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 COLLECTIONS_PATH ?= ~/.ansible/collections
 DOCS_PATH ?= docs
-COLLECTION_VERSION ?=
+VERSION_FILE=version
+COLLECTION_VERSION := $(shell cat ${VERSION_FILE})
 
 TEST_ARGS := -v ${test_target}
 INTEGRATION_CONFIG := tests/integration/integration_config.yml
