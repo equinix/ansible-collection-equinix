@@ -16,7 +16,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          path: .ansible/collections/ansible_collections/equinix/cloud
 
       - name: update packages
         run: sudo apt-get update -y
