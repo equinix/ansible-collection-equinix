@@ -10,7 +10,7 @@ tags:
   - equinix
   - cloud
 repository: https://github.com/equinix-labs/ansible-collection-equinix
-documentation: https://github.com/equinix-labs/ansible-collection-metal/blob/v{{ collection_version }}/README.md
+documentation: https://github.com/equinix-labs/ansible-collection-equinix/blob/v{{ collection_version }}/README.md
 homepage: https://github.com/equinix-labs/ansible-collection-equinix
 issues: https://github.com/equinix-labs/ansible-collection-equinix/issues
 build_ignore:
