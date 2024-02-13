@@ -9,8 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
-      run:
-        working-directory: .ansible/collections/ansible_collections/equinix/cloud
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
@@ -34,7 +32,6 @@ jobs:
       - name: Do GitHub release
         uses: cycjimmy/semantic-release-action@v4
         with:
-          working-directory: .ansible/collections/ansible_collections/equinix/cloud
           semantic_version: 19.0.5
           extra_plugins: |
             @semantic-release/exec@6.0.3
