@@ -11,7 +11,6 @@ jobs:
     defaults:
       run:
         working-directory: .ansible/collections/ansible_collections/equinix/cloud
-    environment: 'METAL_API_TOKEN'
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
