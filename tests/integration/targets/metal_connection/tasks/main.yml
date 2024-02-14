@@ -96,9 +96,9 @@
 
     - assert:
         that:
-          - test_connection.name == "{{ test_name }}"
-          - test_connection.id == "{{ test_connection_fetched.id }}"
-          - test_connection.id == "{{ test_connection_fetched_with_id.id }}"
+          - test_connection.name == test_name
+          - test_connection.id == test_connection_fetched.id
+          - test_connection.id == test_connection_fetched_with_id.id
 
     - name: list test connections
       equinix.cloud.metal_connection_info:
@@ -108,7 +108,7 @@
     - assert:
         that:
           - "test_connections_list.resources | length >= 1"
-          - "test_connection.id in {{ test_connections_list.resources | map(attribute='id') | list }} "
+          - "test_connection.id in test_connections_list.resources | map(attribute='id') | list"
 
     - name: delete connection
       equinix.cloud.metal_connection:

@@ -13,29 +13,36 @@
         unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
     - set_fact:
         test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_project_name1: '{{ test_prefix }}-project1'
+    - set_fact:
+        test_project_renamed: '{{ test_prefix }}-project1_renamed'
+    - set_fact:
+        test_project_name2: '{{ test_prefix }}-project2'
+
 
     - name: create first project for test
       equinix.cloud.metal_project:
-        name: "{{ test_prefix }}-project1"
+        name: "{{ test_project_name1 }}"
         backend_transfer_enabled: true
       register: first_project
 
     - name: create first project for test again, to check idempotence
       equinix.cloud.metal_project:
-        name: "{{ test_prefix }}-project1"
+        name: "{{ test_project_name1 }}"
         backend_transfer_enabled: true
       register: first_project_2
 
     - assert:
         that:
-        - first_project.name == '{{ test_prefix }}-project1'
+        - first_project.name == test_project_name1
         - first_project.backend_transfer_enabled == true
         - first_project_2.changed == false
 
     - name: update project name
       equinix.cloud.metal_project:
         id: "{{ first_project.id }}"
-        name: "{{ test_prefix }}-project1_renamed"
+        name: "{{ test_project_renamed }}"
         backend_transfer_enabled: false
 
     - name: fetch updated project
@@ -45,17 +52,17 @@
 
     - assert:
         that:
-        - first_project_updated.name == '{{ test_prefix }}-project1_renamed'
+        - first_project_updated.name == test_project_renamed
         - first_project_updated.backend_transfer_enabled == false
 
     - name: create second project for test
       equinix.cloud.metal_project:
-        name: "{{ test_prefix }}-project2"
+        name: "{{ test_project_name2 }}"
       register: second_project
 
     - name: list second project
       equinix.cloud.metal_project_info:
-        name: "{{ test_prefix }}-project2"
+        name: "{{ test_project_name2 }}"
       register: second_project_listed
 
     - assert:

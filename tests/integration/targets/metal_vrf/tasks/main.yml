@@ -60,7 +60,7 @@
       assert:
         that:
         - "vrf_list.resources|length == 1"
-        - "vrf_list.resources[0].id == '{{ test_vrf.id }}'"
+        - "vrf_list.resources[0].id == test_vrf.id"
 
     - name: delete test VRF
       equinix.cloud.metal_vrf:
