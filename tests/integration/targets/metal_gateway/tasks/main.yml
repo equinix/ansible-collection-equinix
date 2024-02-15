@@ -56,7 +56,7 @@
 
     - assert:
         that:
-          - fetched_gateway.id == "{{ gateway.id }}"
+          - fetched_gateway.id == gateway.id
 
     - name: list gateways
       equinix.cloud.metal_gateway_info:

@@ -59,7 +59,7 @@
 
     - assert:
         that:
-          - gateway_again.id == "{{ gateway.id }}"
+          - gateway_again.id == gateway.id
           - gateway_again.changed == false
 
     - name: fetch gateway by id
@@ -69,9 +69,9 @@
 
     - assert:
         that:
-          - fetched_gateway.id == "{{ gateway.id }}"
-          - fetched_gateway.ip_reservation_id == "{{ ip_reservation.id }}"
-          - fetched_gateway.virtual_network_id == "{{ vlan.id }}"
+          - fetched_gateway.id == gateway.id
+          - fetched_gateway.ip_reservation_id == ip_reservation.id
+          - fetched_gateway.virtual_network_id == vlan.id
 
     - name: delete gateway
       equinix.cloud.metal_gateway:

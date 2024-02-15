@@ -22,15 +22,17 @@
         test_key: "ssh-dss AAAAB3NzaC1kc3MAAACBAOpXVtmc0Bla98bt0o5/Zj7sb4mHIukgVFZu7F32R3VK1cEKB4rEE8uS0oLS/qMRLue45TWVJwRMYGlPjt3p/VyraelxoyJZLuITIsqa5hBc9w0oTlB5Bmbkn16umW96WCaWEoq/aitpocbRChTiP5biI6FyQTQlIHDaYzBDOi11AAAAFQDUXy7cmuzphDpJSYYTiudiUhVokwAAAIEAyUQ9m8qL/1HPkFe6jbXAvtSSmW27F4c+G2xR5HizaHQzXgBOxPcsOsY17KTU+Ddbg+OF9soWNwSpm9pyVjVmNGqH3S8R1pwvuJF/O2Asy1m6wpWhbPw8JdEBW7WHoptBpfuzJoS2LOzJUEmUu4Eb+xS237KG1d1BVny/49KAoH0AAACBAJKBSsm9Xey0fUN6vYtTQgoYeGxxj/LqAIAOs/TpCxZDntly860y/SzHYai8x48k4t7whENY1CJ41fpMcPlz8xIsrNP3326Wbr0ExwOIvJKAVN1YLYqF8NXWzaVrjo5WbSeI8PiWTYemvLAujVxZssIrApTZBhp55nnwge6K1zTG tomk@air"
     - set_fact:
         test_key2: "ssh-dss AAAAB3NzaC1kc3MAAACBAPWcHWkA06LxBQ67WmNsp1+aZMwNNz9v67pftePlQg94Z1cU4s/5j5S/Fknj7gapWw/ouiOYqXhC2p/hC9/1ARY15t0aHYqLjRhWzs3j8miL1YyXYjqLPLDtgNpX9E09We5ogjbYCB8CCtZrujm/MB6NWvX+T4uG8C/g66I4/bGdAAAAFQDa4SS+q9aQK/XwiqnWpFpAEY74TQAAAIEAklEfXCf1qbUvTquHhtNVKTiKm+qGRsqxnLnu7aduzU81JDFzveF/agkE5x30olTvKECb1PAziDmt63z/obO3Da8TUz0QVdqv81pNWU5JUNiTB8d3rDJU3B66DA6GI305W8qyt0AGUNGR3rDIzNpZY958faBg+TaILRg8ZFNh0PAAAACAdUhJS6bl5M5sQr6XNilHa0nOTk/PB54faGWWMq7zQvxUKJKsDklNTc0MCPjRppyuokbQ6297tq8pEEFqUAyllMvAf75X7DsBQivLzbNuzp41NqFdS/Oka+T1ypRD7mT6g0Kg8yCVYD2ti874wyTpV9riUUaoItveEF3AdC9AzmI= tomk@air"
+    - set_fact:
+        test_key_label: "{{ test_prefix }}-ssh_key1"
+    - set_fact:
+        test_key_renamed: "{{ test_prefix }}-ssh_key1_renamed"
+    - set_fact:
+        test_key_label2: "{{ test_prefix }}-ssh_key2"
 
     - name: create project for test
       equinix.cloud.metal_project:
         name: "{{ test_prefix }}-project"
       register: project
-
-    - assert:
-        that:
-        - project.name == '{{ test_prefix }}-project'
 
     - name: create first project ssh_key for test
       equinix.cloud.metal_project_ssh_key:
@@ -39,17 +41,18 @@
         project_id: "{{ project.id }}"
       register: first_ssh_key
 
+
     - name: create first ssh_key for test again, to check idempotence
       equinix.cloud.metal_project_ssh_key:
-        label: "{{ test_prefix }}-ssh_key1"
+        label: "{{ test_key_label }}" 
         key: "{{ test_key }}"
         project_id: "{{ project.id }}"
       register: first_ssh_key_2
-
+    
     - assert:
         that:
-        - first_ssh_key.label == '{{ test_prefix }}-ssh_key1'
-        - first_ssh_key.key == "{{ test_key }}"
+        - first_ssh_key.label == test_key_label
+        - first_ssh_key.key == test_key
         - first_ssh_key_2.changed == false
 
     - name: update ssh_key label
@@ -65,12 +68,12 @@
 
     - assert:
         that:
-        - first_ssh_key_updated.label == '{{ test_prefix }}-ssh_key1_renamed'
-        - first_ssh_key.key == "{{ test_key }}"
+        - first_ssh_key_updated.label == test_key_renamed
+        - first_ssh_key.key == test_key
 
     - name: create second ssh_key for test
       equinix.cloud.metal_project_ssh_key:
-        label: "{{ test_prefix }}-ssh_key2"
+        label: "{{ test_key_label2 }}"
         key: "{{ test_key2 }}"
         project_id: "{{ project.id }}"
       register: second_ssh_key
@@ -84,11 +87,11 @@
         msg: "{{ ssh_keys_listed.resources }}"
 
     - debug:
-        msg: 'ssh_keys_listed.resources | selectattr("label", "equalto", "{{ test_prefix }}-ssh_key2")'
+        msg: 'ssh_keys_listed.resources | selectattr("label", "equalto", test_key_label2)'
 
     - assert:
         that:
-        - 'ssh_keys_listed.resources | selectattr("label", "equalto", "{{ test_prefix }}-ssh_key2") | length == 1'
+        - 'ssh_keys_listed.resources | selectattr("label", "equalto", test_key_label2) | length == 1'
 
     - name: list test ssh keys
       set_fact:

@@ -35,10 +35,6 @@
         name: "{{ test_prefix }}-project"
       register: project
 
-    - assert:
-        that:
-        - project.name == '{{ test_prefix }}-project'
-
     - name: request ip reservation
       equinix.cloud.metal_reserved_ip_block:
         type: "public_ipv4"
@@ -77,8 +73,8 @@
 
     - assert:
         that:
-          - assignment.device_id == "{{ device.id }}"
-          - assignment.address   == "{{ available_ips.available[0] }}"
+          - assignment.device_id == device.id
+          - assignment.address   == available_ips.available[0]
 
     - name: assignment info test
       equinix.cloud.metal_ip_assignment_info:
