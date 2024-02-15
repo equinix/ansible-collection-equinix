@@ -23,6 +23,7 @@ Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
+[equinix.cloud.metal_bgp_session](./docs/modules/metal_bgp_session.md)|Manage a particular resource type in Equinix Metal|
 [equinix.cloud.metal_connection](./docs/modules/metal_connection.md)|Manage an Interconnection in Equinix Metal|
 [equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
 [equinix.cloud.metal_gateway](./docs/modules/metal_gateway.md)|Manage Metal Gateway in Equinix Metal|
@@ -30,6 +31,7 @@ Name | Description |
 [equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
 [equinix.cloud.metal_organization](./docs/modules/metal_organization.md)|Lookup a single organization by ID in Equinix Metal|
 [equinix.cloud.metal_project](./docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
+[equinix.cloud.metal_project_bgp_config](./docs/modules/metal_project_bgp_config.md)|Manage BGP config within Project in Equinix Metal|
 [equinix.cloud.metal_project_ssh_key](./docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
 [equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 [equinix.cloud.metal_ssh_key](./docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
@@ -44,6 +46,7 @@ Modules for retrieving information about existing Equinix infrastructure.
 Name | Description |
 --- | ------------ |
 [equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_bgp_session_info](./docs/modules/metal_bgp_session_info.md)|Gather information about BGP session|
 [equinix.cloud.metal_connection_info](./docs/modules/metal_connection_info.md)|Gather information about Interconnections|
 [equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
 [equinix.cloud.metal_gateway_info](./docs/modules/metal_gateway_info.md)|Gather information about Metal Gateways|

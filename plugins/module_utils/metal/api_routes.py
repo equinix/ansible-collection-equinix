@@ -69,6 +69,12 @@ def get_routes(mpc):
             equinix_metal.MetalGatewaysApi(mpc).find_metal_gateway_by_id,
             extra_kwargs={"include": ["ip_reservation"]},
         ),
+        ("metal_bgp_session", action.GET): spec_types.Specs(
+            equinix_metal.BGPApi(mpc).find_bgp_session_by_id,
+        ),
+        ('metal_project_bgp_config', action.GET): spec_types.Specs(
+            equinix_metal.BGPApi(mpc).find_bgp_config_by_project,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -140,6 +146,14 @@ def get_routes(mpc):
             {'project_id': 'project_id'},
             extra_kwargs={"include": ["ip_reservation"]},
         ),
+        ('metal_bgp_session', action.LIST): spec_types.Specs(
+            equinix_metal.DevicesApi(mpc).find_bgp_sessions,
+            {'id': 'device_id'},
+        ),
+        ('metal_bgp_session_by_project', action.LIST): spec_types.Specs(
+            equinix_metal.BGPApi(mpc).find_bgp_config_by_project,
+            {'id': 'project_id'},
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -170,6 +184,10 @@ def get_routes(mpc):
             equinix_metal.MetalGatewaysApi(mpc).delete_metal_gateway,
             extra_kwargs={"include": ["ip_reservation"]},
         ),
+        ('metal_bgp_session', action.DELETE): spec_types.Specs(
+            equinix_metal.BGPApi(mpc).delete_bgp_session,
+        ),
+
 
         # CREATORS
         ('metal_device', action.CREATE): spec_types.Specs(
@@ -249,6 +267,16 @@ def get_routes(mpc):
             {"include": ["ip_reservation"]},
         ),
 
+        ('metal_bgp_session', action.CREATE): spec_types.Specs(
+            equinix_metal.DevicesApi(mpc).create_bgp_session,
+            {'id': 'device_id'},
+            equinix_metal.BGPSessionInput,
+        ),
+        ('metal_project_bgp_config', action.CREATE): spec_types.Specs(
+            equinix_metal.BGPApi(mpc).request_bgp_config,
+            {'id': 'project_id'},
+            equinix_metal.BgpConfigRequestInput,
+        ),
 
         # UPDATERS
         ('metal_device', action.UPDATE): spec_types.Specs(
@@ -285,5 +313,10 @@ def get_routes(mpc):
             equinix_metal.VRFsApi(mpc).update_vrf,
             {},
             equinix_metal.VrfUpdateInput,
+        ),
+        ('metal_bgp_session', action.UPDATE): spec_types.Specs(
+            equinix_metal.BGPApi(mpc).update_bgp_session,
+            {},
+            equinix_metal.BGPSessionInput,
         ),
     }

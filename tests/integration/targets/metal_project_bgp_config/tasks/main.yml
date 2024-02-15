@@ -1,0 +1,59 @@
+- name: metal_project
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_bgp_config:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-bgp-config'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}"
+      register: test_project
+
+    - name: enable project bgp config
+      equinix.cloud.metal_project_bgp_config:
+        deployment_type: local
+        asn: 65000
+        md5: null
+        use_case: "ansible test"
+        project_id: "{{ test_project.id }}"
+      register: test_bgp_config1
+
+    - name: enable project bgp config again (idempotence)
+      equinix.cloud.metal_project_bgp_config:
+        deployment_type: local
+        asn: 65000
+        md5: null
+        use_case: "ansible test"
+        project_id: "{{ test_project.id }}"
+      register: test_bgp_config2
+
+    - assert:
+        that:
+        - "test_bgp_config2.changed == False"
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"
