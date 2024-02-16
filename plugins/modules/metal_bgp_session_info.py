@@ -57,7 +57,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 module_spec = dict(
     device_id=SpecField(
         type=FieldType.string,
-        description=['ID of the device to which the BGP session belongs'],
+        description=['Find BGP sessions by device ID.'],
     ),
     project_id=SpecField(
         type=FieldType.string,
