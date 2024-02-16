@@ -77,7 +77,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 module_spec = dict(
     id=SpecField(
         type=FieldType.string,
-        description="UUID of the BGP session.",
+        description="UUID of the BGP session to look up",
     ),
     device_id=SpecField(
         type=FieldType.string,
