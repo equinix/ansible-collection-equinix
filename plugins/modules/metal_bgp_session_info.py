@@ -86,7 +86,7 @@ result_sample = ['''[
 ]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description="Gather information about BGP session",
+    short_description="Gather information BGP sessions in Equinix Metal",
     description=(
         'Gather information about Equinix Metal resources'
     ),
