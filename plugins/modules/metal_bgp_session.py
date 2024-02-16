@@ -124,7 +124,7 @@ SPECDOC_META = getSpecDocMeta(
     short_description='Manage BGP sessions in Equinix Metal',
     description=(
         'Manage BGP sessions in Equinix Metal.'
-        'You can use *id* or *device_id* to lookup the resource. '
+        'Create, update or delete BGP session. To look up an existing session, pass only the *id* attribute.'
     ),
     examples=specdoc_examples,
     options=module_spec,
