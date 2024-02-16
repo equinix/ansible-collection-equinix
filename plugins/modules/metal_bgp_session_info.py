@@ -61,7 +61,7 @@ module_spec = dict(
     ),
     project_id=SpecField(
         type=FieldType.string,
-        description=['ID of project to which BGP session belongs'],
+        description=['Find BGP sessions by project ID.'],
     ),
 )
 
