@@ -121,7 +121,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
-    short_description='Manage a particular resource type in Equinix Metal',
+    short_description='Manage BGP sessions in Equinix Metal',
     description=(
         'Manage the resource kind in Equinix Metal. '
         'You can use *id* or *device_id* to lookup the resource. '
