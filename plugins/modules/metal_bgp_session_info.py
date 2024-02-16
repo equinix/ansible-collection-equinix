@@ -66,7 +66,7 @@ module_spec = dict(
 )
 
 specdoc_examples = ['''
-- name: Gather information about all resources in parent resource
+- name: Gather information about all BGP sessions in a project
   hosts: localhost
   tasks:
       - equinix.cloud.metal_resource_info:
