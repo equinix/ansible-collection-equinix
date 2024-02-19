@@ -55,7 +55,7 @@ Name | Description |
 [equinix.cloud.metal_metro_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_metro_info.md)|Gather information about Equinix Metal metros|
 [equinix.cloud.metal_operating_system_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_operating_system_info.md)|Gather information about Operating Systems available for devices in Equinix Metal|
 [equinix.cloud.metal_organization_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_organization_info.md)|Gather information about Equinix Metal organizations|
-[equinix.cloud.metal_plan_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/docs/modules/metal_plans_info.md)|Gather information about Equinix Metal plans|
+[equinix.cloud.metal_plan_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_plan_info.md)|Gather information about Equinix Metal plans|
 [equinix.cloud.metal_project_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
 [equinix.cloud.metal_project_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys.|
 [equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
