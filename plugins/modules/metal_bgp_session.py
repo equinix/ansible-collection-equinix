@@ -85,7 +85,7 @@ module_spec = dict(
     ),
     address_family=SpecField(
         type=FieldType.string,
-        description="(Required) ipv4 or ipv6.",
+        description="BGP session address family, \"ipv4\" or \"ipv6\"",
         editable=False,
     ),
     default_route=SpecField(
