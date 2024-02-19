@@ -4,7 +4,7 @@
 
 This is repository for Ansible collection registered in Ansible Galaxy as [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/). The collection contains various plugins for managing Equinix services.
 
-For users transitioning from the [equinix.metal collection](https://github.com/equinix/ansible-collection-metal), please refer to our [Migration Guide](MIGRATION.md) for detailed instructions on migrating to this collection (`equinix.cloud`).
+For users transitioning from the [equinix.metal collection](https://github.com/equinix/ansible-collection-metal), please refer to our [Migration Guide](MIGRATION.MD) for detailed instructions on migrating to this collection (`equinix.cloud`).
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
@@ -23,20 +23,20 @@ Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_bgp_session](./docs/modules/metal_bgp_session.md)|Manage a particular resource type in Equinix Metal|
-[equinix.cloud.metal_connection](./docs/modules/metal_connection.md)|Manage an Interconnection in Equinix Metal|
-[equinix.cloud.metal_device](./docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
-[equinix.cloud.metal_gateway](./docs/modules/metal_gateway.md)|Manage Metal Gateway in Equinix Metal|
-[equinix.cloud.metal_hardware_reservation](./docs/modules/metal_hardware_reservation.md)|Lookup a single hardware_reservation by ID in Equinix Metal|
-[equinix.cloud.metal_ip_assignment](./docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
-[equinix.cloud.metal_organization](./docs/modules/metal_organization.md)|Lookup a single organization by ID in Equinix Metal|
-[equinix.cloud.metal_project](./docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
-[equinix.cloud.metal_project_bgp_config](./docs/modules/metal_project_bgp_config.md)|Manage BGP config within Project in Equinix Metal|
-[equinix.cloud.metal_project_ssh_key](./docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
-[equinix.cloud.metal_reserved_ip_block](./docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
-[equinix.cloud.metal_ssh_key](./docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
-[equinix.cloud.metal_vlan](./docs/modules/metal_vlan.md)|Manage a VLAN resource in Equinix Metal|
-[equinix.cloud.metal_vrf](./docs/modules/metal_vrf.md)|Manage a VRF resource in Equinix Metal|
+[equinix.cloud.metal_bgp_session](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_bgp_session.md)|Manage BGP sessions in Equinix Metal|
+[equinix.cloud.metal_connection](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_connection.md)|Manage an Interconnection in Equinix Metal|
+[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_device.md)|Create, update, or delete Equinix Metal devices|
+[equinix.cloud.metal_gateway](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_gateway.md)|Manage Metal Gateway in Equinix Metal|
+[equinix.cloud.metal_hardware_reservation](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_hardware_reservation.md)|Lookup a single hardware_reservation by ID in Equinix Metal|
+[equinix.cloud.metal_ip_assignment](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
+[equinix.cloud.metal_organization](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_organization.md)|Lookup a single organization by ID in Equinix Metal|
+[equinix.cloud.metal_project](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
+[equinix.cloud.metal_project_bgp_config](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_project_bgp_config.md)|Manage BGP Config for Equinix Metal Project|
+[equinix.cloud.metal_project_ssh_key](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
+[equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
+[equinix.cloud.metal_ssh_key](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
+[equinix.cloud.metal_vlan](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_vlan.md)|Manage a VLAN resource in Equinix Metal|
+[equinix.cloud.metal_vrf](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_vrf.md)|Manage a VRF resource in Equinix Metal|
 
 
 ### Info Modules
@@ -45,22 +45,22 @@ Modules for retrieving information about existing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-[equinix.cloud.metal_available_ips_info](./docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
-[equinix.cloud.metal_bgp_session_info](./docs/modules/metal_bgp_session_info.md)|Gather information about BGP session|
-[equinix.cloud.metal_connection_info](./docs/modules/metal_connection_info.md)|Gather information about Interconnections|
-[equinix.cloud.metal_device_info](./docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
-[equinix.cloud.metal_gateway_info](./docs/modules/metal_gateway_info.md)|Gather information about Metal Gateways|
-[equinix.cloud.metal_hardware_reservation_info](./docs/modules/metal_hardware_reservation_info.md)|Gather information about Equinix Metal hardware_reservations|
-[equinix.cloud.metal_ip_assignment_info](./docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
-[equinix.cloud.metal_metro_info](./docs/modules/metal_metro_info.md)|Gather information about Equinix Metal metros|
-[equinix.cloud.metal_operating_system_info](./docs/modules/metal_operating_system_info.md)|Gather information about Operating Systems available for devices in Equinix Metal|
-[equinix.cloud.metal_organization_info](./docs/modules/metal_organization_info.md)|Gather information about Equinix Metal organizations|
-[equinix.cloud.metal_project_info](./docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
-[equinix.cloud.metal_project_ssh_key_info](./docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys.|
-[equinix.cloud.metal_reserved_ip_block_info](./docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
-[equinix.cloud.metal_ssh_key_info](./docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
-[equinix.cloud.metal_vlan_info](./docs/modules/metal_vlan_info.md)|Gather VLANs.|
-[equinix.cloud.metal_vrf_info](./docs/modules/metal_vrf_info.md)|Gather VRFs|
+[equinix.cloud.metal_available_ips_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_available_ips_info.md)|Get list of avialable IP addresses from a reserved IP block|
+[equinix.cloud.metal_bgp_session_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_bgp_session_info.md)|Gather information BGP sessions in Equinix Metal|
+[equinix.cloud.metal_connection_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_connection_info.md)|Gather information about Interconnections|
+[equinix.cloud.metal_device_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_device_info.md)|Select list of Equinix Metal devices|
+[equinix.cloud.metal_gateway_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_gateway_info.md)|Gather information about Metal Gateways|
+[equinix.cloud.metal_hardware_reservation_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_hardware_reservation_info.md)|Gather information about Equinix Metal hardware_reservations|
+[equinix.cloud.metal_ip_assignment_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
+[equinix.cloud.metal_metro_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_metro_info.md)|Gather information about Equinix Metal metros|
+[equinix.cloud.metal_operating_system_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_operating_system_info.md)|Gather information about Operating Systems available for devices in Equinix Metal|
+[equinix.cloud.metal_organization_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_organization_info.md)|Gather information about Equinix Metal organizations|
+[equinix.cloud.metal_project_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_project_info.md)|Gather information about Equinix Metal projects|
+[equinix.cloud.metal_project_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys.|
+[equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
+[equinix.cloud.metal_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
+[equinix.cloud.metal_vlan_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_vlan_info.md)|Gather VLANs.|
+[equinix.cloud.metal_vrf_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/modules/metal_vrf_info.md)|Gather VRFs|
 
 
 ### Inventory Plugins
@@ -69,7 +69,7 @@ Dynamically add Equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
-[equinix.cloud.metal_device](./docs/inventory/metal_device.rst)|
+[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/0.3.0/docs/inventory/metal_device.md)|
 
 
 <!--end collection content-->
@@ -86,7 +86,7 @@ The Python module dependencies are not installed by `ansible-galaxy`.  They can
 be manually installed using pip:
 
 ```shell
-pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/main/requirements.txt
+pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/0.3.0/requirements.txt
 ```
 
 ## Usage

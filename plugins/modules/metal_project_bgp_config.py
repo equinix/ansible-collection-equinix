@@ -8,9 +8,8 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: Manage BGP config within Projec in Equinix Metal. You can use *project_id*
-  lookup a bgp_config.If you want to create new bgp_config, you must provide *asn*
-  and *deployment_type*.
+description: 'You can use this module to enable BGP Config for a project. To lookup
+  BGP Config of an existing project, call the module only with `project_id`. '
 module: metal_project_bgp_config
 notes: []
 options:
@@ -21,8 +20,8 @@ options:
     type: int
   deployment_type:
     description:
-    - '""local" or "global", the local is likely to be usable immediately, '
-    - the global will need to be review by Equinix Metal engineers
+    - '"local" or "global". Local deployment type is likely to be usable immediately, '
+    - '"global" will need to be reviewed by Equinix Metal support.'
     required: true
     type: str
   md5:
@@ -32,19 +31,19 @@ options:
     type: str
   project_id:
     description:
-    - UUID of the project where the BGP config belongs to
+    - UUID of the project where BGP Config should be enabled
     required: true
     type: str
   use_case:
     description:
-    - Information regarding what you're attempting to achieve with BGP.
+    - Description of your BGP use-case for Equinix Metal support
     required: false
     type: str
 requirements: null
-short_description: Manage BGP config within Project in Equinix Metal
+short_description: Manage BGP Config for Equinix Metal Project
 '''
 EXAMPLES = '''
-- name: Create new BGP config
+- name: Enable local BGP Config in Equinix Metal project
   hosts: localhost
   tasks:
   - equinix.cloud.metal_project_bgp_config:

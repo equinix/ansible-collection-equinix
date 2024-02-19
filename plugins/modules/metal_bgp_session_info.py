@@ -8,29 +8,30 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: Gather information about Equinix Metal resources
+description: Gather information BGP sessions in Equinix Metal. You can fetch it by
+  device ID or project ID.
 module: metal_bgp_session_info
 notes: []
 options:
   device_id:
     description:
-    - ID of the device to which the BGP session belongs
+    - Find BGP sessions by device ID.
     required: false
     type: str
   project_id:
     description:
-    - ID of project to which BGP session belongs
+    - Find BGP sessions by project ID.
     required: false
     type: str
 requirements: null
-short_description: Gather information about BGP session
+short_description: Gather information BGP sessions in Equinix Metal
 '''
 EXAMPLES = '''
-- name: Gather information about all resources in parent resource
+- name: Gather information about all BGP sessions in a project
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_resource_info:
-      parent_resource_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+  - equinix.cloud.metal_bgp_session_info:
+      project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 '''
 RETURN = '''
 resources:
@@ -69,8 +70,8 @@ specdoc_examples = ['''
 - name: Gather information about all BGP sessions in a project
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_resource_info:
-          parent_resource_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
+      - equinix.cloud.metal_bgp_session_info:
+          project_id: 2a5122b9-c323-4d5c-b53c-9ad3f54273e7
 ''', '''
 ''',
                     ]

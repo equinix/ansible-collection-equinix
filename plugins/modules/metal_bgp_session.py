@@ -8,33 +8,33 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: 'Manage the resource kind in Equinix Metal. You can use *id* or *device_id*
-  to lookup the resource. '
+description: Manage BGP sessions in Equinix Metal.Create, update or delete BGP session.
+  To look up an existing session, pass only the *id* attribute.
 module: metal_bgp_session
 notes: []
 options:
   address_family:
     description:
-    - (Required) ipv4 or ipv6.
+    - BGP session address family, "ipv4" or "ipv6"
     required: false
     type: str
   default_route:
     description:
-    - (Optional) Boolean flag to set the default route policy. False by default.
+    - Boolean flag to set the default route policy. False by default.
     required: false
     type: bool
   device_id:
     description:
-    - (Required) ID of device.
+    - Device ID for the BGP session
     required: false
     type: str
   id:
     description:
-    - UUID of the BGP session.
+    - UUID of the BGP session to look up
     required: false
     type: str
 requirements: null
-short_description: Manage a particular resource type in Equinix Metal
+short_description: Manage BGP sessions in Equinix Metal
 '''
 EXAMPLES = '''
 - name: Start first test bgp session
@@ -44,15 +44,25 @@ EXAMPLES = '''
       device_id: 8ea9837a-6d19-4607-b166-f7f7bb04b022
       address_family: ipv6
       default_route: true
+- name: Delete bgp session
+  hosts: localhost
+  tasks:
+  - equinix.cloud.metal_bgp_session:
+      id: 1273edef-39af-4df0-85bb-02a847a484d1
+      state: absent
 '''
 RETURN = '''
 metal_bgp_session:
   description: The module object
   returned: always
   sample:
-  - "\n{\n    \"address_family\": \"ipv6\",\n    \"changed\": false,\n    \"device_id\"\
-    : \"b068984f-f7d9-43a2-aa45-de04dcf4fe06\",\n    \"id\": \"43cc0fa9-4b73-4629-a60b-2904ca919155\"\
-    ,\n}\n"
+  - "\n [\n        {\n            \"address_family\": \"ipv4\",\n            \"default_route\"\
+    : true,\n            \"device_id\": \"2066d33e-7c43-4d78-87a3-aaa434913f7f\",\n\
+    \            \"id\": \"fc2d43e6-d606-47f7-9611-9d77aee443b5\"\n        },\n  \
+    \      {\n            \"address_family\": \"ipv6\",\n            \"default_route\"\
+    : true,\n            \"device_id\": \"bfab58c0-0723-49aa-a64e-6caf1b8ea2e2\",\n\
+    \            \"id\": \"277d4a7a-82dd-4e7c-bf79-8a1de6882982\"\n        }\n   \
+    \ ]\n"
   type: dict
 '''
 
@@ -104,6 +114,13 @@ specdoc_examples = ['''
       device_id: 8ea9837a-6d19-4607-b166-f7f7bb04b022
       address_family: ipv6
       default_route: true
+''', '''
+- name: Delete bgp session
+  hosts: localhost
+  tasks:
+  - equinix.cloud.metal_bgp_session:
+      id: 1273edef-39af-4df0-85bb-02a847a484d1
+      state: absent
 ''',
 ]
 

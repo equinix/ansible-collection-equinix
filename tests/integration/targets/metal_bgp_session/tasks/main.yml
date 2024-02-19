@@ -107,7 +107,6 @@
         that:
         - "both_bgp_sessions.resources|length == 2"
 
-
     - name: delete first bgp session
       equinix.cloud.metal_bgp_session:
         id: "{{ test_bgp_session_1.id }}"
