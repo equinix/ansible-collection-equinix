@@ -75,7 +75,7 @@ def get_routes(mpc):
         ('metal_project_bgp_config', action.GET): spec_types.Specs(
             equinix_metal.BGPApi(mpc).find_bgp_config_by_project,
         ),
-        ("metal_plans", action.GET): spec_types.Specs(
+        ("metal_plan", action.GET): spec_types.Specs(
             equinix_metal.PlansApi(mpc).find_plans_by_project,
         ),
 
@@ -157,17 +157,9 @@ def get_routes(mpc):
             equinix_metal.BGPApi(mpc).find_bgp_config_by_project,
             {'id': 'project_id'},
         ),
-        ('metal_plans', action.LIST): spec_types.Specs(
+        ('metal_plan', action.LIST): spec_types.Specs(
             equinix_metal.PlansApi(mpc).find_plans,
             {'category': 'category', 'type': 'type', 'slug': 'slug', 'include': 'include', 'exclude': 'exclude'},
-        ),
-        ('metal_organization_plans', action.LIST): spec_types.Specs(
-            equinix_metal.OrganizationsApi(mpc).find_plans_by_organization,
-            {'id': 'organization_id'},
-        ),
-        ('metal_project_plans', action.LIST): spec_types.Specs(
-            equinix_metal.PlansApi(mpc).find_plans_by_project,
-            {'id': 'project_id'},
         ),
 
         # DELETERS

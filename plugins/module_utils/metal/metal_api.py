@@ -308,7 +308,7 @@ def get_attribute_mapper(resource_type):
     gateway_resources = set(["metal_gateway", "metal_gateway_vrf"])
     bgp_resources = {'metal_bgp_session', 'metal_bgp_session_by_project'}
     project_bgp_config_resources = {'metal_project_bgp_config'}
-    plan_resources = set(["metal_plans", "metal_organization_plans", "metal_project_plans"])
+    plan_resources = set(["metal_plan"])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:

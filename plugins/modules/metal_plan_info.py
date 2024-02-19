@@ -9,7 +9,7 @@
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Gather information about Equinix Metal plans
-module: metal_plans_info
+module: metal_plan_info
 notes: []
 options:
   categories:
@@ -34,33 +34,38 @@ EXAMPLES = '''
 - name: Gather information about all plans
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_plans_info
-- name: Gather information for plans starting with c3.medium
+  - equinix.cloud.metal_plan_info
+- name: Gather information for plans with storage category
   hosts: localhost
   tasks:
-  - equinix.cloud.metal_plans_info:
+  - equinix.cloud.metal_plan_info:
+      categories:
+      - storage
+- name: Gather information for plans with slug c3.medium
+  hosts: localhost
+  tasks:
+  - equinix.cloud.metal_plan_info:
       slug: c3.medium
+- name: Gather information for plans with a standard plan
+  hosts: localhost
+  tasks:
+  - equinix.cloud.metal_plan_info:
+      type: standard
 '''
 RETURN = '''
 resources:
   description: Found resources
   returned: always
   sample:
-  - "\n\n[  \n  {                                                                \
-    \           \n    \"changed\": false,                                        \
-    \                                 \n    \"resources\": [                     \
+  - "\n{                                                                         \
+    \            \n  \"available_in\": [],                                       \
     \                                                                            \
-    \                                                   \n      {                \
-    \                                                                     \n     \
-    \   \"available_in\": [],                                                    \
-    \                                                                            \
-    \                       \n        \"available_in_metros\": [],\n        \"category\"\
-    : [\n          \"compute\",\n          \"current_gen\"\n        ],\n        \"\
-    class\": \"a3.large.opt-m3a2\",\n        \"deployment_types\": [],\n        \"\
-    description\": \"a3.large.opt-m3a2.x86\",\n        \"id\": \"8c04950a-87ab-5e52-a112-5a90bbca8868\"\
-    ,\n        \"legacy\": false,\n        \"line\": \"baremetal\",\n        \"name\"\
-    : \"a3.large.opt-m3a2.x86\",\n        \"pricing_hour\": 8.2,\n        \"pricing_month\"\
-    : null,\n        \"slug\": \"a3.large.opt-m3a2\"\n      },\n    ]\n  }\n]"
+    \                                    \n  \"available_in_metros\": [],\n  \"category\"\
+    : [\n    \"compute\",\n    \"current_gen\"\n  ],\n  \"class\": \"a3.large.opt-m3a2\"\
+    ,\n  \"deployment_types\": [],\n  \"description\": \"a3.large.opt-m3a2.x86\",\n\
+    \  \"id\": \"8c04950a-87ab-5e52-a112-5a90bbca8868\",\n  \"legacy\": false,\n \
+    \ \"line\": \"baremetal\",\n  \"name\": \"a3.large.opt-m3a2.x86\",\n  \"pricing_hour\"\
+    : 8.2,\n  \"pricing_month\": null,\n  \"slug\": \"a3.large.opt-m3a2\"\n}"
   type: dict
 '''
 
@@ -94,43 +99,47 @@ specdoc_examples = ['''
 - name: Gather information about all plans
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_plans_info
+      - equinix.cloud.metal_plan_info
 ''', '''
-- name: Gather information for plans starting with c3.medium
+- name: Gather information for plans with storage category
   hosts: localhost
   tasks:
-      - equinix.cloud.metal_plans_info:
+      - equinix.cloud.metal_plan_info:
+          categories: ['storage']
+''', '''
+- name: Gather information for plans with slug c3.medium
+  hosts: localhost
+  tasks:
+      - equinix.cloud.metal_plan_info:
           slug: c3.medium
+''', '''
+- name: Gather information for plans with a standard plan
+  hosts: localhost
+  tasks:
+      - equinix.cloud.metal_plan_info:
+          type: standard
 ''',
 ]
 
 result_sample = ['''
-
-[  
-  {                                                                           
-    "changed": false,                                                                         
-    "resources": [                                                                                                                                                    
-      {                                                                                     
-        "available_in": [],                                                                                                                                                       
-        "available_in_metros": [],
-        "category": [
-          "compute",
-          "current_gen"
-        ],
-        "class": "a3.large.opt-m3a2",
-        "deployment_types": [],
-        "description": "a3.large.opt-m3a2.x86",
-        "id": "8c04950a-87ab-5e52-a112-5a90bbca8868",
-        "legacy": false,
-        "line": "baremetal",
-        "name": "a3.large.opt-m3a2.x86",
-        "pricing_hour": 8.2,
-        "pricing_month": null,
-        "slug": "a3.large.opt-m3a2"
-      },
-    ]
-  }
-]''',
+{                                                                                     
+  "available_in": [],                                                                                                                                                       
+  "available_in_metros": [],
+  "category": [
+    "compute",
+    "current_gen"
+  ],
+  "class": "a3.large.opt-m3a2",
+  "deployment_types": [],
+  "description": "a3.large.opt-m3a2.x86",
+  "id": "8c04950a-87ab-5e52-a112-5a90bbca8868",
+  "legacy": false,
+  "line": "baremetal",
+  "name": "a3.large.opt-m3a2.x86",
+  "pricing_hour": 8.2,
+  "pricing_month": null,
+  "slug": "a3.large.opt-m3a2"
+}''',
 ]
 
 SPECDOC_META = getSpecDocMeta(
@@ -156,7 +165,7 @@ def main():
     )
     try:
         module.params_syntax_check()
-        return_value = {'resources': module.get_list("metal_plans")}
+        return_value = {'resources': module.get_list("metal_plan")}
 
     except Exception as e:
         tr = traceback.format_exc()
