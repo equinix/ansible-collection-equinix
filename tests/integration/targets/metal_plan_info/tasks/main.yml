@@ -24,7 +24,7 @@
 
     - assert:
         that:
-        - project.name == '{{ test_prefix }}-project'
+        - "project.name == '{{ test_prefix }}-project'"
 
     - name: list metal plans info by categories
       equinix.cloud.metal_plan_info:
