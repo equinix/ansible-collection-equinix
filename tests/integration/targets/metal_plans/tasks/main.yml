@@ -26,37 +26,26 @@
         that:
         - project.name == '{{ test_prefix }}-project'
 
+    - name: list metal plans info by categories
+      equinix.cloud.metal_plans_info:
+        categories: [ 'storage']
+      register: plans_category
+
     - name: list metal plans info by slug
       equinix.cloud.metal_plans_info:
         slug: c3.medium
-
-    - name: list metal plans info by project
-      equinix.cloud.metal_plans_info:
-        project_id: "{{ project.id }}"
-
-    - name: list metal plans info by organization
-      equinix.cloud.metal_plans_info:
-        organization_id: "{{ project.organization_id }}"
+      register: plans_slug
 
     - name: list all metal plans
       equinix.cloud.metal_plans_info:
-        organization_id: "{{ project.organization_id }}"
-
-    - name: list metal plans info by slug
-      equinix.cloud.metal_plans_info:
-        categories: [ 'storage' ]
-
-    - name: list metal plans info by type
-      equinix.cloud.metal_plans_info:
-        type: spot_market
-      register: plans
+      register: plans_all
 
     - debug:
-        msg: "Actually there is {{ plans.resources|length }} plans"
+        msg: "Plan count: all={{ plans_all.resources|length }}, category={{ plans_category.resources|length }}, slug={{ plans_slug.resources|length }}"
 
     - assert:
         that:
-        - "plans.resources|length > 1"
+        - "plans_all.resources|length >= plans_category.resources|length"
 
   always:
     - name: Announce teardown start

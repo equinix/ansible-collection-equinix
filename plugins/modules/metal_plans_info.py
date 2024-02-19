@@ -17,16 +17,6 @@ options:
     - Filter plans by its categories.
     required: false
     type: list
-  organization_id:
-    description:
-    - UUID of the organization containing the plan.
-    required: false
-    type: str
-  project_id:
-    description:
-    - ID of the project where the plan is scoped to.
-    required: false
-    type: str
   slug:
     description:
     - Filter plans by slug.
@@ -98,14 +88,6 @@ module_spec = dict(
         type=FieldType.string,
         description=['Filter plans by slug.'],
     ),
-    organization_id=SpecField(
-        type=FieldType.string,
-        description=['UUID of the organization containing the plan.'],
-    ),
-    project_id=SpecField(
-        type=FieldType.string,
-        description="ID of the project where the plan is scoped to.",
-    ),
 )
 
 specdoc_examples = ['''
@@ -167,21 +149,15 @@ SPECDOC_META = getSpecDocMeta(
     },
 )
 
-
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         is_info=True,
-        mutually_exclusive=[('project_id', 'organization_id')],
     )
     try:
         module.params_syntax_check()
-        if module.params.get('organization_id'):
-            return_value = {'resources': module.get_list("metal_organization_plans")}
-        elif  module.params.get('project_id'):
-            return_value = {'resources': module.get_list("metal_project_plans")}
-        else:
-            return_value = {'resources': module.get_list("metal_plans")}
+        return_value = {'resources': module.get_list("metal_plans")}
+
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)
