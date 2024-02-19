@@ -255,7 +255,6 @@ def main():
                     module.params['id'] = fetched['id']
                     fetched = module.update_by_id({"backend_transfer_enabled": True}, "metal_project")
 
-                # TODO: add support for bgp_config once we have a module
             else:
                 fetched = {}
     except Exception as e:

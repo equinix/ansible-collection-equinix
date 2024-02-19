@@ -1,0 +1,166 @@
+- name: metal_project
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_bgp_session:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_bgp_session_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_device_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_bgp_config:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-bgp-session'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_os: ubuntu_22_04
+    - set_fact:
+        test_plan: c3.small.x86
+    - set_fact:
+        wait_seconds: 1200
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}"
+      register: test_project
+
+    - name: enable project bgp config
+      equinix.cloud.metal_project_bgp_config:
+        deployment_type: local
+        asn: 65000
+        md5: null
+        use_case: "ansible test"
+        project_id: "{{ test_project.id }}"
+
+    - name: start first test device
+      equinix.cloud.metal_device:
+        project_id: "{{ test_project.id }}"
+        hostname: "{{ test_prefix }}-dev1"
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ metal_test_metro }}"
+        state: present
+        provisioning_wait_seconds: "{{ wait_seconds }}"
+      register: test_device_1
+
+    - name: start first test bgp session
+      equinix.cloud.metal_bgp_session:
+        device_id: "{{ test_device_1.id }}"
+        address_family: ipv6
+        default_route: true
+      register: test_bgp_session_1
+
+    - debug:
+        var: test_bgp_session_1
+
+    - name: start first test bgp session again (idempotence test)
+      equinix.cloud.metal_bgp_session:
+        device_id: "{{ test_device_1.id }}"
+        address_family: ipv6
+        default_route: true
+      register: test_bgp_session_1d
+
+    - name: start second test device
+      equinix.cloud.metal_device:
+        project_id: "{{ test_project.id }}"
+        hostname: "{{ test_prefix }}-dev2"
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ metal_test_metro }}"
+        state: present
+        provisioning_wait_seconds: "{{ wait_seconds }}"
+      register: test_device_2
+
+
+    - name: start second test bgp session again
+      equinix.cloud.metal_bgp_session:
+        device_id: "{{ test_device_2.id }}"
+        address_family: ipv4
+        default_route: true
+      register: test_bgp_session_2
+
+    - name: assert bgp sessions
+      assert:
+        that:
+          - "test_bgp_session_1.address_family == 'ipv6'"
+          - "test_bgp_session_1d.changed == false"
+
+    - name: list bgp sessions
+      equinix.cloud.metal_bgp_session_info:
+        project_id: "{{ test_project.id }}"
+      register: both_bgp_sessions
+
+    - debug:
+        var: both_bgp_sessions
+
+    - name: assert both bgp sessions selected
+      assert:
+        that:
+        - "both_bgp_sessions.resources|length == 2"
+
+    - name: delete first bgp session
+      equinix.cloud.metal_bgp_session:
+        id: "{{ test_bgp_session_1.id }}"
+        state: absent
+
+    - name: delete first bgp session again (idempotence check)
+      equinix.cloud.metal_bgp_session:
+        id: "{{ test_bgp_session_1.id }}"
+        state: absent
+      register: test_deletion
+
+    - assert:
+        that:
+        - "test_deletion.changed == false"
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects
+
+    - name: list devices in test projects
+      equinix.cloud.metal_device_info:
+        project_id: "{{ item.id }}"
+      register: "test_devices"
+      loop: "{{ test_projects.resources }}"
+
+    - name: list bgp sessions in test projects
+      equinix.cloud.metal_bgp_session_info:
+        project_id: "{{ item.id }}"
+      register: "test_bgp_sessions"
+      loop: "{{ test_projects.resources }}"
+
+    - name: delete bgp sessions
+      equinix.cloud.metal_bgp_session:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_bgp_sessions.results | map(attribute='resources') | flatten }}"
+
+    - name: delete test devices
+      equinix.cloud.metal_device:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_devices.results | map(attribute='resources') | flatten }}"
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"
