@@ -90,7 +90,7 @@ module_spec = dict(
     ),
     default_route=SpecField(
         type=FieldType.bool,
-        description="(Optional) Boolean flag to set the default route policy. False by default.",
+        description="Boolean flag to set the default route policy. False by default.",
         editable=False,
     ),
 )
