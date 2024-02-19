@@ -28,8 +28,8 @@
 
     - name: get metal plan info
       equinix.cloud.metal_plans_info:
+        slug: c3.medium
       register: plans
-
 
     - debug:
         msg: "Actualy there is {{ plans.resources|length }} plans"

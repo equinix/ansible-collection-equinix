@@ -159,7 +159,7 @@ def get_routes(mpc):
         ),
         ('metal_plans', action.LIST): spec_types.Specs(
             equinix_metal.PlansApi(mpc).find_plans,
-            {},
+            {'category': 'category', 'type': 'type', 'slug': 'slug', 'include': 'include', 'exclude': 'exclude'},
         ),
 
         # DELETERS
