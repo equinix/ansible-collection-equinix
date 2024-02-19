@@ -81,7 +81,7 @@ module_spec = dict(
     ),
     device_id=SpecField(
         type=FieldType.string,
-        description="(Required) ID of device.",
+        description="Device ID for the BGP session",
     ),
     address_family=SpecField(
         type=FieldType.string,
