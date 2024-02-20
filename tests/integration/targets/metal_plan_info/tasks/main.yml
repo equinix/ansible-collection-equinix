@@ -22,9 +22,12 @@
         name: "{{ test_prefix }}-project"
       register: project
 
+    - set_fact:
+        assert_project_name: "{{ test_prefix }}-project"
+
     - assert:
         that:
-        - "project.name == '{{ test_prefix }}-project'"
+        - project.name == assert_project_name
 
     - name: list metal plans info by categories
       equinix.cloud.metal_plan_info:
@@ -50,9 +53,9 @@
 
     - assert:
         that:
-        - "plans_all.resources|length >= plans_category.resources|length"
-        - "plans_all.resources|length >= plans_type.resources|length"
-        - "plans_all.resources|length >= plans_slug.resources|length"
+        - plans_all.resources|length >= plans_category.resources|length
+        - plans_all.resources|length >= plans_type.resources|length
+        - plans_all.resources|length >= plans_slug.resources|length
 
   always:
     - name: Announce teardown start
