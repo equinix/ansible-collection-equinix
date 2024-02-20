@@ -21,7 +21,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Reads device inventories from Equinix Metal. Uses YAML configuration
-  file that ends with equinix_metal.(yml|yaml). ansible_host is set to first public
+  file that ends with equinix.(yml|yaml). ansible_host is set to first public
   IP address of the device.
 module: metal_device
 extends_documentation_fragment: [constructed]
