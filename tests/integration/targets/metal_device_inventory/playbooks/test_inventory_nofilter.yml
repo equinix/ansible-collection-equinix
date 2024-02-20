@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - meta: refresh_inventory
+
+    - name: Test inventory without filter
+      assert:
+        that:
+          - "'ansible-test-inventory' in hostvars"
+          - hostvars["ansible-test-inventory"].ansible_host|length > 0
