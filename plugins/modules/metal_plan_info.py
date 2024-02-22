@@ -87,7 +87,7 @@ module_spec = dict(
     ),
     type=SpecField(
         type=FieldType.string,
-        description=['Filter plans by its plan type.'],
+        description=['Filter plans by type.'],
     ),
     slug=SpecField(
         type=FieldType.string,
