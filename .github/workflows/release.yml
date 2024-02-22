@@ -12,6 +12,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v4
         with:
+          path: .ansible/collections/ansible_collections/equinix/cloud
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
@@ -32,6 +33,7 @@ jobs:
       - name: Do GitHub release
         uses: cycjimmy/semantic-release-action@v4
         with:
+          working_directory: .ansible/collections/ansible_collections/equinix/cloud
           semantic_version: 19.0.5
           extra_plugins: |
             @semantic-release/exec@6.0.3
