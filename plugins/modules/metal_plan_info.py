@@ -83,7 +83,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 module_spec = dict(
     categories=SpecField(
         type=FieldType.list,
-        description=['Filter plans by its categories.'],
+        description=['Filter plans by categories.'],
     ),
     type=SpecField(
         type=FieldType.string,
