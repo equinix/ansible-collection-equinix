@@ -1,0 +1,75 @@
+- name: metal_plan_info
+  module_defaults:
+    equinix.cloud.metal_plan_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+      metal_ua_prefix: '{{ metal_ua_prefix }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-plan'
+
+    - set_fact:
+        unique_id: "{{ lookup('community.general.random_string', upper=false, numbers=false, special=false) }}"
+
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project"
+      register: project
+
+    - set_fact:
+        assert_project_name: "{{ test_prefix }}-project"
+
+    - assert:
+        that:
+        - project.name == assert_project_name
+
+    - name: list metal plans info by categories
+      equinix.cloud.metal_plan_info:
+        categories: ['storage']
+      register: plans_category
+
+    - name: list metal plans info by slug
+      equinix.cloud.metal_plan_info:
+        slug: c3.medium
+      register: plans_slug
+
+    - name: list metal plans info by type
+      equinix.cloud.metal_plan_info:
+        type: standard
+      register: plans_type
+
+    - name: list all metal plans
+      equinix.cloud.metal_plan_info:
+      register: plans_all
+
+    - debug:
+        msg: "Plan count: all={{ plans_all.resources|length }}, category={{ plans_category.resources|length }}, slug={{ plans_slug.resources|length }}, type={{ plans_type.resources|length }}"
+
+    - assert:
+        that:
+        - plans_all.resources|length >= plans_category.resources|length
+        - plans_all.resources|length >= plans_type.resources|length
+        - plans_all.resources|length >= plans_slug.resources|length
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes

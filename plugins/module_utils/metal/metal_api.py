@@ -38,8 +38,8 @@ def optional_bool(key: str):
     return lambda resource: resource.get(key, False)
 
 
-def optional_float(key: str):
-    return lambda resource: resource.get(key, 0.0)
+def optional_float(key: str, default=0.0):
+    return lambda resource: resource.get(key, default)
 
 def cidr_to_quantity(key: str):
     return lambda resource: ip_count_from_mask(resource.get(key))
@@ -151,6 +151,7 @@ LIST_KEYS = [
     'metal_gateways',
     'bgp_sessions',     # metal_bgp_session
     'sessions',         # metal_bgp_session_info
+    'plans',
 ]
 
 
@@ -272,6 +273,23 @@ METAL_PROJECT_BGP_CONFIG_RESPONSE_ATTRIBUTE_MAP = {
 
 }
 
+METAL_PLAN_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'categories': 'categories',
+    'name': 'name',
+    'slug': 'slug',
+    'description': 'description',
+    'line': 'line',
+    'legacy': 'legacy',
+    'class': 'class',
+    'pricing_hour': 'pricing.hour',
+    'pricing_month': optional_float('pricing.month', None),
+    'deployment_types': 'deployment_types',
+    'available_in': 'available_in',
+    'available_in_metros': 'available_in_metros',
+}
+
+
 def get_attribute_mapper(resource_type):
     """
     Returns attribute mapper for the given resource type.
@@ -290,6 +308,7 @@ def get_attribute_mapper(resource_type):
     gateway_resources = set(["metal_gateway", "metal_gateway_vrf"])
     bgp_resources = {'metal_bgp_session', 'metal_bgp_session_by_project'}
     project_bgp_config_resources = {'metal_project_bgp_config'}
+    plan_resources = set(["metal_plan"])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -320,6 +339,8 @@ def get_attribute_mapper(resource_type):
         return METAL_BGP_SESSION_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_bgp_config_resources:
         return METAL_PROJECT_BGP_CONFIG_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in plan_resources:
+        return METAL_PLAN_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
