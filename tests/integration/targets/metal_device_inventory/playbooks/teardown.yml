@@ -34,4 +34,5 @@
         state: absent
       loop:
         - nofilter.metal_device.yml
+        - filter.metal_device.yml
         - keyedgroups.metal_device.yml
