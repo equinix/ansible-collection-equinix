@@ -8,4 +8,4 @@ run_test() {
 
 export -f run_test
 
-parallel -j $PARALLEL_JOBS --group --keep-order run_test ::: $(ls tests/integration/targets)
+parallel -j $PARALLEL_JOBS --group --keep-order run_test ::: metal_device_inventory
