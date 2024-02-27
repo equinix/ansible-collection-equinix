@@ -11,6 +11,12 @@
         src: '{{ template_name }}'
         dest: '../{{ template }}'
 
+    # The following two steps add waiting for the previous task to finish and are needed for the GitHub action
+    # integration test. It fixes a random error where the upper task (copy file) was not finished and the bash script
+    # runme.sh continued. This led to the error shown below and later to the failed assertion that made no sense.
+    #
+    # [WARNING]:  * Failed to parse ...tests/integration/targets/metal_device_inventory/filter.metal_device.yml
+    # with yaml plugin: Plugin configuration YAML file, not YAML inventory
     - name: Check for the existence of the destination file
       stat:
         path: '../{{ template }}'
