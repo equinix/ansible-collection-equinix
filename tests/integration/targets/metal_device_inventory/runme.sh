@@ -2,13 +2,15 @@
 
 set -eux
 
+unique_id=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
+
 cleanup() {
-    ansible-playbook playbooks/teardown.yml "$@"
+    ansible-playbook playbooks/teardown.yml --extra-vars "unique_id=${unique_id}" "$@"
 }
 trap cleanup EXIT
 
 # Create testing device
-ansible-playbook -vvv playbooks/setup_metal_device.yml "$@"
+ansible-playbook -vvv playbooks/setup_metal_device.yml --extra-vars "unique_id=${unique_id}" "$@"
 
 # Test an inventory with no filter
 ansible-playbook playbooks/create_inventory.yml --extra-vars "template=nofilter.metal_device.yml" "$@"

@@ -6,10 +6,15 @@
     - ../../../integration_config.yml
   tasks:
 
+    - set_fact:
+        test_resource_name_prefix: 'ansible-dynamic-inventory-test'
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
     - name: Create testing project
       equinix.cloud.metal_project:
         metal_api_token: '{{ metal_api_token }}'
-        name: 'ansible-test-inventory'
+        name: "{{ test_prefix }}"
       register: project
 
     - name: Create a basic Equinix Metal Device
