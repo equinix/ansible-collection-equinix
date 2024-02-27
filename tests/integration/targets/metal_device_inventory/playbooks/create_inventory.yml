@@ -10,3 +10,14 @@
     - template:
         src: '{{ template_name }}'
         dest: '../{{ template }}'
+
+    - name: Check for the existence of the destination file
+      stat:
+        path: '../{{ template }}'
+      register: dest_file_stat
+
+    - name: Wait for the destination file to exist
+      wait_for:
+        path: '../{{ template }}'
+        state: present
+      when: not dest_file_stat.stat.exists
