@@ -14,7 +14,7 @@ notes: []
 options:
   categories:
     description:
-    - Filter plans by its categories.
+    - Filter plans by categories.
     required: false
     type: list
   slug:
@@ -24,7 +24,7 @@ options:
     type: str
   type:
     description:
-    - Filter plans by its plan type.
+    - Filter plans by type.
     required: false
     type: str
 requirements: null
