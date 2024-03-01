@@ -38,9 +38,10 @@ resources:
   description: Found resources
   returned: always
   sample:
-  - "[\n  {\n    \"address_family\": \"ipv6\",\n    \"default_route\": true,\n   \
-    \ \"device_id\": \"b068984f-f7d9-43a2-aa45-de04dcf4fe06\",\n    \"id\": \"03912bd6-a158-47ad-8bc7-c93df338fe0d\"\
-    \n  }\n]"
+  - address_family: ipv6
+    default_route: true
+    device_id: b068984f-f7d9-43a2-aa45-de04dcf4fe06
+    id: 03912bd6-a158-47ad-8bc7-c93df338fe0d
   type: dict
 '''
 
@@ -76,14 +77,13 @@ specdoc_examples = ['''
 ''',
                     ]
 
-result_sample = ['''[
+result_sample = [
   {
     "address_family": "ipv6",
-    "default_route": true,
+    "default_route": True,
     "device_id": "b068984f-f7d9-43a2-aa45-de04dcf4fe06",
     "id": "03912bd6-a158-47ad-8bc7-c93df338fe0d"
   }
-]''',
 ]
 
 SPECDOC_META = getSpecDocMeta(

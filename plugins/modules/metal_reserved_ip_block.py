@@ -100,12 +100,22 @@ metal_reserved_ip_block:
   description: The module object
   returned: always
   sample:
-  - "\n{\n    \"address_family\": 4,\n    \"changed\": true,\n    \"customdata\":\
-    \ {},\n    \"details\": \"\",\n    \"id\": \"6d94f567-6cf5-4536-8216-7dc96e1585dd\"\
-    ,\n    \"management\": false,\n    \"metro\": \"sv\",\n    \"netmask\": \"255.255.255.255\"\
-    ,\n    \"network\": \"145.40.67.3\",\n    \"project_id\": \"fd554070-70b6-420d-b3f8-7ed8438862d5\"\
-    ,\n    \"public\": true,\n    \"quantity\": 1,\n    \"tags\": [\n        \"t1\"\
-    ,\n        \"t2\"\n    ],\n    \"type\": \"public_ipv4\"\n}\n"
+  - address_family: 4
+    changed: true
+    customdata: {}
+    details: ''
+    id: 6d94f567-6cf5-4536-8216-7dc96e1585dd
+    management: false
+    metro: sv
+    netmask: 255.255.255.255
+    network: 145.40.67.3
+    project_id: fd554070-70b6-420d-b3f8-7ed8438862d5
+    public: true
+    quantity: 1
+    tags:
+    - t1
+    - t2
+    type: public_ipv4
   type: dict
 '''
 
@@ -151,27 +161,27 @@ specdoc_examples = [
 ]
 
 
-result_sample = ['''
-{
-    "address_family": 4,
-    "changed": true,
-    "customdata": {},
-    "details": "",
-    "id": "6d94f567-6cf5-4536-8216-7dc96e1585dd",
-    "management": false,
-    "metro": "sv",
-    "netmask": "255.255.255.255",
-    "network": "145.40.67.3",
-    "project_id": "fd554070-70b6-420d-b3f8-7ed8438862d5",
-    "public": true,
-    "quantity": 1,
-    "tags": [
-        "t1",
-        "t2"
-    ],
-    "type": "public_ipv4"
-}
-''']
+result_sample = [
+    {
+        "address_family": 4,
+        "changed": True,
+        "customdata": {},
+        "details": "",
+        "id": "6d94f567-6cf5-4536-8216-7dc96e1585dd",
+        "management": False,
+        "metro": "sv",
+        "netmask": "255.255.255.255",
+        "network": "145.40.67.3",
+        "project_id": "fd554070-70b6-420d-b3f8-7ed8438862d5",
+        "public": True,
+        "quantity": 1,
+        "tags": [
+            "t1",
+            "t2"
+        ],
+        "type": "public_ipv4"
+    }
+]
 
 module_spec = dict(
     id=SpecField(

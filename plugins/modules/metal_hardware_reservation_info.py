@@ -32,10 +32,13 @@ hardware_reservations:
   description: Found hardware reservations
   returned: always
   sample:
-  - "\n[\n    {\n        \"device_id\": \"\",\n        \"id\": \"84363c08-a7f5-4e09-8b34-634e82e527c1\"\
-    ,\n        \"plan\": \"m3.small.x86\",\n        \"project_id\": \"c6ba3fb2-ee46-4623493a8-de324234a33b\"\
-    ,\n        \"provisionable\": false,\n        \"spare\": false,\n        \"switch_uuid\"\
-    : \"00a324b7\"\n    }\n]"
+  - device_id: ''
+    id: 84363c08-a7f5-4e09-8b34-634e82e527c1
+    plan: m3.small.x86
+    project_id: c6ba3fb2-ee46-4623493a8-de324234a33b
+    provisionable: false
+    spare: false
+    switch_uuid: 00a324b7
   type: dict
 '''
 
@@ -68,18 +71,16 @@ specdoc_examples = ['''
 ''',
                     ]
 
-result_sample = ['''
-[
+result_sample = [
     {
         "device_id": "",
         "id": "84363c08-a7f5-4e09-8b34-634e82e527c1",
         "plan": "m3.small.x86",
         "project_id": "c6ba3fb2-ee46-4623493a8-de324234a33b",
-        "provisionable": false,
-        "spare": false,
+        "provisionable": False,
+        "spare": False,
         "switch_uuid": "00a324b7"
     }
-]''',
 ]
 
 SPECDOC_META = getSpecDocMeta(

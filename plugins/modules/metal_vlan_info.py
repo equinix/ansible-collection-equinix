@@ -30,8 +30,10 @@ resources:
   description: Found resources
   returned: always
   sample:
-  - "\n[\n  {\n    \"vxlan\": 1234,\n    \"metro\": \"se\",\n    \"id\": \"845b45a3-c565-47e5-b9b6-a86204a73d29\"\
-    ,\n    \"description\": \"My VLAN\"\n  }\n]"
+  - description: My VLAN
+    id: 845b45a3-c565-47e5-b9b6-a86204a73d29
+    metro: se
+    vxlan: 1234
   type: dict
 '''
 
@@ -61,15 +63,13 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = ['''
-[
+result_sample = [
   {
     "vxlan": 1234,
     "metro": "se",
     "id": "845b45a3-c565-47e5-b9b6-a86204a73d29",
     "description": "My VLAN"
   }
-]''',
 ]
 
 SPECDOC_META = getSpecDocMeta(

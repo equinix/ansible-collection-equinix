@@ -141,9 +141,12 @@ metal_resource:
   description: The module object
   returned: always
   sample:
-  - "\n{\n    \"project_id\": \"Bhf47603-7a09-4ca1-af67-4087c13ab5b6\"\n    \"name\"\
-    : \"new connection\"\n    \"type\": \"dedicated\"\n    \"redundancy\": \"primary\"\
-    \n    \"speed\": \"50Mbps\"\n    \"metro\": \"am\"\n}\n"
+  - metro: am
+    name: new connection
+    project_id: Bhf47603-7a09-4ca1-af67-4087c13ab5b6
+    redundancy: primary
+    speed: 50Mbps
+    type: dedicated
   type: dict
 '''
 
@@ -291,16 +294,14 @@ specdoc_examples = [
 ]
 
 result_sample = [
-    """
-{
-    "project_id": "Bhf47603-7a09-4ca1-af67-4087c13ab5b6"
-    "name": "new connection"
-    "type": "dedicated"
-    "redundancy": "primary"
-    "speed": "50Mbps"
-    "metro": "am"
-}
-"""
+  {
+    "project_id": "Bhf47603-7a09-4ca1-af67-4087c13ab5b6",
+    "name": "new connection",
+    "type": "dedicated",
+    "redundancy": "primary",
+    "speed": "50Mbps",
+    "metro": "am",
+  }
 ]
 
 MUTABLE_ATTRIBUTES = [k for k, v in module_spec.items() if v.editable]

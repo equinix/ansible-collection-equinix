@@ -32,15 +32,22 @@ resources:
   description: Found metros
   returned: always
   sample:
-  - "\n[\n    {\n        \"code\": \"sv\",\n        \"country\": \"US\",\n       \
-    \ \"id\": \"2991b022-b8c4-497e-8db7-5a407c3a209b\",\n        \"name\": \"Silicon\
-    \ Valley\"\n    },\n    {\n        \"code\": \"la\",\n        \"country\": \"\
-    US\",\n        \"id\": \"bb059cc0-0b2a-4f5b-8a55-219e6b4240da\",\n        \"name\"\
-    : \"Los Angeles\"\n    },\n    {\n        \"code\": \"ch\",\n        \"country\"\
-    : \"US\",\n        \"id\": \"60666d92-e00f-43a8-a9f8-fddf665390ca\",\n       \
-    \ \"name\": \"Chicago\"\n    },\n    {\n        \"code\": \"da\",\n        \"\
-    country\": \"US\",\n        \"id\": \"d3d6b29f-042d-43b7-b3ce-0bf53d5754ca\",\n\
-    \        \"name\": \"Dallas\"\n    }\n]"
+  - code: sv
+    country: US
+    id: 2991b022-b8c4-497e-8db7-5a407c3a209b
+    name: Silicon Valley
+  - code: la
+    country: US
+    id: bb059cc0-0b2a-4f5b-8a55-219e6b4240da
+    name: Los Angeles
+  - code: ch
+    country: US
+    id: 60666d92-e00f-43a8-a9f8-fddf665390ca
+    name: Chicago
+  - code: da
+    country: US
+    id: d3d6b29f-042d-43b7-b3ce-0bf53d5754ca
+    name: Dallas
   type: dict
 '''
 
@@ -71,8 +78,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = ['''
-[
+result_sample = [
     {
         "code": "sv",
         "country": "US",
@@ -97,8 +103,7 @@ result_sample = ['''
         "id": "d3d6b29f-042d-43b7-b3ce-0bf53d5754ca",
         "name": "Dallas"
     }
-]''',
-                 ]
+]
 
 SPECDOC_META = getSpecDocMeta(
     short_description="Gather information about Equinix Metal metros",

@@ -34,7 +34,8 @@ available:
   description: Available IP addresses from the reservation.
   returned: always
   sample:
-  - "\n{\n    \"available\": [\n        \"147.75.71.192/32\"\n    ],\n}\n"
+  - available:
+    - 147.75.71.192/32
   type: dict
 '''
 
@@ -75,13 +76,11 @@ equinix.cloud.metal_available_ips_info:
 ]
 
 result_sample = [
-    '''
 {
     "available": [
         "147.75.71.192/32"
     ],
 }
-''',
 ]
 
 SPECDOC_META = getSpecDocMeta(

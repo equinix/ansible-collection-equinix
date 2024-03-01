@@ -8,10 +8,9 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: !!python/tuple
-- 'Lookup a single hardware_reservation by ID in Equinix Metal. '
-- 'This resource only fetches a single hardware_reservation by resource ID. '
-- It doesn't allow to create or update hardware_reservations.
+description: Lookup a single hardware_reservation by ID in Equinix Metal. This resource
+  only fetches a single hardware_reservation by resource ID. It doesn't allow to create
+  or update hardware_reservations.
 module: metal_hardware_reservation
 notes: []
 options:
@@ -56,10 +55,14 @@ metal_hardware_reservation:
   description: The module object
   returned: always
   sample:
-  - "\n\n{\n    \"changed\": false,\n    \"device_id\": \"\",\n    \"id\": \"82323c08-a7f5-4e09-8b34-634e82e527c1\"\
-    ,\n    \"plan\": \"m3.small.x86\",\n    \"project_id\": \"52436fb2-ee46-4673-93a8-de2c2bdba33b\"\
-    ,\n    \"provisionable\": true,\n    \"spare\": false,\n    \"switch_uuid\": \"\
-    00a5dbb7\"\n}\n"
+  - changed: false
+    device_id: ''
+    id: 82323c08-a7f5-4e09-8b34-634e82e527c1
+    plan: m3.small.x86
+    project_id: 52436fb2-ee46-4673-93a8-de2c2bdba33b
+    provisionable: true
+    spare: false
+    switch_uuid: 00a5dbb7
   type: dict
 '''
 
@@ -127,26 +130,25 @@ specdoc_examples = [
 '''
 ]
 
-result_sample = ['''
-
+result_sample = [
 {
-    "changed": false,
+    "changed": False,
     "device_id": "",
     "id": "82323c08-a7f5-4e09-8b34-634e82e527c1",
     "plan": "m3.small.x86",
     "project_id": "52436fb2-ee46-4673-93a8-de2c2bdba33b",
-    "provisionable": true,
-    "spare": false,
+    "provisionable": True,
+    "spare": False,
     "switch_uuid": "00a5dbb7"
 }
-''']
+]
 
 SPECDOC_META = getSpecDocMeta(
     short_description='Lookup a single hardware_reservation by ID in Equinix Metal',
     description=(
-        'Lookup a single hardware_reservation by ID in Equinix Metal. ',
-        'This resource only fetches a single hardware_reservation by resource ID. ',
-        "It doesn't allow to create or update hardware_reservations.",
+        'Lookup a single hardware_reservation by ID in Equinix Metal. '
+        'This resource only fetches a single hardware_reservation by resource ID. '
+        "It doesn't allow to create or update hardware_reservations."
     ),
     examples=specdoc_examples,
     options=module_spec,

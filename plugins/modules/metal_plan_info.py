@@ -14,7 +14,7 @@ notes: []
 options:
   categories:
     description:
-    - Filter plans by its categories.
+    - Filter plans by categories.
     required: false
     type: list
   slug:
@@ -24,7 +24,7 @@ options:
     type: str
   type:
     description:
-    - Filter plans by its plan type.
+    - Filter plans by type.
     required: false
     type: str
 requirements: null
@@ -57,15 +57,21 @@ resources:
   description: Found resources
   returned: always
   sample:
-  - "\n{                                                                         \
-    \            \n  \"available_in\": [],                                       \
-    \                                                                            \
-    \                                    \n  \"available_in_metros\": [],\n  \"category\"\
-    : [\n    \"compute\",\n    \"current_gen\"\n  ],\n  \"class\": \"a3.large.opt-m3a2\"\
-    ,\n  \"deployment_types\": [],\n  \"description\": \"a3.large.opt-m3a2.x86\",\n\
-    \  \"id\": \"8c04950a-87ab-5e52-a112-5a90bbca8868\",\n  \"legacy\": false,\n \
-    \ \"line\": \"baremetal\",\n  \"name\": \"a3.large.opt-m3a2.x86\",\n  \"pricing_hour\"\
-    : 8.2,\n  \"pricing_month\": null,\n  \"slug\": \"a3.large.opt-m3a2\"\n}"
+  - available_in: []
+    available_in_metros: []
+    category:
+    - compute
+    - current_gen
+    class: a3.large.opt-m3a2
+    deployment_types: []
+    description: a3.large.opt-m3a2.x86
+    id: 8c04950a-87ab-5e52-a112-5a90bbca8868
+    legacy: false
+    line: baremetal
+    name: a3.large.opt-m3a2.x86
+    pricing_hour: 8.2
+    pricing_month: null
+    slug: a3.large.opt-m3a2
   type: dict
 '''
 
@@ -121,25 +127,25 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = ['''
-{                                                                                     
-  "available_in": [],                                                                                                                                                       
-  "available_in_metros": [],
-  "category": [
-    "compute",
-    "current_gen"
-  ],
-  "class": "a3.large.opt-m3a2",
-  "deployment_types": [],
-  "description": "a3.large.opt-m3a2.x86",
-  "id": "8c04950a-87ab-5e52-a112-5a90bbca8868",
-  "legacy": false,
-  "line": "baremetal",
-  "name": "a3.large.opt-m3a2.x86",
-  "pricing_hour": 8.2,
-  "pricing_month": null,
-  "slug": "a3.large.opt-m3a2"
-}''',
+result_sample = [
+  {
+    "available_in": [],
+    "available_in_metros": [],
+    "category": [
+      "compute",
+      "current_gen"
+    ],
+    "class": "a3.large.opt-m3a2",
+    "deployment_types": [],
+    "description": "a3.large.opt-m3a2.x86",
+    "id": "8c04950a-87ab-5e52-a112-5a90bbca8868",
+    "legacy": False,
+    "line": "baremetal",
+    "name": "a3.large.opt-m3a2.x86",
+    "pricing_hour": 8.2,
+    "pricing_month": None,
+    "slug": "a3.large.opt-m3a2"
+  }
 ]
 
 SPECDOC_META = getSpecDocMeta(

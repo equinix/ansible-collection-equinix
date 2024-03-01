@@ -32,16 +32,18 @@ resources:
   description: Found Metal Gateways
   returned: always
   sample:
-  - "\n[\n    {\n        \"id\": \"771c9418-7c60-4a45-8fa6-3a002132331d\",\n     \
-    \   \"ip_reservation_id\": \"d45c9629-3aab-4a7b-af5d-4ca50041e311\",\n       \
-    \ \"metal_state\": \"ready\",\n        \"private_ipv4_subnet_size\": 8,\n    \
-    \    \"project_id\": \"f7a35065-2e41-4747-b3d1-400af0a3e0e8\",\n        \"virtual_network_id\"\
-    : \"898972b3-7eb9-4ca2-b803-7b5d339bbea7\"\n    },\n    {\n        \"id\": \"\
-    b66eb02d-c4bb-4ae8-a22e-0f7934da971e\",\n        \"ip_reservation_id\": \"6282982a-e6de-4f4d-b230-2ae27e90778c\"\
-    ,\n        \"metal_state\": \"ready\",\n        \"private_ipv4_subnet_size\":\
-    \ 8,\n        \"project_id\": \"f7a35065-2e41-4747-b3d1-400af0a3e0e8\",\n    \
-    \    \"virtual_network_id\": \"898972b3-7eb9-4ca2-b803-7b5d339bbea7\"\n    }\n\
-    ]"
+  - id: 771c9418-7c60-4a45-8fa6-3a002132331d
+    ip_reservation_id: d45c9629-3aab-4a7b-af5d-4ca50041e311
+    metal_state: ready
+    private_ipv4_subnet_size: 8
+    project_id: f7a35065-2e41-4747-b3d1-400af0a3e0e8
+    virtual_network_id: 898972b3-7eb9-4ca2-b803-7b5d339bbea7
+  - id: b66eb02d-c4bb-4ae8-a22e-0f7934da971e
+    ip_reservation_id: 6282982a-e6de-4f4d-b230-2ae27e90778c
+    metal_state: ready
+    private_ipv4_subnet_size: 8
+    project_id: f7a35065-2e41-4747-b3d1-400af0a3e0e8
+    virtual_network_id: 898972b3-7eb9-4ca2-b803-7b5d339bbea7
   type: dict
 '''
 
@@ -72,8 +74,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = ['''
-[
+result_sample = [
     {
         "id": "771c9418-7c60-4a45-8fa6-3a002132331d",
         "ip_reservation_id": "d45c9629-3aab-4a7b-af5d-4ca50041e311",
@@ -90,7 +91,6 @@ result_sample = ['''
         "project_id": "f7a35065-2e41-4747-b3d1-400af0a3e0e8",
         "virtual_network_id": "898972b3-7eb9-4ca2-b803-7b5d339bbea7"
     }
-]''',
 ]
 
 SPECDOC_META = getSpecDocMeta(
