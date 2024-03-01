@@ -57,8 +57,8 @@ Gather information about Equinix Metal plans
 
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
-| `categories` | <center>`list`</center> | <center>Optional</center> | Filter plans by its categories.   |
-| `type` | <center>`str`</center> | <center>Optional</center> | Filter plans by its plan type.   |
+| `categories` | <center>`list`</center> | <center>Optional</center> | Filter plans by categories.   |
+| `type` | <center>`str`</center> | <center>Optional</center> | Filter plans by type.   |
 | `slug` | <center>`str`</center> | <center>Optional</center> | Filter plans by slug.   |
 
 
