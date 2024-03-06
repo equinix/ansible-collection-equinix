@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - meta: refresh_inventory
+
+    - name: Test inventory without filter
+      assert:
+        that:
+          - "groups['cool_group'] | list | length > 0"

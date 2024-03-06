@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - ../../../integration_config.yml
+  tasks:
+
+    - set_fact:
+        test_resource_name_prefix: 'ansible-dynamic-inventory-test'
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+
+    - name: get testing project id
+      equinix.cloud.metal_project_info:
+        metal_api_token: '{{ metal_api_token }}'
+        name: '{{ test_resource_name_prefix }}'
+      register: projects
+
+    - name: Delete the metal_device
+      equinix.cloud.metal_device:
+        project_id: "{{ projects.resources[0].id}}"
+        hostname: 'ansible-test-inventory'
+        metal_api_token: '{{ metal_api_token }}'
+        plan: c3.small.x86
+        metro: sv
+        tags:
+          - ansible-inventory-node
+        state: absent
+
+    - name: remove testing project
+      equinix.cloud.metal_project:
+        metal_api_token: '{{ metal_api_token }}'
+        id: "{{ projects.resources[0].id}}"
+        state: absent
+
+    - name: Ensure test files are absent
+      file:
+        path: '../{{item}}.yml'
+        state: absent
+      loop:
+        - nofilter.metal_device.yml
+        - filter.metal_device.yml
+        - keyedgroups.metal_device.yml

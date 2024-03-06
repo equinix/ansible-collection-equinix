@@ -12,7 +12,7 @@ metal_device -- Equinix Metal Device inventory source
 Synopsis
 --------
 
-Reads device inventories from Equinix Metal. Uses YAML configuration file that ends with equinix_metal.(yml|yaml). ansible_host is set to first public IP address of the device.
+Reads device inventories from Equinix Metal. Uses YAML configuration file that ends with equinix.(yml|yaml). ansible_host is set to first public IP address of the device.
 
 
 
