@@ -84,14 +84,19 @@ metal_gateway:
   description: The module object
   returned: always
   sample:
-  - "\n{\n                 \n  \"changed\": true,\n  \"id\": \"1f4d30da-4041-406d-8d94-6ce929340d98\"\
-    ,\n  \"ip_reservation_id\": \"fa017281-b10e-4b22-b449-35a93fb88d85\",\n  \"metal_state\"\
-    : \"ready\",\n  \"private_ipv4_subnet_size\": null,\n  \"project_id\": \"2e85a66a-ea6a-4e33-8029-cc5ab9a0bc91\"\
-    ,\n  \"virtual_network_id\": \"4a06c542-e47c-4e3c-ab85-bfc3cba4004d\"\n}\n"
-  - "\n{\n  \"changed\": true,\n  \"id\": \"be809e36-42a0-4a3b-982c-8f4487b9b9fc\"\
-    ,\n  \"ip_reservation_id\": \"e5c4be29-e238-431a-8c5f-f44f30fd5098\",\n  \"metal_state\"\
-    : \"ready\",\n  \"private_ipv4_subnet_size\": 8,\n  \"project_id\": \"0491c16b-376d-4842-89d2-da3efead4991\"\
-    ,\n  \"virtual_network_id\": \"f46ab2c8-1332-4f87-91e9-f3a6a81d9769\"\n}\n"
+  - changed: true
+    id: 1f4d30da-4041-406d-8d94-6ce929340d98
+    ip_reservation_id: fa017281-b10e-4b22-b449-35a93fb88d85
+    metal_state: ready
+    project_id: 2e85a66a-ea6a-4e33-8029-cc5ab9a0bc91
+    virtual_network_id: 4a06c542-e47c-4e3c-ab85-bfc3cba4004d
+  - changed: true
+    id: be809e36-42a0-4a3b-982c-8f4487b9b9fc
+    ip_reservation_id: e5c4be29-e238-431a-8c5f-f44f30fd5098
+    metal_state: ready
+    private_ipv4_subnet_size: 8
+    project_id: 0491c16b-376d-4842-89d2-da3efead4991
+    virtual_network_id: f46ab2c8-1332-4f87-91e9-f3a6a81d9769
   type: dict
 '''
 
@@ -189,21 +194,18 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = ['''
+result_sample = [
 {
                  
-  "changed": true,
+  "changed": True,
   "id": "1f4d30da-4041-406d-8d94-6ce929340d98",
   "ip_reservation_id": "fa017281-b10e-4b22-b449-35a93fb88d85",
   "metal_state": "ready",
-  "private_ipv4_subnet_size": null,
   "project_id": "2e85a66a-ea6a-4e33-8029-cc5ab9a0bc91",
   "virtual_network_id": "4a06c542-e47c-4e3c-ab85-bfc3cba4004d"
-}
-''',
-'''
+},
 {
-  "changed": true,
+  "changed": True,
   "id": "be809e36-42a0-4a3b-982c-8f4487b9b9fc",
   "ip_reservation_id": "e5c4be29-e238-431a-8c5f-f44f30fd5098",
   "metal_state": "ready",
@@ -211,7 +213,6 @@ result_sample = ['''
   "project_id": "0491c16b-376d-4842-89d2-da3efead4991",
   "virtual_network_id": "f46ab2c8-1332-4f87-91e9-f3a6a81d9769"
 }
-''',
 ]
 
 MUTABLE_ATTRIBUTES = [

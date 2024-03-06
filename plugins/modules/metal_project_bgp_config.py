@@ -58,7 +58,7 @@ metal_project_bgp_config:
   description: The module object
   returned: always
   sample:
-  - "\n{\n    \"changed\": true\n}\n"
+  - changed: true
   type: dict
 '''
 
@@ -128,11 +128,11 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = ['''
-{
-    "changed": true
-}
-''']
+result_sample = [
+    {
+        "changed": True
+    }
+]
 
 MUTABLE_ATTRIBUTES = [
     k for k, v in module_spec.items() if v.editable

@@ -48,6 +48,7 @@ options:
 requirements: null
 short_description: Manage Projects in Equinix Metal
 '''
+
 EXAMPLES = '''
 - name: Create new project
   hosts: localhost
@@ -73,16 +74,28 @@ EXAMPLES = '''
       name: newer project
       payment_method_id: abf49903-7a09-4ca1-af67-4087c29ab343
 '''
+
 RETURN = '''
 metal_project:
   description: The module object
   returned: always
   sample:
-  - "\n{\n  \"backend_transfer_enabled\": false,\n  \"changed\": false,\n  \"customdata\"\
-    : {},\n  \"description\": \"\",\n  \"id\": \"7624f0f7-75b6-4271-bc64-632b80f87de2\"\
-    ,\n  \"name\": \"ansible-integration-test-project-csle6t2y-project1_renamed\"\
-    ,\n  \"organization_id\": \"70c2f878-9f32-452e-8c69-ab15480e1d99\",\n  \"payment_method_id\"\
-    : \"845b45a3-c565-47e5-b9b6-a86204a73d29\"\n}\n"
+  - backend_transfer_enabled: false
+    changed: false
+    customdata: {}
+    description: ''
+    id: 8624f0f7-75b6-4271-bc64-632b80f87de2
+    name: ansible-integration-test-project-csle6t2y-project1_renamed
+    organization_id: 70c2f878-9f32-452e-8c69-ab15480e1d99
+    payment_method_id: 845b45a3-c565-47e5-b9b6-a86204a73d29
+  - backend_transfer_enabled: true
+    changed: false
+    customdata: {}
+    description: ''
+    id: 9624f0f7-75b6-4271-bc64-632b80f87de2
+    name: ansible-integration-test-project-csle6t2y-project1_renamed
+    organization_id: 70c2f878-9f32-452e-8c69-ab15480e1d99
+    payment_method_id: 845b45a3-c565-47e5-b9b6-a86204a73d29
   type: dict
 '''
 
@@ -172,18 +185,30 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = ['''
+result_sample = [
 {
-  "backend_transfer_enabled": false,
-  "changed": false,
+  "backend_transfer_enabled": False,
+  "changed": False,
   "customdata": {},
   "description": "",
-  "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
+  "id": "8624f0f7-75b6-4271-bc64-632b80f87de2",
   "name": "ansible-integration-test-project-csle6t2y-project1_renamed",
   "organization_id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
   "payment_method_id": "845b45a3-c565-47e5-b9b6-a86204a73d29"
-}
-''']
+},
+{
+  "backend_transfer_enabled": True,
+  "changed": False,
+  "customdata": {},
+  "description": "",
+  "id": "9624f0f7-75b6-4271-bc64-632b80f87de2",
+  "name": "ansible-integration-test-project-csle6t2y-project1_renamed",
+  "organization_id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
+  "payment_method_id": "845b45a3-c565-47e5-b9b6-a86204a73d29"
+},
+
+
+]
 
 MUTABLE_ATTRIBUTES = [
     k for k, v in module_spec.items() if v.editable

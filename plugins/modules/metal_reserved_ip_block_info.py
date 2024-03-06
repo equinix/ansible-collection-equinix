@@ -56,13 +56,19 @@ resources:
   description: Found resources
   returned: always
   sample:
-  - "\n[\n    {\n        \"address_family\": 4,\n        \"customdata\": {},\n   \
-    \     \"details\": \"some desc fff\",\n        \"id\": \"16148fad-7839-4c63-b33f-0ecfec4f9e29\"\
-    ,\n        \"management\": false,\n        \"metro\": \"da\",\n        \"netmask\"\
-    : \"255.255.255.255\",\n        \"network\": \"145.40.102.107\",\n        \"project_id\"\
-    : \"52000fb2-ee46-4673-93a8-de2c2bdba33b\",\n        \"public\": true,\n     \
-    \   \"quantity\": 1,\n        \"tags\": [],\n        \"type\": \"public_ipv4\"\
-    \n    }\n]\n"
+  - address_family: 4
+    customdata: {}
+    details: some desc fff
+    id: 16148fad-7839-4c63-b33f-0ecfec4f9e29
+    management: false
+    metro: da
+    netmask: 255.255.255.255
+    network: 145.40.102.107
+    project_id: 52000fb2-ee46-4673-93a8-de2c2bdba33b
+    public: true
+    quantity: 1
+    tags: []
+    type: public_ipv4
   type: dict
 '''
 
@@ -112,25 +118,21 @@ module_spec = dict(
 )
 
 result_sample = [
-'''
-[
     {
         "address_family": 4,
         "customdata": {},
         "details": "some desc fff",
         "id": "16148fad-7839-4c63-b33f-0ecfec4f9e29",
-        "management": false,
+        "management": False,
         "metro": "da",
         "netmask": "255.255.255.255",
         "network": "145.40.102.107",
         "project_id": "52000fb2-ee46-4673-93a8-de2c2bdba33b",
-        "public": true,
+        "public": True,
         "quantity": 1,
         "tags": [],
         "type": "public_ipv4"
     }
-]
-'''    
 ]
 
 SPECDOC_META = getSpecDocMeta(

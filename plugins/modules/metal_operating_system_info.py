@@ -33,21 +33,36 @@ resources:
   description: Found Operating Systems
   returned: always
   sample:
-  - "\n[\n    {\n        \"distro\": \"windows\",\n        \"distro_label\": \"Windows\"\
-    ,\n        \"id\": \"897c6a00-4fb7-4bc6-80db-83478e1ce1ba\",\n        \"licensed\"\
-    : true,\n        \"name\": \"Windows 2019 Standard\",\n        \"preinstallable\"\
-    : false,\n        \"pricing\": {\n            \"hour\": {\n                \"\
-    multiplier\": \"cores\",\n                \"price\": 0.01\n            }\n   \
-    \     },\n        \"provisionable_on\": [\n            \"c2.medium.x86\",\n  \
-    \          \"c3.medium.opt-c1\",\n        ],\n        \"slug\": \"windows_2019\"\
-    ,\n        \"version\": \"2019\"\n    },\n    {\n        \"distro\": \"windows\"\
-    ,\n        \"distro_label\": \"Windows\",\n        \"id\": \"fefd6fa7-6f6e-46eb-918b-6839f5ca59cf\"\
-    ,\n        \"licensed\": true,\n        \"name\": \"Windows 2022 Standard\",\n\
-    \        \"preinstallable\": false,\n        \"pricing\": {\n            \"hour\"\
-    : {\n                \"multiplier\": \"cores\",\n                \"price\": 0.01\n\
-    \            }\n        },\n        \"provisionable_on\": [\n            \"c2.medium.x86\"\
-    ,\n            \"c3.medium.opt-c1\",\n        ],\n        \"slug\": \"windows_2022\"\
-    ,\n        \"version\": \"2022\"\n    }\n]"
+  - distro: windows
+    distro_label: Windows
+    id: 897c6a00-4fb7-4bc6-80db-83478e1ce1ba
+    licensed: true
+    name: Windows 2019 Standard
+    preinstallable: false
+    pricing:
+      hour:
+        multiplier: cores
+        price: 0.01
+    provisionable_on:
+    - c2.medium.x86
+    - c3.medium.opt-c1
+    slug: windows_2019
+    version: '2019'
+  - distro: windows
+    distro_label: Windows
+    id: fefd6fa7-6f6e-46eb-918b-6839f5ca59cf
+    licensed: true
+    name: Windows 2022 Standard
+    preinstallable: false
+    pricing:
+      hour:
+        multiplier: cores
+        price: 0.01
+    provisionable_on:
+    - c2.medium.x86
+    - c3.medium.opt-c1
+    slug: windows_2022
+    version: '2022'
   type: dict
 '''
 
@@ -78,15 +93,14 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = ['''
-[
+result_sample = [
     {
         "distro": "windows",
         "distro_label": "Windows",
         "id": "897c6a00-4fb7-4bc6-80db-83478e1ce1ba",
-        "licensed": true,
+        "licensed": True,
         "name": "Windows 2019 Standard",
-        "preinstallable": false,
+        "preinstallable": False,
         "pricing": {
             "hour": {
                 "multiplier": "cores",
@@ -104,9 +118,9 @@ result_sample = ['''
         "distro": "windows",
         "distro_label": "Windows",
         "id": "fefd6fa7-6f6e-46eb-918b-6839f5ca59cf",
-        "licensed": true,
+        "licensed": True,
         "name": "Windows 2022 Standard",
-        "preinstallable": false,
+        "preinstallable": False,
         "pricing": {
             "hour": {
                 "multiplier": "cores",
@@ -120,8 +134,7 @@ result_sample = ['''
         "slug": "windows_2022",
         "version": "2022"
     }
-]''',
-                 ]
+]
 
 SPECDOC_META = getSpecDocMeta(
     short_description="Gather information about Operating Systems available for devices in Equinix Metal",

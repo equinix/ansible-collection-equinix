@@ -42,10 +42,13 @@ resources:
   description: Found resources
   returned: always
   sample:
-  - "\n\n[\n  {\n    \"id\": \"31d3ae8b-bd5a-41f3-a420-055211345cc7\",\n    \"name\"\
-    : \"my_test_connection\",\n    \"project_id\": \"845b45a3-c565-47e5-b9b6-a86204a73d29\"\
-    ,\n    \"type\": \"dedicated\",\n    \"redundancy\": \"primary\",\n    \"speed\"\
-    : \"50Mbps\",\n    \"metro\": \"am\",\n  }\n]"
+  - id: 31d3ae8b-bd5a-41f3-a420-055211345cc7
+    metro: am
+    name: my_test_connection
+    project_id: 845b45a3-c565-47e5-b9b6-a86204a73d29
+    redundancy: primary
+    speed: 50Mbps
+    type: dedicated
   type: dict
 '''
 
@@ -86,9 +89,6 @@ specdoc_examples = [
 ]
 
 result_sample = [
-    """
-
-[
   {
     "id": "31d3ae8b-bd5a-41f3-a420-055211345cc7",
     "name": "my_test_connection",
@@ -98,7 +98,6 @@ result_sample = [
     "speed": "50Mbps",
     "metro": "am",
   }
-]""",
 ]
 
 SPECDOC_META = getSpecDocMeta(

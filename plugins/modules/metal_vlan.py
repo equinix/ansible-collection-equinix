@@ -56,9 +56,12 @@ metal_vlan:
   description: The module object
   returned: always
   sample:
-  - "\n{\n  \"changed\": false,\n  \"id\": \"7624f0f7-75b6-4271-bc64-632b80f87de2\"\
-    ,\n  \"description\": \"This is my new VLAN.\",\n  \"metro\": \"se\",\n  \"vxlan\"\
-    : 1234,\n  \"project_id\": \"778h50f7-75b6-4271-bc64-632b80f87de2\"\n}\n"
+  - changed: false
+    description: This is my new VLAN.
+    id: 7624f0f7-75b6-4271-bc64-632b80f87de2
+    metro: se
+    project_id: 778h50f7-75b6-4271-bc64-632b80f87de2
+    vxlan: 1234
   type: dict
 '''
 
@@ -124,16 +127,14 @@ specdoc_examples = [
 ]
 
 result_sample = [
-    """
-{
-  "changed": false,
-  "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
-  "description": "This is my new VLAN.",
-  "metro": "se",
-  "vxlan": 1234,
-  "project_id": "778h50f7-75b6-4271-bc64-632b80f87de2"
-}
-"""
+    {
+    "changed": False,
+    "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
+    "description": "This is my new VLAN.",
+    "metro": "se",
+    "vxlan": 1234,
+    "project_id": "778h50f7-75b6-4271-bc64-632b80f87de2"
+    }
 ]
 
 MUTABLE_ATTRIBUTES = [k for k, v in module_spec.items() if v.editable]

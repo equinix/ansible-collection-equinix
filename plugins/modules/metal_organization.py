@@ -8,10 +8,9 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: !!python/tuple
-- 'Lookup a single organization by ID in Equinix Metal. '
-- 'This resource only fetches a single organization by resource ID. '
-- It doesn't allow to create or update organizations.
+description: Lookup a single organization by ID in Equinix Metal. This resource only
+  fetches a single organization by resource ID. It doesn't allow to create or update
+  organizations.
 module: metal_organization
 notes: []
 options:
@@ -35,12 +34,18 @@ metal_organization:
   description: The module object
   returned: always
   sample:
-  - "\n{\n\n  \"changed\": false,\n  \"description\": \"\",\n  \"id\": \"70c2f878-9f32-452e-8c69-ab15480e1d99\"\
-    ,\n  },\n  \"name\": \"Tomas\u2019 Projects\",\n  \"projects\": [\n      \"18234234-0432-4eb5-9636-5f05671ff33a\"\
-    ,\n      \"4394a515-8423-46ed-b0f5-8bfd09573a06\",\n      \"52000324-e342-4673-93a8-de242342343b\"\
-    ,\n      \"64234231-bce5-4a62-a47c-14234d7ea8d9\",\n      \"81423459-f69d-40c4-9b72-51e23c324243\"\
-    ,\n      \"e9324234-6423-4232-8423-854234238106\"\n  ],\n  \"website\": \"\"\n\
-    }\n"
+  - changed: false
+    description: ''
+    id: 70c2f878-9f32-452e-8c69-ab15480e1d99
+    name: "Tomas\u2019 Projects"
+    projects:
+    - 18234234-0432-4eb5-9636-5f05671ff33a
+    - 4394a515-8423-46ed-b0f5-8bfd09573a06
+    - 52000324-e342-4673-93a8-de242342343b
+    - 64234231-bce5-4a62-a47c-14234d7ea8d9
+    - 81423459-f69d-40c4-9b72-51e23c324243
+    - e9324234-6423-4232-8423-854234238106
+    website: ''
   type: dict
 '''
 
@@ -86,32 +91,31 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = ['''
-{
+result_sample = [
+    {
 
-  "changed": false,
-  "description": "",
-  "id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
-  },
-  "name": "Tomas’ Projects",
-  "projects": [
-      "18234234-0432-4eb5-9636-5f05671ff33a",
-      "4394a515-8423-46ed-b0f5-8bfd09573a06",
-      "52000324-e342-4673-93a8-de242342343b",
-      "64234231-bce5-4a62-a47c-14234d7ea8d9",
-      "81423459-f69d-40c4-9b72-51e23c324243",
-      "e9324234-6423-4232-8423-854234238106"
-  ],
-  "website": ""
-}
-''']
+    "changed": False,
+    "description": "",
+    "id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
+    "name": "Tomas’ Projects",
+    "projects": [
+        "18234234-0432-4eb5-9636-5f05671ff33a",
+        "4394a515-8423-46ed-b0f5-8bfd09573a06",
+        "52000324-e342-4673-93a8-de242342343b",
+        "64234231-bce5-4a62-a47c-14234d7ea8d9",
+        "81423459-f69d-40c4-9b72-51e23c324243",
+        "e9324234-6423-4232-8423-854234238106"
+    ],
+    "website": ""
+    }
+]
 
 SPECDOC_META = getSpecDocMeta(
     short_description='Lookup a single organization by ID in Equinix Metal',
     description=(
-        'Lookup a single organization by ID in Equinix Metal. ',
-        'This resource only fetches a single organization by resource ID. ',
-        "It doesn't allow to create or update organizations.",
+        'Lookup a single organization by ID in Equinix Metal. '
+        'This resource only fetches a single organization by resource ID. '
+        "It doesn't allow to create or update organizations."
     ),
     examples=specdoc_examples,
     options=module_spec,
