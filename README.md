@@ -87,7 +87,7 @@ The Python module dependencies are not installed by `ansible-galaxy`.  They can
 be manually installed using pip:
 
 ```shell
-pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/0.4.0/requirements.txt
+pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/v0.4.0/requirements.txt
 ```
 
 ## Usage
