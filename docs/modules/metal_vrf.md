@@ -53,28 +53,26 @@ Create a VRF in a metro, with IP ranges that you want the VRF to route and forwa
 
 ## Return Values
 
-- `metal_vrf` - The module object
 
-    - Sample Response:
-        ```json
-        
-        {
-            "changed": false,
-            "description": "Test VRF with ASN 65000",
-            "id": "f4a7863c-fcbf-419c-802c-3c6d3ad9529e",
-            "ip_ranges": [
-                "192.168.100.0/25",
-                "192.168.200.0/25"
-            ],
-            "local_asn": 65000,
-            "metro": {
-                "href": "/metal/v1/locations/metros/108b2cfb-246b-45e3-885a-bf3e82fce1a0",
-                "id": "108b2cfb-246b-45e3-885a-bf3e82fce1a0"
-            },
-            "name": "ansible-integration-test-vrf-6yww6pyz",
-            "project_id": "9934e474-04a1-46a3-842b-5f3dc0ed0eba"
-        }
-        
-        ```
+
+### Sample Response for metal_vrf
+```json
+{
+  "changed": false,
+  "description": "Test VRF with ASN 65000",
+  "id": "f4a7863c-fcbf-419c-802c-3c6d3ad9529e",
+  "ip_ranges": [
+    "192.168.100.0/25",
+    "192.168.200.0/25"
+  ],
+  "local_asn": 65000,
+  "metro": {
+    "href": "/metal/v1/locations/metros/108b2cfb-246b-45e3-885a-bf3e82fce1a0",
+    "id": "108b2cfb-246b-45e3-885a-bf3e82fce1a0"
+  },
+  "name": "ansible-integration-test-vrf-6yww6pyz",
+  "project_id": "9934e474-04a1-46a3-842b-5f3dc0ed0eba"
+}
+```
 
 

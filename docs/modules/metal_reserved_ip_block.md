@@ -63,31 +63,29 @@ When a user provisions first device in a facility, Equinix Metal API automatical
 
 ## Return Values
 
-- `metal_reserved_ip_block` - The module object
 
-    - Sample Response:
-        ```json
-        
-        {
-            "address_family": 4,
-            "changed": true,
-            "customdata": {},
-            "details": "",
-            "id": "6d94f567-6cf5-4536-8216-7dc96e1585dd",
-            "management": false,
-            "metro": "sv",
-            "netmask": "255.255.255.255",
-            "network": "145.40.67.3",
-            "project_id": "fd554070-70b6-420d-b3f8-7ed8438862d5",
-            "public": true,
-            "quantity": 1,
-            "tags": [
-                "t1",
-                "t2"
-            ],
-            "type": "public_ipv4"
-        }
-        
-        ```
+
+### Sample Response for metal_reserved_ip_block
+```json
+{
+  "address_family": 4,
+  "changed": true,
+  "customdata": {},
+  "details": "",
+  "id": "6d94f567-6cf5-4536-8216-7dc96e1585dd",
+  "management": false,
+  "metro": "sv",
+  "netmask": "255.255.255.255",
+  "network": "145.40.67.3",
+  "project_id": "fd554070-70b6-420d-b3f8-7ed8438862d5",
+  "public": true,
+  "quantity": 1,
+  "tags": [
+    "t1",
+    "t2"
+  ],
+  "type": "public_ipv4"
+}
+```
 
 

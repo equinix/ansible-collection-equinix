@@ -71,20 +71,18 @@ Manage an Interconnection in Equinix Metal. You can use *connection_id* to looku
 
 ## Return Values
 
-- `metal_resource` - The module object
 
-    - Sample Response:
-        ```json
-        
-        {
-            "project_id": "Bhf47603-7a09-4ca1-af67-4087c13ab5b6"
-            "name": "new connection"
-            "type": "dedicated"
-            "redundancy": "primary"
-            "speed": "50Mbps"
-            "metro": "am"
-        }
-        
-        ```
+
+### Sample Response for metal_resource
+```json
+{
+  "metro": "am",
+  "name": "new connection",
+  "project_id": "Bhf47603-7a09-4ca1-af67-4087c13ab5b6",
+  "redundancy": "primary",
+  "speed": "50Mbps",
+  "type": "dedicated"
+}
+```
 
 

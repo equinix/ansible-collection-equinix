@@ -47,20 +47,18 @@ Manage the VLAN in Equinix Metal. You can use *id* or *vxlan* to lookup the reso
 
 ## Return Values
 
-- `metal_vlan` - The module object
 
-    - Sample Response:
-        ```json
-        
-        {
-          "changed": false,
-          "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
-          "description": "This is my new VLAN.",
-          "metro": "se",
-          "vxlan": 1234,
-          "project_id": "778h50f7-75b6-4271-bc64-632b80f87de2"
-        }
-        
-        ```
+
+### Sample Response for metal_vlan
+```json
+{
+  "changed": false,
+  "description": "This is my new VLAN.",
+  "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
+  "metro": "se",
+  "project_id": "778h50f7-75b6-4271-bc64-632b80f87de2",
+  "vxlan": 1234
+}
+```
 
 

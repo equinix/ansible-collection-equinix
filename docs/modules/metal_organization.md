@@ -1,10 +1,6 @@
 # metal_organization
 
-Lookup a single organization by ID in Equinix Metal. 
-
-This resource only fetches a single organization by resource ID. 
-
-It doesn't allow to create or update organizations.
+Lookup a single organization by ID in Equinix Metal. This resource only fetches a single organization by resource ID. It doesn't allow to create or update organizations.
 
 
 - [Examples](#examples)
@@ -44,29 +40,25 @@ It doesn't allow to create or update organizations.
 
 ## Return Values
 
-- `metal_organization` - The module object
 
-    - Sample Response:
-        ```json
-        
-        {
-        
-          "changed": false,
-          "description": "",
-          "id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
-          },
-          "name": "Tomas’ Projects",
-          "projects": [
-              "18234234-0432-4eb5-9636-5f05671ff33a",
-              "4394a515-8423-46ed-b0f5-8bfd09573a06",
-              "52000324-e342-4673-93a8-de242342343b",
-              "64234231-bce5-4a62-a47c-14234d7ea8d9",
-              "81423459-f69d-40c4-9b72-51e23c324243",
-              "e9324234-6423-4232-8423-854234238106"
-          ],
-          "website": ""
-        }
-        
-        ```
+
+### Sample Response for metal_organization
+```json
+{
+  "changed": false,
+  "description": "",
+  "id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
+  "name": "Tomas\u2019 Projects",
+  "projects": [
+    "18234234-0432-4eb5-9636-5f05671ff33a",
+    "4394a515-8423-46ed-b0f5-8bfd09573a06",
+    "52000324-e342-4673-93a8-de242342343b",
+    "64234231-bce5-4a62-a47c-14234d7ea8d9",
+    "81423459-f69d-40c4-9b72-51e23c324243",
+    "e9324234-6423-4232-8423-854234238106"
+  ],
+  "website": ""
+}
+```
 
 

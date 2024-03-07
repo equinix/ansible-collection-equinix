@@ -41,17 +41,15 @@ equinix.cloud.metal_available_ips_info:
 
 ## Return Values
 
-- `available` - Available IP addresses from the reservation.
 
-    - Sample Response:
-        ```json
-        
-        {
-            "available": [
-                "147.75.71.192/32"
-            ],
-        }
-        
-        ```
+
+### Sample Response for available
+```json
+{
+  "available": [
+    "147.75.71.192/32"
+  ]
+}
+```
 
 

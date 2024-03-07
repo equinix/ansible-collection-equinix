@@ -48,15 +48,13 @@ You can use this module to enable BGP Config for a project. To lookup BGP Config
 
 ## Return Values
 
-- `metal_project_bgp_config` - The module object
 
-    - Sample Response:
-        ```json
-        
-        {
-            "changed": true
-        }
-        
-        ```
+
+### Sample Response for metal_project_bgp_config
+```json
+{
+  "changed": true
+}
+```
 
 

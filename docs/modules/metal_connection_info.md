@@ -42,23 +42,19 @@ Gather information about Interconnections
 
 ## Return Values
 
-- `resources` - Found resources
 
-    - Sample Response:
-        ```json
-        
-        
-        [
-          {
-            "id": "31d3ae8b-bd5a-41f3-a420-055211345cc7",
-            "name": "my_test_connection",
-            "project_id": "845b45a3-c565-47e5-b9b6-a86204a73d29",
-            "type": "dedicated",
-            "redundancy": "primary",
-            "speed": "50Mbps",
-            "metro": "am",
-          }
-        ]
-        ```
+
+### Sample Response for resources
+```json
+{
+  "id": "31d3ae8b-bd5a-41f3-a420-055211345cc7",
+  "metro": "am",
+  "name": "my_test_connection",
+  "project_id": "845b45a3-c565-47e5-b9b6-a86204a73d29",
+  "redundancy": "primary",
+  "speed": "50Mbps",
+  "type": "dedicated"
+}
+```
 
 

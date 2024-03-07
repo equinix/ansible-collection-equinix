@@ -80,17 +80,18 @@
 ## Return Values
 
 {% for name, spec in return_values.items() %}
-- `{{ name }}`{% if spec.description %} - {% for line in spec.description %}{{ line }}{% endfor %}{% endif %}
 
 {% if spec.sample %}
 
-    - Sample Response:
+{% if spec.sample | length > 1 %}
+### Sample Responses for {{ name }}
+{% else %}
+### Sample Response for {{ name }}
+{% endif %}
 {% for sample in spec.sample %}
-        ```json
-{% for line in sample.split('\n') %}
-        {{ line }}
-{% endfor %}
-        ```
+```json
+{{ sample | tojson(2) }}
+```
 {% endfor %}
 {% endif %}
 {% if spec.docs_url %}
