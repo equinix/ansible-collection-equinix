@@ -105,7 +105,7 @@ specdoc_examples = ['''
 ''',
                     ]
 
-result_sample = [
+return_values = [
     {
         "description": "",
         "id": "72342434-9423-454e-8423-ab6546461d99",
@@ -129,7 +129,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found organizations',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

@@ -88,7 +88,7 @@ specdoc_examples = [
 """
 ]
 
-result_sample = [
+return_values = [
   {
     "id": "31d3ae8b-bd5a-41f3-a420-055211345cc7",
     "name": "my_test_connection",
@@ -109,7 +109,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description="Found resources",
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

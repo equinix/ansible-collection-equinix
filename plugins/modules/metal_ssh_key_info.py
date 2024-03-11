@@ -80,7 +80,7 @@ specdoc_examples = [
 ]
 
 
-result_sample = [
+return_values = [
     {
         "fingerprint": "70:c1:73:8b:3f:2f:a4:18:ea:4d:79:13:52:7b:c4:3e",
         "id": "6edfcbc2-17e5-4221-9eac-2f40dbe60daf",
@@ -105,7 +105,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found resources',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

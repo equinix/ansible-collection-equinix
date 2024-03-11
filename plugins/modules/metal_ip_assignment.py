@@ -164,7 +164,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
 {
     "address": "147.75.71.192/32",
     "address_family": 4,
@@ -193,7 +193,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_ip_assignment": SpecReturnValue(
             description='The assignment object.',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

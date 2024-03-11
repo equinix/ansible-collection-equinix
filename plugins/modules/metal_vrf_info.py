@@ -96,7 +96,7 @@ specdoc_examples = ['''
 ''',
                     ]
 
-result_sample = [
+return_values = [
     {
         "description": "Test VRF with ASN 65000",
         "id": "8b24de5b-c70e-4a4e-9dd2-064ceb09c587",
@@ -125,7 +125,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found resources',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

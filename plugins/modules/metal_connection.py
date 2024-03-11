@@ -293,7 +293,7 @@ specdoc_examples = [
 """,
 ]
 
-result_sample = [
+return_values = [
   {
     "project_id": "Bhf47603-7a09-4ca1-af67-4087c13ab5b6",
     "name": "new connection",
@@ -319,7 +319,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_resource": SpecReturnValue(
             description="The module object",
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

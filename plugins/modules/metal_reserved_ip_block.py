@@ -161,7 +161,7 @@ specdoc_examples = [
 ]
 
 
-result_sample = [
+return_values = [
     {
         "address_family": 4,
         "changed": True,
@@ -252,7 +252,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_reserved_ip_block": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

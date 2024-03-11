@@ -71,7 +71,7 @@ specdoc_examples = ['''
 ''',
                     ]
 
-result_sample = [
+return_values = [
     {
         "device_id": "",
         "id": "84363c08-a7f5-4e09-8b34-634e82e527c1",
@@ -94,7 +94,7 @@ SPECDOC_META = getSpecDocMeta(
         "hardware_reservations": SpecReturnValue(
             description='Found hardware reservations',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

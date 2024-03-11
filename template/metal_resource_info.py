@@ -42,7 +42,7 @@ specdoc_examples = ['''
 ''',
                     ]
 
-result_sample = ['''
+return_values = ['''
 
 [  
   {
@@ -64,7 +64,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found resources',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

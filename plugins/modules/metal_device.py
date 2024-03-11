@@ -552,7 +552,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
 {
     "always_pxe": False,
     "billing_cycle": "hourly",
@@ -644,7 +644,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_device": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

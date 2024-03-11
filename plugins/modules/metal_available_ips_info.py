@@ -75,7 +75,7 @@ equinix.cloud.metal_available_ips_info:
 ''',
 ]
 
-result_sample = [
+return_values = [
 {
     "available": [
         "147.75.71.192/32"
@@ -92,7 +92,7 @@ SPECDOC_META = getSpecDocMeta(
         "available": SpecReturnValue(
             description='Available IP addresses from the reservation.',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )
