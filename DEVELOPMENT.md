@@ -97,10 +97,54 @@ Our documentation efforts should primarily concentrate on the `SPECDOC_META` var
 
 For examples of SpecField usage in the collection, refer to existing modules. Additionally, the class definition is available in the [ansible-specdoc repository](https://github.com/linode/ansible-specdoc/).
 
-
 SPECDOC_META has other parameters that are quite self-explanatory. Just note that the `examples` value, and the `sample` for SpecRetrunValue should both be lists.
 
-The `return_values` dictionary does not itemize every key of the module output. Instead, it includes a dictionary with the module name, and a `sample` subkey is populated with example module output. Importantly, the value of the `sample` should be in list format.
+The `return_values` should be formatted as a list of dictionaries. If the output of module called `metal_project` is
+```json
+changed: [testhost] => {
+    "backend_transfer_enabled": false,
+    "changed": true,
+    "customdata": {},
+    "description": "",
+    "id": "e4a49767-824d-4b60-a55e-d66f4baaf7ea",
+    "invocation": {},
+    "name": "ansible-integration-test-project-j9sa85k8-project2",
+    "organization_id": "4d12f460-8c5e-43ea-986d-529d328815ee",
+    "payment_method_id": ""
+}
+```
+.. define `return_values` in module script (in Python code) as
+
+```python
+result_sample = [
+  {
+    "backend_transfer_enabled": False,
+    "changed": True,
+    "customdata": {},
+    "description": "",
+    "id": "e4a49767-824d-4b60-a55e-d66f4baaf7ea",
+    "name": "ansible-integration-test-project-csle6t2y-project1_renamed",
+    "organization_id": "70c2f878-9f32-452e-8c69-ab15480e1d99",
+    "payment_method_id": "845b45a3-c565-47e5-b9b6-a86204a73d29"
+  },
+]
+
+# .. and in SPECDOC_META:
+
+SPECDOC_META = getSpecDocMeta(
+    # ...
+    return_values={
+        "metal_project": SpecReturnValue(
+            description='The module object',
+            type=FieldType.dict,
+            sample=result_sample,
+        ),
+    },
+)
+```
+
+All the samples will be rendered in markdown docs visible in the GitHub repo, only the first sample will be rendered in ansible-doc visible in Ansible Galaxy.
+
 
 ###  2.3. <a name='mainfunction'></a>main() function
 
