@@ -40,6 +40,7 @@ docs: inject-module-docs
 	DOCS_PATH=$(DOCS_PATH) ./scripts/specdoc_generate.sh
 	python scripts/render_readme.py ${COLLECTION_VERSION}
 	ansible-doc-extractor --template=template/module.rst.j2 $(DOCS_PATH)/inventory plugins/inventory/metal_device.py
+	find . -type d -name '__pycache__' -exec rm -rf {} \;
 
 .PHONY: inject-module-docs
 inject-module-docs:
