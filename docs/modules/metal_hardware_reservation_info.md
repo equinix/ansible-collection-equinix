@@ -44,22 +44,19 @@ Gather information about Equinix Metal hardware_reservations
 
 ## Return Values
 
-- `hardware_reservations` - Found hardware reservations
 
-    - Sample Response:
-        ```json
-        
-        [
-            {
-                "device_id": "",
-                "id": "84363c08-a7f5-4e09-8b34-634e82e527c1",
-                "plan": "m3.small.x86",
-                "project_id": "c6ba3fb2-ee46-4623493a8-de324234a33b",
-                "provisionable": false,
-                "spare": false,
-                "switch_uuid": "00a324b7"
-            }
-        ]
-        ```
+
+### Sample Response for hardware_reservations
+```json
+{
+  "device_id": "",
+  "id": "84363c08-a7f5-4e09-8b34-634e82e527c1",
+  "plan": "m3.small.x86",
+  "project_id": "c6ba3fb2-ee46-4623493a8-de324234a33b",
+  "provisionable": false,
+  "spare": false,
+  "switch_uuid": "00a324b7"
+}
+```
 
 

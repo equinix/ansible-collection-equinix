@@ -34,37 +34,40 @@ Gather information about Equinix Metal metros
 
 ## Return Values
 
-- `resources` - Found metros
 
-    - Sample Response:
-        ```json
-        
-        [
-            {
-                "code": "sv",
-                "country": "US",
-                "id": "2991b022-b8c4-497e-8db7-5a407c3a209b",
-                "name": "Silicon Valley"
-            },
-            {
-                "code": "la",
-                "country": "US",
-                "id": "bb059cc0-0b2a-4f5b-8a55-219e6b4240da",
-                "name": "Los Angeles"
-            },
-            {
-                "code": "ch",
-                "country": "US",
-                "id": "60666d92-e00f-43a8-a9f8-fddf665390ca",
-                "name": "Chicago"
-            },
-            {
-                "code": "da",
-                "country": "US",
-                "id": "d3d6b29f-042d-43b7-b3ce-0bf53d5754ca",
-                "name": "Dallas"
-            }
-        ]
-        ```
+
+### Sample Responses for resources
+```json
+{
+  "code": "sv",
+  "country": "US",
+  "id": "2991b022-b8c4-497e-8db7-5a407c3a209b",
+  "name": "Silicon Valley"
+}
+```
+```json
+{
+  "code": "la",
+  "country": "US",
+  "id": "bb059cc0-0b2a-4f5b-8a55-219e6b4240da",
+  "name": "Los Angeles"
+}
+```
+```json
+{
+  "code": "ch",
+  "country": "US",
+  "id": "60666d92-e00f-43a8-a9f8-fddf665390ca",
+  "name": "Chicago"
+}
+```
+```json
+{
+  "code": "da",
+  "country": "US",
+  "id": "d3d6b29f-042d-43b7-b3ce-0bf53d5754ca",
+  "name": "Dallas"
+}
+```
 
 

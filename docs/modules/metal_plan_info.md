@@ -68,29 +68,28 @@ Gather information about Equinix Metal plans
 
 ## Return Values
 
-- `resources` - Found resources
 
-    - Sample Response:
-        ```json
-        
-        {                                                                                     
-          "available_in": [],                                                                                                                                                       
-          "available_in_metros": [],
-          "category": [
-            "compute",
-            "current_gen"
-          ],
-          "class": "a3.large.opt-m3a2",
-          "deployment_types": [],
-          "description": "a3.large.opt-m3a2.x86",
-          "id": "8c04950a-87ab-5e52-a112-5a90bbca8868",
-          "legacy": false,
-          "line": "baremetal",
-          "name": "a3.large.opt-m3a2.x86",
-          "pricing_hour": 8.2,
-          "pricing_month": null,
-          "slug": "a3.large.opt-m3a2"
-        }
-        ```
+
+### Sample Response for resources
+```json
+{
+  "available_in": [],
+  "available_in_metros": [],
+  "category": [
+    "compute",
+    "current_gen"
+  ],
+  "class": "a3.large.opt-m3a2",
+  "deployment_types": [],
+  "description": "a3.large.opt-m3a2.x86",
+  "id": "8c04950a-87ab-5e52-a112-5a90bbca8868",
+  "legacy": false,
+  "line": "baremetal",
+  "name": "a3.large.opt-m3a2.x86",
+  "pricing_hour": 8.2,
+  "pricing_month": null,
+  "slug": "a3.large.opt-m3a2"
+}
+```
 
 

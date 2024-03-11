@@ -54,29 +54,25 @@ Gather list of reserved IP blocks matching the specified criteria
 
 ## Return Values
 
-- `resources` - Found resources
 
-    - Sample Response:
-        ```json
-        
-        [
-            {
-                "address_family": 4,
-                "customdata": {},
-                "details": "some desc fff",
-                "id": "16148fad-7839-4c63-b33f-0ecfec4f9e29",
-                "management": false,
-                "metro": "da",
-                "netmask": "255.255.255.255",
-                "network": "145.40.102.107",
-                "project_id": "52000fb2-ee46-4673-93a8-de2c2bdba33b",
-                "public": true,
-                "quantity": 1,
-                "tags": [],
-                "type": "public_ipv4"
-            }
-        ]
-        
-        ```
+
+### Sample Response for resources
+```json
+{
+  "address_family": 4,
+  "customdata": {},
+  "details": "some desc fff",
+  "id": "16148fad-7839-4c63-b33f-0ecfec4f9e29",
+  "management": false,
+  "metro": "da",
+  "netmask": "255.255.255.255",
+  "network": "145.40.102.107",
+  "project_id": "52000fb2-ee46-4673-93a8-de2c2bdba33b",
+  "public": true,
+  "quantity": 1,
+  "tags": [],
+  "type": "public_ipv4"
+}
+```
 
 

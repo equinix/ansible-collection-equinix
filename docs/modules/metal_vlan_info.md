@@ -38,19 +38,16 @@ Gather information about Equinix Metal VLAN resources
 
 ## Return Values
 
-- `resources` - Found resources
 
-    - Sample Response:
-        ```json
-        
-        [
-          {
-            "vxlan": 1234,
-            "metro": "se",
-            "id": "845b45a3-c565-47e5-b9b6-a86204a73d29",
-            "description": "My VLAN"
-          }
-        ]
-        ```
+
+### Sample Response for resources
+```json
+{
+  "description": "My VLAN",
+  "id": "845b45a3-c565-47e5-b9b6-a86204a73d29",
+  "metro": "se",
+  "vxlan": 1234
+}
+```
 
 
