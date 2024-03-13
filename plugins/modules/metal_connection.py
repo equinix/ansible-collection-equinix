@@ -110,7 +110,7 @@ options:
     type: list
   vrfs:
     description:
-    - List of connection ports - primary (`ports[0]`) and secondary (`ports[1]`)
+    - Only used with shared connection. VRFs to attach. Pass one VRF for Primary/Single connection and two VRFs for Redundant connection
     elements: str
     required: false
     type: list
@@ -264,7 +264,7 @@ module_spec = dict(
     ),
     vrfs=SpecField(
         type=FieldType.list,
-        description=["List of connection ports - primary (`ports[0]`) and secondary (`ports[1]`)"],
+        description=["Only used with shared connection. VRFs to attach. Pass one VRF for Primary/Single connection and two VRFs for Redundant connection"],
         element_type=FieldType.string,
     ),
 )
@@ -331,6 +331,7 @@ def main():
         required_one_of=[("name", "connection_id", "id"), ("project_id", "organization_id")],
     )
     vlans = module.params.get("vlans")
+    vrfs = module.params.get("vrfs")
     connection_type = module.params.get("type")
 
     if not module.params.get("connection_id") and module.params.get("id"):
@@ -343,12 +344,17 @@ def main():
         if module.params.get("service_token_type"):
           module.fail_json(msg="A 'dedicated' connection can't have service_token_type set.")
     elif connection_type == "shared":
+        if vlans and vrfs:
+           module.fail_json(msg="A 'shared' connection can't have both vlans and vrfs")
         if not module.params.get("project_id"):
           module.fail_json(msg="You must provide 'project_id' for a 'shared' connection.")
         if module.params.get("mode") == "tunnel":
           module.fail_json(msg="A 'shared' connection doesn't support 'tunnel' mode.")
-        if module.params.get("redundancy") == "primary" and len(vlans) > 1:
-          module.fail_json(msg="A 'shared' connection without redundancy can only have 1 vlan.")
+        if module.params.get("redundancy") == "primary":
+          if vlans and len(vlans) > 1:
+            module.fail_json(msg="A 'shared' connection without redundancy can only have 1 vlan.")
+          if vrfs and len(vrfs) > 1:
+            module.fail_json(msg="A 'shared' connection without redundancy can only have 1 vrf.")
         if not module.params.get("service_token_type"):
           module.fail_json(msg="A 'shared' connection must have a set service_token_type.")
 
