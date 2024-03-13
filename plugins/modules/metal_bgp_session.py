@@ -125,7 +125,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = [
+return_values = [
         {
             "address_family": "ipv4",
             "default_route": True,
@@ -156,7 +156,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_bgp_session": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

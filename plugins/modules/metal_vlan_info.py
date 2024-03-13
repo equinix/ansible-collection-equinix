@@ -63,7 +63,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = [
+return_values = [
   {
     "vxlan": 1234,
     "metro": "se",
@@ -83,7 +83,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found resources',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

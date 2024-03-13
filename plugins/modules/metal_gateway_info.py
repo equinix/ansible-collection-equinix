@@ -74,7 +74,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = [
+return_values = [
     {
         "id": "771c9418-7c60-4a45-8fa6-3a002132331d",
         "ip_reservation_id": "d45c9629-3aab-4a7b-af5d-4ca50041e311",
@@ -104,7 +104,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found Metal Gateways',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

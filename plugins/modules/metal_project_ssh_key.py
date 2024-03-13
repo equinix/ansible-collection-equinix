@@ -131,7 +131,7 @@ specdoc_examples = [
 """,
 ]
 
-result_sample = [
+return_values = [
     {
     "fingerprint": "98:9c:35:ed:f9:75:5b:52:e2:70:50:22:ea:77:5b:b6",
     "id": "eef49903-7a09-4ca1-af67-4087c29ab5b6",
@@ -157,7 +157,7 @@ SPECDOC_META = getSpecDocMeta(
         MODULE_NAME: SpecReturnValue(
             description="The module object",
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

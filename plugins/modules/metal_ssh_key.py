@@ -114,7 +114,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
     {
     "fingerprint": "98:9c:35:ed:f9:75:5b:52:e2:70:50:22:ea:77:5b:b6",
     "id": "260c8ef0-2667-4446-9c9d-a156f7234da6",
@@ -141,7 +141,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_ssh_key": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

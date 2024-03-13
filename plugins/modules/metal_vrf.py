@@ -166,7 +166,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
     {
         "changed": False,
         "description": "Test VRF with ASN 65000",
@@ -200,7 +200,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_vrf": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

@@ -126,7 +126,7 @@ specdoc_examples = [
 """,
 ]
 
-result_sample = [
+return_values = [
     {
     "changed": False,
     "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
@@ -152,7 +152,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_vlan": SpecReturnValue(
             description="The module object",
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

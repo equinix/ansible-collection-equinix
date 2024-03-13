@@ -78,7 +78,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = [
+return_values = [
     {
         "code": "sv",
         "country": "US",
@@ -116,7 +116,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found metros',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

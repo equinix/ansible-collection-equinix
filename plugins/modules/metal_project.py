@@ -177,7 +177,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
 {
   "backend_transfer_enabled": False,
   "changed": False,
@@ -207,7 +207,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_project": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

@@ -93,7 +93,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = [
+return_values = [
     {
         "distro": "windows",
         "distro_label": "Windows",
@@ -147,7 +147,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found Operating Systems',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

@@ -100,7 +100,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
     {
         "address": "147.75.55.115/31",
         "address_family": 4,
@@ -158,7 +158,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found resources',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

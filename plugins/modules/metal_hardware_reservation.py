@@ -130,7 +130,7 @@ specdoc_examples = [
 '''
 ]
 
-result_sample = [
+return_values = [
 {
     "changed": False,
     "device_id": "",
@@ -156,7 +156,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_hardware_reservation": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

@@ -210,7 +210,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
     {
         "always_pxe": False,
         "billing_cycle": "hourly",
@@ -380,7 +380,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description="List of devices",
             type=FieldType.list,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

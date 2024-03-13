@@ -127,7 +127,7 @@ specdoc_examples = ['''
 ''',
 ]
 
-result_sample = [
+return_values = [
   {
     "available_in": [],
     "available_in_metros": [],
@@ -159,7 +159,7 @@ SPECDOC_META = getSpecDocMeta(
         "resources": SpecReturnValue(
             description='Found resources',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )

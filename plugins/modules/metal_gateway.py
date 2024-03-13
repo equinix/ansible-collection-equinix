@@ -194,7 +194,7 @@ specdoc_examples = [
 ''',
 ]
 
-result_sample = [
+return_values = [
 {
                  
   "changed": True,
@@ -232,7 +232,7 @@ SPECDOC_META = getSpecDocMeta(
         "metal_gateway": SpecReturnValue(
             description='The module object',
             type=FieldType.dict,
-            sample=result_sample,
+            sample=return_values,
         ),
     },
 )
