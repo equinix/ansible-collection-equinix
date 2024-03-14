@@ -1,0 +1,43 @@
+on: 
+  pull_request_target:
+    paths:
+    - plugins/**
+    - Makefile
+    - requirements.txt
+    - requirements-dev.txt
+    - .github/**
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read
+  contents: read
+
+jobs:
+  integration-test-pr:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .ansible/collections/ansible_collections/equinix/cloud
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: .ansible/collections/ansible_collections/equinix/cloud            
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+
+      - name: update packages
+        run: sudo apt-get update -y
+
+      - name: install make
+        run: sudo apt-get install -y build-essential
+
+      - name: setup python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: install dependencies
+        run: pip3 install -r requirements-dev.txt -r requirements.txt
+
+      - name: run docs generation
+        run: make docs
+
