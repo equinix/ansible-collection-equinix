@@ -175,15 +175,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
 
 MEGA = 1000 * 1000
 GIGA = 1000 * MEGA
-allowed_speeds = [
-    (50 * MEGA, "50Mbps"),
-    (200 * MEGA, "200Mbps"),
-    (500 * MEGA, "500Mbps"),
-    (1 * GIGA, "1Gbps"),
-    (2 * GIGA, "2Gbps"),
-    (5 * GIGA, "5Gbps"),
-    (10 * GIGA, "10Gbps"),
-]
+allowed_speeds = ["50Mbps", "200Mbps", "500Mbps", "1Gbps", "2Gbps", "5Gbps","10Gbps"]
 MODULE_NAME = "metal_connection"
 DEDICATED_ORG_IC_SUBMODULE = "metal_connection_organization_dedicated"
 DEDICATED_PROJECT_IC_SUBMODULE = "metal_connection_project_dedicated"
@@ -245,7 +237,7 @@ module_spec = dict(
     ),
     speed=SpecField(
         type=FieldType.string,
-        description=[f"Port speed. Required for a_side connections. Allowed values are {[s[1] for s in allowed_speeds]}"],
+        description=[f"Port speed. Required for a_side connections. Allowed values are {[s for s in allowed_speeds]}"],
     ),
     tags=SpecField(
         type=FieldType.list,
@@ -359,9 +351,6 @@ def main():
         if not module.params.get("service_token_type"):
           module.fail_json(msg="A 'shared' connection must have a set service_token_type.")
 
-    if module.params.get("speed"):
-        module.params["speed"] = speed_str_to_int(module)
-
     state = module.params.get("state")
     changed = False
 
@@ -403,16 +392,6 @@ def main():
 
     fetched.update({"changed": changed})
     module.exit_json(**fetched)
-
-
-def speed_str_to_int(module):
-    raw_speed = module.params["speed"]
-
-    for speed, speed_str in allowed_speeds:
-        if raw_speed == speed_str:
-            return speed
-    raise module.fail_json(msg=f"Speed value invalid, allowed values are {[s[1] for s in allowed_speeds]}")
-
 
 def determine_ic_submodule(module):
   type = module.params["type"]
