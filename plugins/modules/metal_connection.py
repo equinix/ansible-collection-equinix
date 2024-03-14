@@ -110,7 +110,8 @@ options:
     type: list
   vrfs:
     description:
-    - Only used with shared connection. VRFs to attach. Pass one VRF for Primary/Single connection and two VRFs for Redundant connection
+    - Only used with shared connection. VRFs to attach. Pass one VRF for Primary/Single
+      connection and two VRFs for Redundant connection
     elements: str
     required: false
     type: list

@@ -12,7 +12,7 @@ metal_device -- Equinix Metal Device inventory source
 Synopsis
 --------
 
-Reads device inventories from Equinix Metal. Uses YAML configuration file that ends with equinix.(yml|yaml). ansible\_host is set to first public IP address of the device.
+Reads device inventories from Equinix Metal. Uses YAML configuration file that ends with equinix.(yml|yaml). ansible_host is set to first public IP address of the device.
 
 
 
@@ -20,8 +20,8 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- python \>= 3
-- metal\_python \>= 0.0.1
+- python >= 3
+- metal_python >= 0.0.1
 
 
 
@@ -35,7 +35,7 @@ Parameters
 
 
   **metal_api_token (Required, type=str):**
-    \• Equinix Metal API token. Can also be specified via METAL\_AUTH\_TOKEN environment variable.
+    \• Equinix Metal API token. Can also be specified via METAL_AUTH_TOKEN environment variable.
 
 
 
@@ -44,7 +44,7 @@ Parameters
 
 
   **strict (type=bool):**
-    \• If \ :literal:`yes`\  make invalid entries a fatal error, otherwise skip and continue.
+    \• If V(yes) make invalid entries a fatal error, otherwise skip and continue.
 
     \• Since it is possible to use facts in the expressions they might not always be available and we ignore those errors by default.
 
@@ -80,13 +80,13 @@ Parameters
       **default_value (type=str):**
         \• The default value when the host variable's value is an empty string.
 
-        \• This option is mutually exclusive with \ :literal:`trailing\_separator`\ .
+        \• This option is mutually exclusive with O(keyed_groups[].trailing_separator).
 
 
       **trailing_separator (type=bool, default=True):**
-        \• Set this option to \ :emphasis:`False`\  to omit the \ :literal:`separator`\  after the host variable when the value is an empty string.
+        \• Set this option to V(False) to omit the O(keyed_groups[].separator) after the host variable when the value is an empty string.
 
-        \• This option is mutually exclusive with \ :literal:`default\_value`\ .
+        \• This option is mutually exclusive with O(keyed_groups[].default_value).
 
 
 
@@ -95,11 +95,11 @@ Parameters
 
 
   **leading_separator (type=boolean, default=True):**
-    \• Use in conjunction with keyed\_groups.
+    \• Use in conjunction with keyed_groups.
 
     \• By default, a keyed group that does not have a prefix or a separator provided will have a name that starts with an underscore.
 
-    \• This is because the default prefix is "" and the default separator is "\_".
+    \• This is because the default prefix is "" and the default separator is "_".
 
     \• Set this option to False to omit the leading underscore (or other separator) if no prefix is given.
 

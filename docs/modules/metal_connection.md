@@ -62,7 +62,7 @@ Manage an Interconnection in Equinix Metal. You can use *connection_id* to looku
 | `tags` | <center>`list`</center> | <center>Optional</center> | Tags attached to the connection  **(Updatable)** |
 | `type` | <center>`str`</center> | <center>Optional</center> | Connection type - dedicated or shared  **(Choices: `dedicated`, `shared`)** |
 | `vlans` | <center>`list`</center> | <center>Optional</center> | Only used with shared connection. VLANs to attach. Pass one vlan for Primary/Single connection and two vlans for Redundant connection   |
-| `vrfs` | <center>`list`</center> | <center>Optional</center> | List of connection ports - primary (`ports[0]`) and secondary (`ports[1]`)   |
+| `vrfs` | <center>`list`</center> | <center>Optional</center> | Only used with shared connection. VRFs to attach. Pass one VRF for Primary/Single connection and two VRFs for Redundant connection   |
 
 
 
