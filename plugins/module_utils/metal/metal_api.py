@@ -131,7 +131,7 @@ METAL_VRF_RESPONSE_ATTRIBUTE_MAP = {
     'name': 'name',
     'metro': 'metro',
     'project_id': 'project.id',
-    'description': 'description',
+    'description': optional_str('description'),
     'local_asn': 'local_asn',
     'ip_ranges': 'ip_ranges',
 }
@@ -152,6 +152,7 @@ LIST_KEYS = [
     'bgp_sessions',     # metal_bgp_session
     'sessions',         # metal_bgp_session_info
     'plans',
+    'virtual_circuits',
 ]
 
 
@@ -289,6 +290,23 @@ METAL_PLAN_RESPONSE_ATTRIBUTE_MAP = {
     'available_in_metros': 'available_in_metros',
 }
 
+METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'name': 'name',
+    'customer_ip': 'customer_ip',
+    'metal_ip': 'metal_ip',
+    'nni_vlan': 'nni_vlan',
+    'peer_asn': 'peer_asn',
+    'port': 'port',
+    'project': 'project',
+    'status': 'status',
+    'subnet': optional('subnet'),
+    'tags': 'tags',
+    'type': 'type',
+    'vrf': 'vrf',
+    'project_id': 'project.id',
+}
+
 
 def get_attribute_mapper(resource_type):
     """
@@ -309,6 +327,7 @@ def get_attribute_mapper(resource_type):
     bgp_resources = {'metal_bgp_session', 'metal_bgp_session_by_project'}
     project_bgp_config_resources = {'metal_project_bgp_config'}
     plan_resources = set(["metal_plan"])
+    virtual_circuit_resources = set(["metal_virtual_circuit", "metal_virtual_circuit_vrf"])
     if resource_type in device_resources:
         return METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in project_resources:
@@ -341,6 +360,8 @@ def get_attribute_mapper(resource_type):
         return METAL_PROJECT_BGP_CONFIG_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in plan_resources:
         return METAL_PLAN_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type in virtual_circuit_resources:
+        return METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
