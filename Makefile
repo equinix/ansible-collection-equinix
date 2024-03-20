@@ -74,4 +74,7 @@ endif
 ifneq ("${METAL_HARDWARE_RESERVATION_PROJECT_ID}", "")
 	echo "metal_hardware_reservation_project_id: ${METAL_HARDWARE_RESERVATION_PROJECT_ID}" >> $(INTEGRATION_CONFIG)
 endif
+ifneq ("${ANSIBLE_ACC_METAL_DEDICATED_CONNECTION_ID}", "")
+	echo "ansible_acc_metal_dedicated_connection_id: ${ANSIBLE_ACC_METAL_DEDICATED_CONNECTION_ID}" >> $(INTEGRATION_CONFIG)
+endif
 

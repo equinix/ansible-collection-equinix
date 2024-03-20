@@ -35,6 +35,7 @@ Name | Description |
 [equinix.cloud.metal_project_ssh_key](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
 [equinix.cloud.metal_reserved_ip_block](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_reserved_ip_block.md)|Create/delete blocks of reserved IP addresses in a project.|
 [equinix.cloud.metal_ssh_key](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_ssh_key.md)|Manage personal SSH keys in Equinix Metal|
+[equinix.cloud.metal_virtual_circuit](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_virtual_circuit.md)|Manage a Virtual Circuit in Equinix Metal|
 [equinix.cloud.metal_vlan](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_vlan.md)|Manage a VLAN resource in Equinix Metal|
 [equinix.cloud.metal_vrf](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_vrf.md)|Manage a VRF resource in Equinix Metal|
 
@@ -60,6 +61,7 @@ Name | Description |
 [equinix.cloud.metal_project_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys.|
 [equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 [equinix.cloud.metal_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
+[equinix.cloud.metal_virtual_circuit_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_virtual_circuit_info.md)|Gather information about Equinix Metal Virtual Circuits|
 [equinix.cloud.metal_vlan_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_vlan_info.md)|Gather VLANs.|
 [equinix.cloud.metal_vrf_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.5.0/docs/modules/metal_vrf_info.md)|Gather VRFs|
 

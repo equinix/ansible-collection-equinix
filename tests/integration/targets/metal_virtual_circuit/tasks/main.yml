@@ -1,0 +1,199 @@
+# https://registry.terraform.io/providers/equinix/equinix/latest/docs/resources/equinix_metal_virtual_circuit
+- name: metal_virtual_circuit
+  module_defaults:
+    equinix.cloud.metal_virtual_circuit:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_virtual_circuit_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_connection:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vrf:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_vrf_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_organization_info:
+      metal_api_token: '{{ metal_api_token }}'
+  block:
+    - set_fact:
+        test_resource_name_prefix: 'ansible-integration-test-virtualcircuit'
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_circuit_name: "test_virtual_circuit"
+        test_nni_vlan: 1056
+        test_peer_asn: 66000
+        test_subnet: "192.168.151.126/31"
+
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}-project"
+        backend_transfer_enabled: true
+      register: test_project
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: get connection
+      equinix.cloud.metal_connection:
+        id: "{{ ansible_acc_metal_dedicated_connection_id }}"
+        organization_id: "{{ test_project.organization_id }}"
+      register: test_connection
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - debug:
+        var: test_connection
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: create test VRF
+      equinix.cloud.metal_vrf:
+        name: "{{ test_prefix }}"
+        project_id: "{{ test_project.id }}"
+        metro: "{{ test_connection.metro.code }}"
+        description: "Test VRF with ASN 65000"
+        local_asn: 65000
+        ip_ranges:
+          - "192.168.151.0/25"
+          - "192.168.222.0/25"
+      register: test_vrf
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - debug:
+        var: test_vrf
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: Extract the port ID with status 'active' from test_connection
+      set_fact:
+        test_active_ports: "{{ test_connection.ports | selectattr('status', 'equalto', 'active') }}"
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - debug:
+        var: test_active_ports
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - fail:
+        msg: "There is no port with status=active"
+      when:
+        - ansible_acc_metal_dedicated_connection_id is defined
+        - test_active_ports | length == 0
+
+    - name: create first VRF virtual circuit for test
+      equinix.cloud.metal_virtual_circuit:
+        connection_id: "{{ ansible_acc_metal_dedicated_connection_id }}"
+        port_id: "{{ test_active_ports[0].id }}"
+        name: "{{ test_circuit_name }}"
+        nni_vlan: "{{ test_nni_vlan }}"
+        peer_asn: "{{ test_peer_asn }}"
+        project_id: "{{ test_project.id }}"
+        subnet: "{{ test_subnet }}"
+        vrf: "{{ test_vrf.id }}"
+      register: first_virtual_circuit
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: create first VRF virtual circuit for test (idempotence test)
+      equinix.cloud.metal_virtual_circuit:
+        connection_id: "{{ ansible_acc_metal_dedicated_connection_id }}"
+        port_id: "{{ test_active_ports[0].id }}"
+        name: "{{ test_circuit_name }}"
+        nni_vlan: "{{ test_nni_vlan }}"
+        peer_asn: "{{ test_peer_asn }}"
+        project_id: "{{ test_project.id }}"
+        subnet: "{{ test_subnet }}"
+        vrf: "{{ test_vrf.id }}"
+      register: first_virtual_circuit_idempotence
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: create first VRF virtual circuit for test (edit)
+      equinix.cloud.metal_virtual_circuit:
+        id: "{{ first_virtual_circuit.id }}"
+        name: "{{ test_circuit_name }}-changed"
+      register: first_virtual_circuit_changed
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - set_fact:
+        expected_change_name: "{{ test_circuit_name }}-changed"
+
+    - name: assert virtual circuits
+      assert:
+        that:
+          - "first_virtual_circuit.changed == true"
+          - "first_virtual_circuit_idempotence.changed == false"
+          - "first_virtual_circuit_changed.changed == true"
+          - "first_virtual_circuit_changed.name == expected_change_name"
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: fetch virtual circuit
+      equinix.cloud.metal_virtual_circuit:
+        id: "{{ first_virtual_circuit.id }}"
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: fetch virtual circuit by name
+      equinix.cloud.metal_virtual_circuit:
+        name: "{{ expected_change_name }}"
+        connection_id: "{{ ansible_acc_metal_dedicated_connection_id }}"
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - debug:
+        var: first_virtual_circuit
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: list test VCs
+      equinix.cloud.metal_virtual_circuit_info:
+        connection_id: "{{ ansible_acc_metal_dedicated_connection_id }}"
+      register: test_circuits_listed
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - debug:
+        var: test_circuits_listed
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test VCs
+      equinix.cloud.metal_virtual_circuit_info:
+        connection_id: "{{ ansible_acc_metal_dedicated_connection_id }}"
+      register: test_circuits_listed
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: delete test VCs
+      equinix.cloud.metal_virtual_circuit:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_circuits_listed.resources }}"
+      ignore_errors: yes
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: get VRF info
+      equinix.cloud.metal_vrf_info:
+        project_id: "{{ test_project.id }}"
+      register: vrf_list
+
+    - debug:
+        var: vrf_list
+
+    - name: delete test VRF
+      equinix.cloud.metal_vrf:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ vrf_list.resources }}"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+      when: ansible_acc_metal_dedicated_connection_id is defined
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes
+      when: ansible_acc_metal_dedicated_connection_id is defined

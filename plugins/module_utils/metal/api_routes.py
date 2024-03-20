@@ -78,6 +78,12 @@ def get_routes(mpc):
         ("metal_plan", action.GET): spec_types.Specs(
             equinix_metal.PlansApi(mpc).find_plans_by_project,
         ),
+        ('metal_virtual_circuit', action.GET): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).get_virtual_circuit,
+        ),
+        ('metal_virtual_circuit_vrf', action.GET): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).get_virtual_circuit,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -161,6 +167,18 @@ def get_routes(mpc):
             equinix_metal.PlansApi(mpc).find_plans,
             {'category': 'category', 'type': 'type', 'slug': 'slug', 'include': 'include', 'exclude': 'exclude'},
         ),
+        ('metal_virtual_circuit', action.LIST): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).list_interconnection_virtual_circuits,
+            {'connection_id': 'connection_id'},
+        ),
+        ('metal_virtual_circuit_vrf', action.LIST): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).list_interconnection_virtual_circuits,
+            {'connection_id': 'connection_id'},
+        ),
+        ('metal_port_virtual_circuit', action.LIST): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).list_interconnection_port_virtual_circuits,
+            {'connection_id': 'connection_id', 'port_id': 'port_id'},
+        ),
 
         # DELETERS
         ('metal_device', action.DELETE): spec_types.Specs(
@@ -194,7 +212,12 @@ def get_routes(mpc):
         ('metal_bgp_session', action.DELETE): spec_types.Specs(
             equinix_metal.BGPApi(mpc).delete_bgp_session,
         ),
-
+        ('metal_virtual_circuit', action.DELETE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).delete_virtual_circuit,
+        ),
+        ('metal_virtual_circuit_vrf', action.DELETE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).delete_virtual_circuit,
+        ),
 
         # CREATORS
         ('metal_device', action.CREATE): spec_types.Specs(
@@ -284,6 +307,19 @@ def get_routes(mpc):
             {'id': 'project_id'},
             equinix_metal.BgpConfigRequestInput,
         ),
+        ('metal_virtual_circuit', action.CREATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).create_interconnection_port_virtual_circuit,
+            {'connection_id': 'connection_id', 'port_id': 'port_id'},
+            equinix_metal.VlanVirtualCircuitCreateInput,
+            equinix_metal.VirtualCircuitCreateInput,
+        ),
+        ('metal_virtual_circuit_vrf', action.CREATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).create_interconnection_port_virtual_circuit,
+            {'connection_id': 'connection_id', 'port_id': 'port_id'},
+            equinix_metal.VrfVirtualCircuitCreateInput,
+            equinix_metal.VirtualCircuitCreateInput,
+        ),
+
 
         # UPDATERS
         ('metal_device', action.UPDATE): spec_types.Specs(
@@ -325,5 +361,17 @@ def get_routes(mpc):
             equinix_metal.BGPApi(mpc).update_bgp_session,
             {},
             equinix_metal.BGPSessionInput,
+        ),
+        ('metal_virtual_circuit', action.UPDATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).update_virtual_circuit,
+            {},
+            equinix_metal.VlanVirtualCircuitUpdateInput,
+            equinix_metal.VirtualCircuitUpdateInput,
+        ),
+        ('metal_virtual_circuit_vrf', action.UPDATE): spec_types.Specs(
+            equinix_metal.InterconnectionsApi(mpc).update_virtual_circuit,
+            {},
+            equinix_metal.VrfVirtualCircuitUpdateInput,
+            equinix_metal.VirtualCircuitUpdateInput,
         ),
     }
