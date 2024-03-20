@@ -72,7 +72,7 @@ Dynamically add Equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
-[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.0/docs/inventory/metal_device.md)|
+[equinix.cloud.metal_device](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.0/docs/inventory/metal_device.rst)|
 
 
 <!--end collection content-->
