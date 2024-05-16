@@ -106,6 +106,9 @@ class EquinixModule(AnsibleModule):
             uuid_args = {k: v for k, v in self.params.items() if (k == "id") | (k.endswith("_id"))}
             for k, v in uuid_args.items():
                 if v is not None:
+                    # Skip uuid check for next-available when using reserved hardware
+                    if k == "hardware_reservation_id" and v == "next-available":
+                        continue
                     if not metal_client.is_valid_uuid(v):
                         raise Exception("Invalid UUID for {0}: {1}".format(k, v))
         except Exception as e:
