@@ -136,6 +136,39 @@ METAL_VRF_RESPONSE_ATTRIBUTE_MAP = {
     'ip_ranges': 'ip_ranges',
 }
 
+METAL_USER_RESPONSE_ATTRIBUTE_MAP = {
+    'id': 'id',
+    'short_id': 'short_id',
+    'first_name': 'first_name',
+    'last_name': 'last_name',
+    'full_name': 'full_name',
+    'email': 'email',
+    'social_accounts': 'social_accounts',
+    'created_at': 'created_at',
+    'updated_at': 'updated_at',
+    'default_organization_id': 'default_organization_id',
+    'customdata': 'customdata',
+    'opt_in': 'opt_in',
+    'opt_in_updated_at': 'opt_in_updated_at',
+    'default_project_id': 'default_project_id',
+    'number_of_ssh_keys': 'number_of_ssh_keys',
+    'originating_idp': 'originating_idp',
+    'timezone': 'timezone',
+    'language': 'language',
+    'mailing_address': 'mailing_address',
+    'verification_stage': 'verification_stage',
+    'two_factor_auth': 'two_factor_auth',
+    'max_projects': 'max_projects',
+    'last_login_at': 'last_login_at',
+    'features': 'features',
+    'emails': 'emails',
+    'avatar_url': 'avatar_url',
+    'avatar_thumb_url': 'avatar_thumb_url',
+    'href': 'href',
+    'phone_number': 'phone_number',
+    'restricted': 'restricted'
+}
+
 LIST_KEYS = [
     'projects',
     'devices',
@@ -153,6 +186,7 @@ LIST_KEYS = [
     'sessions',         # metal_bgp_session_info
     'plans',
     'virtual_circuits',
+    'users',
 ]
 
 
@@ -362,6 +396,8 @@ def get_attribute_mapper(resource_type):
         return METAL_PLAN_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in virtual_circuit_resources:
         return METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type == 'metal_user':
+        return METAL_USER_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
