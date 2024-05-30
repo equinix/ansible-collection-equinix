@@ -61,6 +61,7 @@ Name | Description |
 [equinix.cloud.metal_project_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.1/docs/modules/metal_project_ssh_key_info.md)|Gather project SSH keys.|
 [equinix.cloud.metal_reserved_ip_block_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.1/docs/modules/metal_reserved_ip_block_info.md)|Gather list of reserved IP blocks|
 [equinix.cloud.metal_ssh_key_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.1/docs/modules/metal_ssh_key_info.md)|Gather personal SSH keys|
+[equinix.cloud.metal_user_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.1/docs/modules/metal_user_info.md)|Gather information about the current user for Equinix Metal|
 [equinix.cloud.metal_virtual_circuit_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.1/docs/modules/metal_virtual_circuit_info.md)|Gather information about Equinix Metal Virtual Circuits|
 [equinix.cloud.metal_vlan_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.1/docs/modules/metal_vlan_info.md)|Gather VLANs.|
 [equinix.cloud.metal_vrf_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.6.1/docs/modules/metal_vrf_info.md)|Gather VRFs|
