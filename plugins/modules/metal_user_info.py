@@ -78,7 +78,8 @@ from ansible_specdoc.objects import (
     SpecReturnValue,
 )
 import traceback
-import requests
+from equinix_metal import Configuration, ApiClient
+from equinix_metal.api import UsersApi
 
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
@@ -173,15 +174,16 @@ def main():
     try:
         module.params_syntax_check()
         metal_api_token = module.params['metal_api_token']
-        headers = {
-            'X-Auth-Token': metal_api_token
-        }
 
-        response = requests.get("https://api.equinix.com/metal/v1/user", headers=headers)
-        if response.status_code == 200:
-            return_value = {'user': response.json()}
-        else:
-            module.fail_json(msg='Failed to retrieve user information', response=response.text)
+        configuration = Configuration()
+        configuration.api_key['X-Auth-Token'] = metal_api_token
+        api_client = ApiClient(configuration)
+
+        # Get the current user via the Users API
+        users_api = UsersApi(api_client)
+        user = users_api.find_current_user()
+        return_value = {'user': user.to_dict()}
+
     except Exception as e:
         tb = traceback.format_exc()
         module.fail_json(msg="Error in metal_user_info: {0}".format(to_native(e)), exception=tb)
