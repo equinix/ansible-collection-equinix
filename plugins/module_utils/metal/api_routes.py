@@ -84,6 +84,9 @@ def get_routes(mpc):
         ('metal_virtual_circuit_vrf', action.GET): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).get_virtual_circuit,
         ),
+        ('metal_user', action.GET): spec_types.Specs(
+            equinix_metal.UsersApi(mpc).find_current_user,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
