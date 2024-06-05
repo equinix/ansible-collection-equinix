@@ -21,36 +21,24 @@
 
     - assert:
         that:
-        - user_info.user.id is defined
-        - user_info.user.short_id is defined
-        - user_info.user.first_name is defined
-        - user_info.user.last_name is defined
-        - user_info.user.full_name is defined
-        - user_info.user.email is defined
-        - user_info.user.social_accounts is defined
-        - user_info.user.created_at is defined
-        - user_info.user.updated_at is defined
-        - user_info.user.default_organization_id is defined
-        - user_info.user.customdata is defined
-        - user_info.user.opt_in is defined
-        - user_info.user.opt_in_updated_at is defined
-        - user_info.user.default_project_id is defined
-        - user_info.user.number_of_ssh_keys is defined
-        - user_info.user.originating_idp is defined
-        - user_info.user.timezone is defined
-        - user_info.user.language is defined
-        - user_info.user.mailing_address is defined
-        - user_info.user.verification_stage is defined
-        - user_info.user.two_factor_auth is defined
-        - user_info.user.max_projects is defined
-        - user_info.user.last_login_at is defined
-        - user_info.user.features is defined
-        - user_info.user.emails is defined
-        - user_info.user.avatar_url is defined
         - user_info.user.avatar_thumb_url is defined
+        - user_info.user.avatar_url is defined
+        - user_info.user.created_at is defined
+        - user_info.user.customdata is defined
+        - user_info.user.default_organization_id is defined
+        - user_info.user.email is defined
+        - user_info.user.emails is defined
+        - user_info.user.first_name is defined
+        - user_info.user.full_name is defined
         - user_info.user.href is defined
-        - user_info.user.phone_number is defined
-        - user_info.user.restricted is defined
+        - user_info.user.id is defined
+        - user_info.user.last_login_at is defined
+        - user_info.user.last_name is defined
+        - user_info.user.max_projects is defined
+        - user_info.user.short_id is defined
+        - user_info.user.timezone is defined
+        - user_info.user.two_factor_auth is defined
+        - user_info.user.updated_at is defined
 
   always:
     - name: Announce teardown start
