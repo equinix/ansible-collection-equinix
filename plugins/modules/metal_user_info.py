@@ -40,32 +40,20 @@ user:
     created_at: '2019-08-24T14:15:22Z'
     customdata: {}
     default_organization_id: 7498eaa8-62af-4757-81e0-959250fc9cd5
-    default_project_id: null
     email: john.doe@email.com
     emails:
     - href: string
-    features: []
     first_name: John
     full_name: John Doe
     href: /metal/v1/users/497f6eca-6276-4993-bfeb-53cbbbba6f08
     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-    language: null
     last_login_at: '2019-08-24T14:15:22Z'
     last_name: Doe
-    mailing_address: null
     max_projects: 0
-    number_of_ssh_keys: 0
-    opt_in: false
-    opt_in_updated_at: null
-    originating_idp: Equinix
-    phone_number: null
-    restricted: false
     short_id: 497f6eca
-    social_accounts: {}
     timezone: America/New_York
     two_factor_auth: ''
     updated_at: '2019-08-24T14:15:22Z'
-    verification_stage: verified
   type: dict
 '''
 
@@ -78,13 +66,10 @@ from ansible_specdoc.objects import (
     SpecReturnValue,
 )
 import traceback
-from equinix_metal import Configuration, ApiClient
-from equinix_metal.api import UsersApi
 
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     getSpecDocMeta,
-    get_diff
 )
 
 module_spec = dict(
@@ -92,7 +77,13 @@ module_spec = dict(
         type=FieldType.string,
         description=['The Equinix Metal API token to use.'],
         required=True,
-    )
+        no_log=True,
+    ),
+    metal_api_url=SpecField(
+        type=FieldType.string,
+        description=['The Equinix Metal API URL to use.'],
+        required=True,
+    ),
 )
 
 specdoc_examples = [
@@ -111,40 +102,28 @@ specdoc_examples = [
 
 return_values = [
     {
-        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-        "short_id": "497f6eca",
-        "first_name": "John",
-        "last_name": "Doe",
-        "full_name": "John Doe",
-        "email": "john.doe@email.com",
-        "social_accounts": {},
+        "avatar_thumb_url": "https://www.gravatar.com/avatar/49d55cbf53f2dae15bfa4c3a3fb884f9?d=mm",
+        "avatar_url": "https://www.gravatar.com/avatar/49d55cbf53f2dae15bfa4c3a3fb884f9?d=mm",
         "created_at": "2019-08-24T14:15:22Z",
-        "updated_at": "2019-08-24T14:15:22Z",
-        "default_organization_id": "7498eaa8-62af-4757-81e0-959250fc9cd5",
         "customdata": {},
-        "opt_in": False,
-        "opt_in_updated_at": None,
-        "default_project_id": None,
-        "number_of_ssh_keys": 0,
-        "originating_idp": "Equinix",
-        "timezone": "America/New_York",
-        "language": None,
-        "mailing_address": None,
-        "verification_stage": "verified",
-        "two_factor_auth": "",
-        "max_projects": 0,
-        "last_login_at": "2019-08-24T14:15:22Z",
-        "features": [],
+        "default_organization_id": "7498eaa8-62af-4757-81e0-959250fc9cd5",
+        "email": "john.doe@email.com",
         "emails": [
             {
                 "href": "string"
             }
         ],
-        "avatar_url": "https://www.gravatar.com/avatar/49d55cbf53f2dae15bfa4c3a3fb884f9?d=mm",
-        "avatar_thumb_url": "https://www.gravatar.com/avatar/49d55cbf53f2dae15bfa4c3a3fb884f9?d=mm",
+        "first_name": "John",
+        "full_name": "John Doe",
         "href": "/metal/v1/users/497f6eca-6276-4993-bfeb-53cbbbba6f08",
-        "phone_number": None,
-        "restricted": False
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "last_login_at": "2019-08-24T14:15:22Z",
+        "last_name": "Doe",
+        "max_projects": 0,
+        "short_id": "497f6eca",
+        "timezone": "America/New_York",
+        "two_factor_auth": "",
+        "updated_at": "2019-08-24T14:15:22Z"
     }
 ]
 
@@ -167,28 +146,15 @@ def main():
         argument_spec=SPECDOC_META.ansible_spec,
         is_info=True,
     )
-
-    changed = False
-    return_value = {}
-
     try:
         module.params_syntax_check()
-        metal_api_token = module.params['metal_api_token']
-
-        configuration = Configuration()
-        configuration.api_key['X-Auth-Token'] = metal_api_token
-        api_client = ApiClient(configuration)
-
-        # Get the current user via the Users API
-        users_api = UsersApi(api_client)
-        user = users_api.find_current_user()
-        return_value = {'user': user.to_dict()}
-
+        module.params["id"] = "current_user"
+        result = module.get_by_id("metal_user")
+        return_value = {"user": result}
     except Exception as e:
-        tb = traceback.format_exc()
-        module.fail_json(msg="Error in metal_user_info: {0}".format(to_native(e)), exception=tb)
-
-    module.exit_json(changed=changed, **return_value)
+        tr = traceback.format_exc()
+        module.fail_json(msg=to_native(e), exception=tr)
+    module.exit_json(**return_value)
 
 
 if __name__ == '__main__':
