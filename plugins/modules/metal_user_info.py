@@ -72,6 +72,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     getSpecDocMeta,
 )
 
+# Define module specifications
 module_spec = dict(
     metal_api_token=SpecField(
         type=FieldType.string,
@@ -86,6 +87,7 @@ module_spec = dict(
     ),
 )
 
+# Define examples for the module documentation
 specdoc_examples = [
     '''
 - name: Gather information about the current current user
@@ -100,6 +102,7 @@ specdoc_examples = [
 ''',
 ]
 
+# Define return values for the module documentation
 return_values = [
     {
         "avatar_thumb_url": "https://www.gravatar.com/avatar/49d55cbf53f2dae15bfa4c3a3fb884f9?d=mm",
@@ -127,6 +130,7 @@ return_values = [
     }
 ]
 
+# Define the metadata for SpecDoc
 SPECDOC_META = getSpecDocMeta(
     short_description='Gather information about the current user for Equinix Metal',
     description='Gather information about the current user for Equinix Metal',
@@ -142,18 +146,30 @@ SPECDOC_META = getSpecDocMeta(
 )
 
 def main():
+    # Create an instance of EquinixModule with provided specifications
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
         is_info=True,
     )
     try:
+        # Check for syntax validity in provided parameters
         module.params_syntax_check()
+
+        # Setting the id parameter to 'current_user' ensures the module fetches the correct information
+        # Since the id parameter is required by 'get_by_id', we need to set it to a value
         module.params["id"] = "current_user"
+
+        # Fetch the current user's information using the get_by_id method
         result = module.get_by_id("metal_user")
+
+        # Prepare the return value with the fetched user information
         return_value = {"user": result}
     except Exception as e:
+        # Capture any exception and fail the module execution with the error message
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)
+
+    # Exit the module with the return value
     module.exit_json(**return_value)
 
 
