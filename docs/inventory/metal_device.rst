@@ -44,7 +44,7 @@ Parameters
 
 
   **strict (type=bool):**
-    \• If ``yes`` make invalid entries a fatal error, otherwise skip and continue.
+    \• If V(yes) make invalid entries a fatal error, otherwise skip and continue.
 
     \• Since it is possible to use facts in the expressions they might not always be available and we ignore those errors by default.
 
@@ -80,13 +80,13 @@ Parameters
       **default_value (type=str):**
         \• The default value when the host variable's value is an empty string.
 
-        \• This option is mutually exclusive with ``trailing_separator``.
+        \• This option is mutually exclusive with O(keyed_groups[].trailing_separator).
 
 
       **trailing_separator (type=bool, default=True):**
-        \• Set this option to *False* to omit the ``separator`` after the host variable when the value is an empty string.
+        \• Set this option to V(False) to omit the O(keyed_groups[].separator) after the host variable when the value is an empty string.
 
-        \• This option is mutually exclusive with ``default_value``.
+        \• This option is mutually exclusive with O(keyed_groups[].default_value).
 
 
 
