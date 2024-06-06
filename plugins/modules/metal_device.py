@@ -165,9 +165,10 @@ options:
     required: false
     type: list
   provisioning_wait_seconds:
-    default: 300
+    default: 1800
     description:
-    - How long should the module wait for the device to be provisionedi, in seconds.
+    - How long should the module wait for the device to reach `active` status, in
+      seconds.
     required: false
     type: int
   public_ipv4_subnet_size:
@@ -472,8 +473,8 @@ module_spec = dict(
     ),
     provisioning_wait_seconds=SpecField(
         type=FieldType.integer,
-        description="How long should the module wait for the device to be provisionedi, in seconds.",
-        default=300,
+        description="How long should the module wait for the device to reach `active` status, in seconds.",
+        default=1800,
     ),
     spot_instance=SpecField(
         type=FieldType.bool,
