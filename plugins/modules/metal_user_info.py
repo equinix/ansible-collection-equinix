@@ -17,6 +17,11 @@ options:
     - The Equinix Metal API token to use.
     required: true
     type: str
+  metal_api_url:
+    description:
+    - The Equinix Metal API URL to use.
+    required: true
+    type: str
 requirements: null
 short_description: Gather information about the current user for Equinix Metal
 '''
