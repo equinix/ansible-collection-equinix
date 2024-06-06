@@ -136,6 +136,27 @@ METAL_VRF_RESPONSE_ATTRIBUTE_MAP = {
     'ip_ranges': 'ip_ranges',
 }
 
+METAL_USER_RESPONSE_ATTRIBUTE_MAP = {
+    'avatar_thumb_url': 'avatar_thumb_url',
+    'avatar_url': 'avatar_url',
+    'created_at': 'created_at',
+    'customdata': 'customdata',
+    'default_organization_id': 'default_organization_id',
+    'email': 'email',
+    'emails': 'emails',
+    'first_name': 'first_name',
+    'full_name': 'full_name',
+    'href': 'href',
+    'id': 'id',
+    'last_login_at': 'last_login_at',
+    'last_name': 'last_name',
+    'max_projects': 'max_projects',
+    'short_id': 'short_id',
+    'timezone': 'timezone',
+    'two_factor_auth': 'two_factor_auth',
+    'updated_at': 'updated_at'
+}
+
 LIST_KEYS = [
     'projects',
     'devices',
@@ -153,6 +174,7 @@ LIST_KEYS = [
     'sessions',         # metal_bgp_session_info
     'plans',
     'virtual_circuits',
+    'users',
 ]
 
 
@@ -362,6 +384,8 @@ def get_attribute_mapper(resource_type):
         return METAL_PLAN_RESPONSE_ATTRIBUTE_MAP
     elif resource_type in virtual_circuit_resources:
         return METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type == 'metal_user':
+        return METAL_USER_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
