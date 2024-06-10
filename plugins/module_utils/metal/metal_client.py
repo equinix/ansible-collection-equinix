@@ -49,6 +49,7 @@ def get_equinix_metal_client(api_token, api_url=API_URL, ua_prefix=""):
         host=api_url,
     )
     conf.api_key['x_auth_token'] = api_token
+    conf.debug = True
     mpc = equinix_metal.ApiClient(conf)
     mpc.user_agent = ua + " " + mpc.user_agent
     return mpc
