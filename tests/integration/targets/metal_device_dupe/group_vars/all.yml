@@ -1,0 +1,12 @@
+---
+k8s_cluster_phase: test
+ignition_content:
+  stdout: ""
+cluster_request:
+  controllers:
+    count: 2
+  env: test
+  metro: ch
+  ipxe_script_url: ""
+  userdata: ""
+

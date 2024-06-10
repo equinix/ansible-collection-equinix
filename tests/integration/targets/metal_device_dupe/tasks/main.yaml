@@ -1,0 +1,36 @@
+- name: metal_device
+  module_defaults:
+    equinix.cloud.metal_device:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_project:
+      metal_api_token: "{{ metal_api_token }}"
+  block:
+    - set_fact:
+        test_os: ubuntu_22_04
+    - set_fact:
+        test_plan: c3.small.x86
+
+    - equinix.cloud.metal_project:
+        name: "Ansible Dupe Test"
+      register: project
+
+    - name: "Create 2 Kube Controllers"
+      equinix.cloud.metal_device:
+        project_id: "{{ project.id }}"
+        state: "present"
+        hostname: "test-{{ metal_test_metro }}-{{ item }}"
+        tags:
+          - "test-{{ metal_test_metro }}"
+          - kube_controllers
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{metal_test_metro }}"
+        provisioning_wait_seconds: 5
+      loop: "{{ range(0, 2) }}"
+      retries: 5
+      delay: 10
+      register: controller_nodes
+
+    - name: "Debug output"
+      ansible.builtin.debug:
+        var: controller_nodes
