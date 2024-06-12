@@ -157,6 +157,11 @@ METAL_USER_RESPONSE_ATTRIBUTE_MAP = {
     'updated_at': 'updated_at'
 }
 
+METAL_METRO_CAPACITY_INFO_RESPONSE_ATTRIBUTE_MAP = {
+    'capacity': 'capacity'
+}
+
+
 LIST_KEYS = [
     'projects',
     'devices',
@@ -386,6 +391,8 @@ def get_attribute_mapper(resource_type):
         return METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_user':
         return METAL_USER_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type == 'metal_metro_capacity_info':
+        return METAL_METRO_CAPACITY_INFO_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
