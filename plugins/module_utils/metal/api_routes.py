@@ -87,6 +87,9 @@ def get_routes(mpc):
         ('metal_user', action.GET): spec_types.Specs(
             equinix_metal.UsersApi(mpc).find_current_user,
         ),
+        ('metal_metro_capacity_info', action.GET): spec_types.Specs(
+            equinix_metal.CapacityApi(mpc).find_capacity_for_metro,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
