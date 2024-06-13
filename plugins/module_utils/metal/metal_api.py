@@ -157,8 +157,8 @@ METAL_USER_RESPONSE_ATTRIBUTE_MAP = {
     'updated_at': 'updated_at'
 }
 
-METAL_METRO_CAPACITY_INFO_RESPONSE_ATTRIBUTE_MAP = {
-    'capacity': 'capacity'
+METAL_METRO_CAPACITY_RESPONSE_ATTRIBUTE_MAP = {
+    'capacity': lambda resource: resource.get('capacity', {}) if isinstance(resource, dict) else {}
 }
 
 
@@ -180,6 +180,7 @@ LIST_KEYS = [
     'plans',
     'virtual_circuits',
     'users',
+    'capacity',
 ]
 
 
@@ -391,8 +392,8 @@ def get_attribute_mapper(resource_type):
         return METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_user':
         return METAL_USER_RESPONSE_ATTRIBUTE_MAP
-    elif resource_type == 'metal_metro_capacity_info':
-        return METAL_METRO_CAPACITY_INFO_RESPONSE_ATTRIBUTE_MAP
+    elif resource_type == 'metal_metro_capacity':
+        return METAL_METRO_CAPACITY_RESPONSE_ATTRIBUTE_MAP
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 
@@ -437,6 +438,8 @@ def add_id_from_href(v):
 
 
 def populate_ids_from_hrefs(response):
+    if isinstance(response, str):
+        return response
     return_dict = response.to_dict()
     if return_dict == {}:
         return_dict = response.additional_properties.copy()

@@ -395,3 +395,4 @@ ansible.cfg
 
 *tar.gz
 getbody.py
+plugins/modules/metal_metro_capacity_info copy.py
