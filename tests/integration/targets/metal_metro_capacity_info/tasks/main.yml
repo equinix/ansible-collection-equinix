@@ -1,0 +1,51 @@
+- name: metal_metro_capacity_info
+  module_defaults:
+    equinix.cloud.metal_metro_capacity_info:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project:
+      metal_api_token: '{{ metal_api_token }}'
+    equinix.cloud.metal_project_info:
+      metal_api_token: '{{ metal_api_token }}'
+      metal_ua_prefix: '{{ metal_ua_prefix }}'
+  block:
+    - set_fact:
+        test_prefix: 'ansible-integration-test'
+
+    - name: gather capacity information for metros
+      equinix.cloud.metal_metro_capacity_info:
+        metal_api_token: '{{ metal_api_token }}'
+        metal_api_url: '{{ metal_api_url }}'
+      register: metro_capacity_info
+
+    - debug:
+        msg: "Metro Capacity Info: {{ metro_capacity_info.capacity }}"
+
+    - assert:
+        that:
+          - metro_capacity_info is defined
+          - metro_capacity_info.capacity is defined
+          - metro_capacity_info.capacity is mapping
+          - metro_capacity_info.capacity.am is defined
+          - metro_capacity_info.capacity.am is mapping
+          - metro_capacity_info.capacity.am['c2.medium.x86'] is defined
+          - metro_capacity_info.capacity.am['c2.medium.x86'] is mapping
+          - metro_capacity_info.capacity.am['c2.medium.x86'].level is defined
+          - metro_capacity_info.capacity.am['c2.medium.x86'].available_servers is defined
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        metal_api_token: '{{ metal_api_token }}'
+        name: "{{ test_prefix }}"
+      register: test_projects_listed
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      loop: "{{ test_projects_listed.resources }}"
+      ignore_errors: yes

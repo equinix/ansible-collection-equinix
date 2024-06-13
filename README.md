@@ -53,6 +53,7 @@ Name | Description |
 [equinix.cloud.metal_gateway_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.7.0/docs/modules/metal_gateway_info.md)|Gather information about Metal Gateways|
 [equinix.cloud.metal_hardware_reservation_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.7.0/docs/modules/metal_hardware_reservation_info.md)|Gather information about Equinix Metal hardware_reservations|
 [equinix.cloud.metal_ip_assignment_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.7.0/docs/modules/metal_ip_assignment_info.md)|Gather IP address assignments for a device|
+[equinix.cloud.metal_metro_capacity_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.7.0/docs/modules/metal_metro_capacity_info.md)|Gather information about the current capacity for Equinix Metal metros|
 [equinix.cloud.metal_metro_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.7.0/docs/modules/metal_metro_info.md)|Gather information about Equinix Metal metros|
 [equinix.cloud.metal_operating_system_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.7.0/docs/modules/metal_operating_system_info.md)|Gather information about Operating Systems available for devices in Equinix Metal|
 [equinix.cloud.metal_organization_info](https://github.com/equinix-labs/ansible-collection-equinix/blob/v0.7.0/docs/modules/metal_organization_info.md)|Gather information about Equinix Metal organizations|
