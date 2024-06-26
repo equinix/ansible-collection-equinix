@@ -158,7 +158,7 @@ METAL_USER_RESPONSE_ATTRIBUTE_MAP = {
 }
 
 METAL_METRO_CAPACITY_RESPONSE_ATTRIBUTE_MAP = {
-    'capacity': lambda resource: resource.get('capacity', {}) if isinstance(resource, dict) else {}
+    'capacity': lambda resource: resource
 }
 
 
@@ -393,7 +393,7 @@ def get_attribute_mapper(resource_type):
     elif resource_type == 'metal_user':
         return METAL_USER_RESPONSE_ATTRIBUTE_MAP
     elif resource_type == 'metal_metro_capacity':
-        return METAL_METRO_CAPACITY_RESPONSE_ATTRIBUTE_MAP
+        return None
     else:
         raise NotImplementedError("No mapper for resource type %s" % resource_type)
 

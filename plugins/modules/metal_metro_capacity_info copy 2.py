@@ -74,6 +74,7 @@ from ansible_specdoc.objects import (
     SpecReturnValue,
 )
 import traceback
+import requests
 
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
@@ -169,9 +170,16 @@ def main():
     try:
         module.params_syntax_check()
 
-        module.params["id"] = "current_user"
+        api_url = module.params['metal_api_url']
+        api_token = module.params['metal_api_token']
+        headers = {'X-Auth-Token': api_token}
 
-        return_value = {"capacity": module.get_by_id("metal_metro_capacity")}
+        response = requests.get(f"{api_url}/capacity/metros", headers=headers)
+        response.raise_for_status()
+
+        result = response.json()
+
+        return_value = {"capacity": result.get('capacity', {})}
     except Exception as e:
         tr = traceback.format_exc()
         module.fail_json(msg=to_native(e), exception=tr)

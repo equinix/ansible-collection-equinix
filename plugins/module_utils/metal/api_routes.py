@@ -87,6 +87,9 @@ def get_routes(mpc):
         ('metal_user', action.GET): spec_types.Specs(
             equinix_metal.UsersApi(mpc).find_current_user,
         ),
+        ('metal_metro_capacity', action.GET): spec_types.Specs(
+            equinix_metal.CapacityApi(mpc).find_capacity_for_metro,
+        ),
 
         # LISTERS
         ('metal_project_device', action.LIST): spec_types.Specs(
@@ -181,9 +184,6 @@ def get_routes(mpc):
         ('metal_port_virtual_circuit', action.LIST): spec_types.Specs(
             equinix_metal.InterconnectionsApi(mpc).list_interconnection_port_virtual_circuits,
             {'connection_id': 'connection_id', 'port_id': 'port_id'},
-        ),
-        ('metal_metro_capacity', action.LIST): spec_types.Specs(
-            equinix_metal.CapacityApi(mpc).find_capacity_for_metro,
         ),
 
         # DELETERS
