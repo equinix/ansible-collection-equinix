@@ -49,6 +49,34 @@ def ip_address_getter(resource: dict):
     pick_keys = ['address', 'address_family', 'public']
     return [dict((k, ip[k]) for k in pick_keys) for ip in resource.get('ip_addresses', [])]
 
+def network_ports_getter(resource: dict):
+    ports = resource.get('network_ports')
+    result = []
+    for port in ports:
+        actual_port = {'id': port.get('id', ''), 'name': port.get('name')}
+
+        bond = port.get('bond', None)
+        if bond:
+            actual_port['bond'] = bond.get('id', '')
+
+        network_type = port.get('network_type', None)
+        if network_type:
+            actual_port['network_type'] = network_type
+
+        native_vlan = port.get('native_virtual_network', None)
+        if native_vlan:
+            actual_port['native_vlan'] = native_vlan.get('id', '')
+
+        vlans = port.get('virtual_networks', [])
+        if vlans:
+            actual_port['vlans'] = []
+            for vlan in vlans:
+                actual_port['vlans'].append(vlan.get('id'))
+
+        result.append(actual_port)
+
+    return result
+
 
 def extract_ids_from_projects_hrefs(resource: dict):
     return [href_to_id(p['href']) for p in resource.get('projects', [])]
@@ -68,6 +96,7 @@ METAL_DEVICE_RESPONSE_ATTRIBUTE_MAP = {
     'hostname': 'hostname',
     'id': 'id',
     'ip_addresses': ip_address_getter,
+    'network_ports': network_ports_getter,
     'ipxe_script_url': optional_str('ipxe_script_url'),
     'locked': 'locked',
     'metal_state': optional_str('state'),

@@ -437,6 +437,38 @@ module_spec = dict(
         description="Whether the device network should be frozen, preventing any changes to the network configuration.",
         editable=True,
     ),
+    network_ports=SpecField(
+        type=FieldType.list,
+        description="Network ports for this device.",
+        element_type=FieldType.dict,
+        suboptions=dict(
+            id=SpecField(
+                type=FieldType.string,
+                description="Port ID.",
+            ),
+            name=SpecField(
+                type=FieldType.string,
+                description="Port name.",
+            ),
+            bond=SpecField(
+                type=FieldType.string,
+                description="ID for the bond parent of this port.",
+            ),
+            network_type=SpecField(
+                type=FieldType.string,
+                description="Network type.",
+            ),
+            native_vlan=SpecField(
+                type=FieldType.string,
+                description="Native virtual network set on this port.",
+            ),
+            vlans=SpecField(
+                type=FieldType.list,
+                description="Non native virtual networks on this port.",
+                element_type=FieldType.string,
+            ),
+        ),
+    ),
     no_ssh_keys=SpecField(
         type=FieldType.bool,
         description="Overrides default behaviour of attaching all of the organization members ssh keys and project ssh keys to device if no specific keys specified.",
