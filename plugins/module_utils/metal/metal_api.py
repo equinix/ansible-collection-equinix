@@ -231,8 +231,8 @@ METAL_METRO_RESPONSE_ATTRIBUTE_MAP = {
 VLAN_RESPONSE_ATTRIBUTE_MAP = {
     "id": "id",
     "description": optional_str('description'),
-    "metro": optional_str("metro"),
-    "facility": optional_str("facility"),
+    "metro": optional("metro"),
+    "facility": optional("facility"),
     "vxlan": "vxlan",
     "tags": "tags",
 }
