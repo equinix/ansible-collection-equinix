@@ -110,6 +110,11 @@ module_spec = dict(
         type=FieldType.integer,
         description=["VLAN ID, must be unique in metro"],
     ),
+    tags=SpecField(
+        type=FieldType.list,
+        element_type=FieldType.string,
+        description=["List of tags to match. Matches only resources that have all the tags provided."],
+    ),
 )
 
 
@@ -123,6 +128,7 @@ specdoc_examples = [
       metro: "se"
       vxlan: 1234
       project_id: "778h50f7-75b6-4271-bc64-632b80f87de2"
+      tags: ["my_vlan", "se"]
 """,
 ]
 
@@ -133,7 +139,8 @@ return_values = [
     "description": "This is my new VLAN.",
     "metro": "se",
     "vxlan": 1234,
-    "project_id": "778h50f7-75b6-4271-bc64-632b80f87de2"
+    "project_id": "778h50f7-75b6-4271-bc64-632b80f87de2",
+    "tags": ["my_vlan", "se"]
     }
 ]
 
@@ -143,7 +150,7 @@ SPECDOC_META = getSpecDocMeta(
     short_description="Manage a VLAN resource in Equinix Metal",
     description=(
         "Manage the VLAN in Equinix Metal. "
-        "You can use *id* or *vxlan* to lookup the resource. "
+        "You can use *id*, *vxlan* or *tags* to lookup the resource. "
         "If you want to create new resource, you must provide *metro*."
     ),
     examples=specdoc_examples,
@@ -167,9 +174,13 @@ def main():
     changed = False
     try:
         module.params_syntax_check()
+
+        # if `id` is not specified, then we try to match either `tags` or `vxlan` id to find an existing resource. 
         if module.params.get("id"):
             tolerate_not_found = state == "absent"
             fetched = module.get_by_id(MODULE_NAME, tolerate_not_found)
+        elif module.params.get("tags"):
+            fetched = module.get_one_with_tags(MODULE_NAME, module.params.get("tags"))
         else:
             fetched = module.get_one_from_list(
                 MODULE_NAME,

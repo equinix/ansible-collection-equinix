@@ -233,6 +233,7 @@ VLAN_RESPONSE_ATTRIBUTE_MAP = {
     "description": optional_str('description'),
     "metro": "metro",
     "vxlan": "vxlan",
+    "tags": "tags",
 }
 
 METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
