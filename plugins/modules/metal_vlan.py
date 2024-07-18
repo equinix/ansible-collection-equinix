@@ -8,7 +8,7 @@
 
 DOCUMENTATION = '''
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
-description: Manage the VLAN in Equinix Metal. You can use *id* or *vxlan* to lookup
+description: Manage the VLAN in Equinix Metal. You can use *id*, *vxlan* or *tags* to lookup
   the resource. If you want to create new resource, you must provide *metro*.
 module: metal_vlan
 notes: []
@@ -38,6 +38,11 @@ options:
     - VLAN ID, must be unique in metro
     required: false
     type: int
+  tags:
+    description:
+    - Resource tags
+    required: false
+    type: list
 requirements: null
 short_description: Manage a VLAN resource in Equinix Metal
 '''
@@ -50,6 +55,9 @@ EXAMPLES = '''
       metro: se
       vxlan: 1234
       project_id: 778h50f7-75b6-4271-bc64-632b80f87de2
+      tags:
+        - "my_vlan"
+        - "se"
 '''
 RETURN = '''
 metal_vlan:
@@ -62,6 +70,9 @@ metal_vlan:
     metro: se
     project_id: 778h50f7-75b6-4271-bc64-632b80f87de2
     vxlan: 1234
+    tags: 
+        - "my_vlan"
+        - "se"
   type: dict
 '''
 
@@ -113,7 +124,7 @@ module_spec = dict(
     tags=SpecField(
         type=FieldType.list,
         element_type=FieldType.string,
-        description=["List of tags to match. Matches only resources that have all the tags provided."],
+        description=["Resource tags"],
     ),
 )
 
@@ -128,7 +139,9 @@ specdoc_examples = [
       metro: "se"
       vxlan: 1234
       project_id: "778h50f7-75b6-4271-bc64-632b80f87de2"
-      tags: ["my_vlan", "se"]
+      tags:
+        - "my_vlan"
+        - "se"
 """,
 ]
 

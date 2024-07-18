@@ -1,6 +1,6 @@
 # metal_vlan
 
-Manage the VLAN in Equinix Metal. You can use *id* or *vxlan* to lookup the resource. If you want to create new resource, you must provide *metro*.
+Manage the VLAN in Equinix Metal. You can use *id*, *vxlan* or *tags* to lookup the resource. If you want to create new resource, you must provide *metro*.
 
 
 - [Examples](#examples)
@@ -18,6 +18,7 @@ Manage the VLAN in Equinix Metal. You can use *id* or *vxlan* to lookup the reso
       metro: "se"
       vxlan: 1234
       project_id: "778h50f7-75b6-4271-bc64-632b80f87de2"
+      tags: ["my_vlan", "se"]
 
 ```
 
@@ -39,6 +40,8 @@ Manage the VLAN in Equinix Metal. You can use *id* or *vxlan* to lookup the reso
 | `description` | <center>`str`</center> | <center>Optional</center> | Description of the VLAN   |
 | `metro` | <center>`str`</center> | <center>Optional</center> | Metro in which to create the VLAN   |
 | `vxlan` | <center>`int`</center> | <center>Optional</center> | VLAN ID, must be unique in metro   |
+| `tags` | <center>`list`</center> | <center>Optional</center> | Resource tags   |
+
 
 
 
@@ -57,6 +60,7 @@ Manage the VLAN in Equinix Metal. You can use *id* or *vxlan* to lookup the reso
   "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
   "metro": "se",
   "project_id": "778h50f7-75b6-4271-bc64-632b80f87de2",
+  "tags": ["my_vlan", "se"],
   "vxlan": 1234
 }
 ```

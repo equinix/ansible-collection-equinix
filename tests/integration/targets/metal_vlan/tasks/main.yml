@@ -80,24 +80,28 @@
           - second_vlan.vxlan != 0
           - second_vlan.tags | length != 0
 
-    - name: fetch existing vlan..with tags
+    - name: fetch existing vlan with tags
       equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
         tags: "{{ vlan_tags }}"
       register: second_vlan_fetched
 
     - assert:
         that:
+          - second_vlan_fetched.id ==  second_vlan.id
           - second_vlan_fetched.vxlan ==  second_vlan.vxlan
           - second_vlan_fetched.tags | length == second_vlan.tags | length
 
-    - name: delete vlan
+    - name: delete vlan with tags
       equinix.cloud.metal_vlan:
-        id: "{{ second_vlan.id }}"
+        project_id: "{{ project.id }}"
+        tags: "{{ vlan_tags }}"
         state: absent
 
-    - name: delete vlan again to check indempotence
+    - name: delete vlan with tags again to check indempotence
       equinix.cloud.metal_vlan:
-        id: "{{ second_vlan.id }}"
+        project_id: "{{ project.id }}"
+        tags: "{{ vlan_tags }}"
         state: absent
 
   always:

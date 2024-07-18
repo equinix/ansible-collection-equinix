@@ -139,7 +139,7 @@ class EquinixModule(AnsibleModule):
 
     def get_one_with_tags(self, resource_type: str, tags: List[str]):
         '''
-        Gets exactly one resource matching a list og tags.
+        Gets exactly one resource matching a list of tags.
 
         This function runs a list call for the resource_type specified, and
         returns zero or one elements matching a set of tags. Raises an exception
@@ -154,7 +154,7 @@ class EquinixModule(AnsibleModule):
             resource_tags = i.get("tags")
             # if break statement isn't hit, `else` block runs.
             for t in tags:
-                if t not in tags:
+                if t not in resource_tags:
                     break
             else:
                 matches.append(i)
@@ -162,7 +162,7 @@ class EquinixModule(AnsibleModule):
         if len(matches) == 0:
             return None
         if len(matches) > 1:
-            raise Exception(f'found more than one {resource_type} with tags {tags}')
+            raise Exception(f'found more than one {resource_type} with tags {tags}: {matches}')
         return matches[0]
 
     def get_one_from_list(self, resource_type: str, match_attrs: List[str]):
