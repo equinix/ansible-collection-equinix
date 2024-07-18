@@ -22,6 +22,8 @@
         test_description: 'My new VLAN'
     - set_fact:
         test_vxlan: 123
+    - set_fact:
+        vlan_tags: ["a", "b", "c", "d"]
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -63,6 +65,43 @@
     - name: delete vlan again to check indempotence
       equinix.cloud.metal_vlan:
         id: "{{ first_vlan.id }}"
+        state: absent
+
+    - name: create vlan with tags
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        metro: "{{ test_metro }}"
+        description: "{{ test_description }}"
+        tags: "{{ vlan_tags }}"
+      register: second_vlan
+
+    - assert:
+        that:
+          - second_vlan.vxlan != 0
+          - second_vlan.tags | length != 0
+
+    - name: fetch existing vlan with tags
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        tags: "{{ vlan_tags }}"
+      register: second_vlan_fetched
+
+    - assert:
+        that:
+          - second_vlan_fetched.id ==  second_vlan.id
+          - second_vlan_fetched.vxlan ==  second_vlan.vxlan
+          - second_vlan_fetched.tags | length == second_vlan.tags | length
+
+    - name: delete vlan with tags
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        tags: "{{ vlan_tags }}"
+        state: absent
+
+    - name: delete vlan with tags again to check indempotence
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        tags: "{{ vlan_tags }}"
         state: absent
 
   always:

@@ -137,6 +137,34 @@ class EquinixModule(AnsibleModule):
             raise e
         return result
 
+    def get_one_with_tags(self, resource_type: str, tags: List[str]):
+        '''
+        Gets exactly one resource matching a list of tags.
+
+        This function runs a list call for the resource_type specified, and
+        returns zero or one elements matching a set of tags. Raises an exception
+        if more than one resource matches.
+        '''
+        if self.params.get('tags') is None:
+            raise Exception("get_with_tags called without tags, this is a module bug.")   
+
+        result = self._metal_api_call(resource_type, action.LIST, self.params.copy())
+        matches = []
+        for i in result:
+            resource_tags = i.get("tags")
+            # if break statement isn't hit, `else` block runs.
+            for t in tags:
+                if t not in resource_tags:
+                    break
+            else:
+                matches.append(i)
+
+        if len(matches) == 0:
+            return None
+        if len(matches) > 1:
+            raise Exception(f'found more than one {resource_type} with tags {tags}: {matches}')
+        return matches[0]
+
     def get_one_from_list(self, resource_type: str, match_attrs: List[str]):
         match_values = []
         for attr in match_attrs:
