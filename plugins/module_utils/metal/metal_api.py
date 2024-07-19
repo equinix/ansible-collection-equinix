@@ -235,6 +235,7 @@ VLAN_RESPONSE_ATTRIBUTE_MAP = {
     "facility": optional("facility"),
     "vxlan": "vxlan",
     "tags": "tags",
+    "metal_gateways": "metal_gateways",
 }
 
 METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
