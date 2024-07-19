@@ -3,7 +3,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = '''
+DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Get list of avialable IP addresses from a reserved IP block
 module: metal_available_ips_info
@@ -21,15 +21,15 @@ options:
     type: str
 requirements: null
 short_description: Get list of avialable IP addresses from a reserved IP block
-'''
-EXAMPLES = '''
+"""
+EXAMPLES = r"""
 name: available addresses from reservation
 equinix.cloud.metal_available_ips_info:
   reserved_ip_block_id: '{{ ip_reservation.id }}'
   cidr: 32
   register: available_ips
-'''
-RETURN = '''
+"""
+RETURN = r"""
 available:
   description: Available IP addresses from the reservation.
   returned: always
@@ -37,7 +37,7 @@ available:
   - available:
     - 147.75.71.192/32
   type: dict
-'''
+"""
 
 from ansible.module_utils._text import to_native
 import traceback

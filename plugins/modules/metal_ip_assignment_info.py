@@ -3,7 +3,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = '''
+DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Gather IP address assignments for a device
 module: metal_ip_assignment_info
@@ -16,14 +16,14 @@ options:
     type: str
 requirements: null
 short_description: Gather IP address assignments for a device
-'''
-EXAMPLES = '''
+"""
+EXAMPLES = r"""
 - name: assignment info
   equinix.cloud.metal_ip_assignment_info:
     device_id: '{{ device.id }}'
   register: assignment_info
-'''
-RETURN = '''
+"""
+RETURN = r"""
 resources:
   description: Found resources
   returned: always
@@ -67,7 +67,7 @@ resources:
     network: 10.70.50.128
     public: false
   type: dict
-'''
+"""
 
 from ansible.module_utils._text import to_native
 import traceback

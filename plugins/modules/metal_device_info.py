@@ -6,7 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-DOCUMENTATION = '''
+DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Select list of Equinix Metal devices
 module: metal_device_info
@@ -29,8 +29,8 @@ options:
     type: str
 requirements: null
 short_description: Select list of Equinix Metal devices
-''' 
-EXAMPLES = '''
+""" 
+EXAMPLES = r"""
 - name: Gather information about all devices
   hosts: localhost
   tasks:
@@ -51,8 +51,8 @@ EXAMPLES = '''
   - equinix.cloud.metal_device_info:
       project_id: 173d7f11-f7b9-433e-ac40-f1571a38037a
       hostname: webserver
-'''
-RETURN = '''
+"""
+RETURN = r"""
 resources:
   description: List of devices
   returned: always
@@ -156,7 +156,7 @@ resources:
     tags: []
     userdata: ''
   type: list
-'''
+"""
 
 from ansible.module_utils._text import to_native
 from ansible_specdoc.objects import SpecField, FieldType, SpecDocMeta, SpecReturnValue

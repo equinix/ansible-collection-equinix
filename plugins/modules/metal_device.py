@@ -5,7 +5,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-DOCUMENTATION = '''
+DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Create, update, or delete Equinix Metal devices
 module: metal_device
@@ -237,8 +237,8 @@ options:
     type: str
 requirements: null
 short_description: Create, update, or delete Equinix Metal devices
-'''
-EXAMPLES = '''
+"""
+EXAMPLES = r"""
 - name: Create new device in a project
   hosts: localhost
   tasks:
@@ -251,8 +251,8 @@ EXAMPLES = '''
     equinix.cloud.metal_device:
       id: eef49903-7a09-4ca1-af67-4087c29ab5b6
       state: absent
-'''
-RETURN = '''
+"""
+RETURN = r"""
 metal_device:
   description: The module object
   returned: always
@@ -308,7 +308,7 @@ metal_device:
     tags: []
     userdata: ''
   type: dict
-'''
+"""
 
 
 from ansible.module_utils._text import to_native

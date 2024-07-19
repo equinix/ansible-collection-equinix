@@ -3,7 +3,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = '''
+DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Gather personal SSH keys. Read more about personal vs project SSH keys
   in [Equinix Metal documentation](https://metal.equinix.com/developers/docs/accounts/ssh-keys/#personal-keys-vs-project-keys).
@@ -12,8 +12,8 @@ notes: []
 options: {}
 requirements: null
 short_description: Gather personal SSH keys
-'''
-EXAMPLES = '''
+"""
+EXAMPLES = r"""
 - set_fact:
     desired_name_substring: tkarasek
 - name: list ssh_keys
@@ -23,8 +23,8 @@ EXAMPLES = '''
   set_fact:
     both_ssh_keys_listed: '{{ ssh_keys_listed.resources | selectattr(''label'', ''match'',
       desired_name_substring) }}'
-'''
-RETURN = '''
+"""
+RETURN = r"""
 resources:
   description: Found resources
   returned: always
@@ -39,7 +39,7 @@ resources:
       tomk@air
     label: ansible-integration-test-ssh_key-ztiapihf-ssh_key1_renamed
   type: dict
-'''
+"""
 
 from ansible.module_utils._text import to_native
 import traceback

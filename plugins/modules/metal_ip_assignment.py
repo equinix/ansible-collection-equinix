@@ -3,7 +3,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-DOCUMENTATION = '''
+DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Asign reserved IPs to Equinix Metal devices.
 module: metal_ip_assignment
@@ -36,8 +36,8 @@ options:
     type: bool
 requirements: null
 short_description: Manage Equinix Metal IP assignments
-'''
-EXAMPLES = '''
+"""
+EXAMPLES = r"""
 - name: request ip reservation
   equinix.cloud.metal_reserved_ip_block:
     type: public_ipv4
@@ -67,8 +67,8 @@ EXAMPLES = '''
     device_id: '{{ device.id }}'
     address: '{{ available_ips.available[0] }}'
   register: assignment
-'''   
-RETURN = '''
+"""   
+RETURN = r"""
 metal_ip_assignment:
   description: The assignment object.
   returned: always
@@ -85,7 +85,7 @@ metal_ip_assignment:
     network: 147.75.71.192
     public: true
   type: dict
-'''
+"""
 
 from ansible.module_utils._text import to_native
 import traceback
