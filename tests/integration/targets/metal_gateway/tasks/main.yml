@@ -68,6 +68,15 @@
         that:
           - "listed_gateways.resources | length == 2"
 
+    - name: get vlan for test
+      equinix.cloud.metal_vlan:
+        id: "{{ vlan.id }}"
+      register: vlan
+
+    - assert:
+        that:
+          - "vlan.metal_gateways | length == 2"
+
     - name: delete gateways
       equinix.cloud.metal_gateway:
         id: "{{ item.id }}"
