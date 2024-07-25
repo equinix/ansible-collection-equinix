@@ -20,6 +20,8 @@
     - set_fact:
         test_plan: c3.small.x86
     - set_fact:
+        interface_count: 3 # depends on the amount of interfaces we expect for the plan above. by default, we get bonded interfaces, so we count 2 nics + 1 bond
+    - set_fact:
         wait_seconds: 1200
 
     - name: create project for test
@@ -49,6 +51,16 @@
         that:
           - "test_device_1.metal_state == 'active'"
           - "test_device_1_2.changed == false"
+          - "test_device_1.network_ports | length == interface_count"
+          - "test_device_1_2.network_ports | length == interface_count"
+
+    - name: assert network ports
+      assert:
+        that:
+          - "item.0.id == item.1.id"
+          - "item.0.id != ''"
+          - "item.1.id != ''"
+      loop: "{{ test_device_1.network_ports|zip(test_device_1_2.network_ports)|list }}"
 
     - name: start second test device
       equinix.cloud.metal_device:
