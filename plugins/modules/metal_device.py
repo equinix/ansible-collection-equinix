@@ -131,6 +131,44 @@ options:
       configuration.
     required: false
     type: bool
+  network_ports:
+    description:
+    - Network ports for this device.
+    elements: dict
+    required: false
+    suboptions:
+      bond:
+        description:
+        - ID for the bond parent of this port.
+        required: false
+        type: str
+      id:
+        description:
+        - Port ID.
+        required: false
+        type: str
+      name:
+        description:
+        - Port name.
+        required: false
+        type: str
+      native_vlan:
+        description:
+        - Native virtual network set on this port.
+        required: false
+        type: str
+      network_type:
+        description:
+        - Network type.
+        required: false
+        type: str
+      vlans:
+        description:
+        - Non native virtual networks on this port.
+        elements: str
+        required: false
+        type: list
+    type: list
   no_ssh_keys:
     description:
     - Overrides default behaviour of attaching all of the organization members ssh

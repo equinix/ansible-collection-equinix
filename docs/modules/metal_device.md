@@ -55,6 +55,7 @@ Create, update, or delete Equinix Metal devices
 | `locked` | <center>`bool`</center> | <center>Optional</center> | Whether the device is locked, preventing accidental deletion.  **(Updatable)** |
 | `metro` | <center>`str`</center> | <center>Optional</center> | Metro of the device.   |
 | `network_frozen` | <center>`bool`</center> | <center>Optional</center> | Whether the device network should be frozen, preventing any changes to the network configuration.  **(Updatable)** |
+| [`network_ports` (sub-options)](#network_ports) | <center>`list`</center> | <center>Optional</center> | Network ports for this device.   |
 | `no_ssh_keys` | <center>`bool`</center> | <center>Optional</center> | Overrides default behaviour of attaching all of the organization members ssh keys and project ssh keys to device if no specific keys specified.   |
 | `operating_system` | <center>`str`</center> | <center>Optional</center> | Operating system of the device.   |
 | `plan` | <center>`str`</center> | <center>Optional</center> | Plan of the device.   |
@@ -81,6 +82,21 @@ Create, update, or delete Equinix Metal devices
 | `address` | <center>`str`</center> | <center>Optional</center> | IP address.   |
 | `address_family` | <center>`int`</center> | <center>Optional</center> | IP address family.   |
 | `public` | <center>`bool`</center> | <center>Optional</center> | Whether the IP address is public.   |
+
+
+
+
+
+### network_ports
+
+| Field     | Type | Required | Description                                                                  |
+|-----------|------|----------|------------------------------------------------------------------------------|
+| `id` | <center>`str`</center> | <center>Optional</center> | Port ID.   |
+| `name` | <center>`str`</center> | <center>Optional</center> | Port name.   |
+| `bond` | <center>`str`</center> | <center>Optional</center> | ID for the bond parent of this port.   |
+| `network_type` | <center>`str`</center> | <center>Optional</center> | Network type.   |
+| `native_vlan` | <center>`str`</center> | <center>Optional</center> | Native virtual network set on this port.   |
+| `vlans` | <center>`list`</center> | <center>Optional</center> | Non native virtual networks on this port.   |
 
 
 
