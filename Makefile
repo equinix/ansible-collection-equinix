@@ -59,10 +59,10 @@ integration-test: create-integration-config
 	ansible-test integration $(TEST_ARGS)
 
 create-integration-config:
-ifneq ("${METAL_API_TOKEN}", "")
-	@echo "metal_api_token: ${METAL_API_TOKEN}" > $(INTEGRATION_CONFIG);
+ifneq ("${METAL_AUTH_TOKEN}", "")
+	@echo "metal_api_token: ${METAL_AUTH_TOKEN}" > $(INTEGRATION_CONFIG);
 else
-	echo "METAL_API_TOKEN must be set"; \
+	echo "METAL_AUTH_TOKEN must be set"; \
 	exit 1;
 endif
 	echo "metal_ua_prefix: E2E" >> $(INTEGRATION_CONFIG)
