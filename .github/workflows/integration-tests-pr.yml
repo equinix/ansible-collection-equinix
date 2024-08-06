@@ -58,6 +58,6 @@ jobs:
       - name: run tests
         run: make testall
         env:
-          METAL_API_TOKEN: ${{ secrets.METAL_API_TOKEN }}
+          METAL_AUTH_TOKEN: ${{ secrets.METAL_AUTH_TOKEN }}
           ANSIBLE_ACC_METAL_DEDICATED_CONNECTION_ID: ${{ secrets.ANSIBLE_ACC_METAL_DEDICATED_CONNECTION_ID }}
 
