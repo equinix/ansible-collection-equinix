@@ -1,0 +1,96 @@
+- name: metal_project
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_device:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_project_info:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_device_info:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_port:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_vlan:
+      metal_api_token: "{{ metal_api_token }}"
+  block:
+    - set_fact:
+        test_resource_name_prefix: "ansible-integration-test-device"
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_os: ubuntu_22_04
+    - set_fact:
+        test_plan: c3.small.x86
+    - set_fact:
+        test_vxlan: 123
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}"
+      register: test_project
+
+    - name: create device for test
+      equinix.cloud.metal_device:
+        project_id: "{{ test_project.id }}"
+        hostname: "{{ test_prefix }}-dev1"
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ metal_test_metro }}"
+      register: test_device
+
+    - name: create vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ test_project.id }}"
+        metro: "{{ metal_test_metro }}"
+        vxlan: "{{ test_vxlan }}"
+      register: test_vlan
+
+    - name: convert first port to layer 2
+      equinix.cloud.metal_port:
+        id: "{{ test_device.network_ports.0.id }}"
+        bonded: true
+        layer2: true
+        vlan_ids:
+          - "{{ test_vlan.id }}"
+      register: test_port
+
+    - name: debug port
+      debug:
+        var: test_port
+
+    - name: assert port found
+      assert:
+        that:
+          - "test_port.id == test_device.network_ports.0.id"
+
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects
+
+    - name: list devices in test projects
+      equinix.cloud.metal_device_info:
+        project_id: "{{ item.id }}"
+      register: "test_devices"
+      loop: "{{ test_projects.resources }}"
+
+    - name: delete test devices
+      equinix.cloud.metal_device:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_devices.results | map(attribute='resources') | flatten }}"
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"

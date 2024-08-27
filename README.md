@@ -30,6 +30,7 @@ Name | Description |
 [equinix.cloud.metal_hardware_reservation](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_hardware_reservation.md)|Lookup a single hardware_reservation by ID in Equinix Metal|
 [equinix.cloud.metal_ip_assignment](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
 [equinix.cloud.metal_organization](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_organization.md)|Lookup a single organization by ID in Equinix Metal|
+[equinix.cloud.metal_port](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_port.md)|Manage a device port in Equinix Metal|
 [equinix.cloud.metal_project](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
 [equinix.cloud.metal_project_bgp_config](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_project_bgp_config.md)|Manage BGP Config for Equinix Metal Project|
 [equinix.cloud.metal_project_ssh_key](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
