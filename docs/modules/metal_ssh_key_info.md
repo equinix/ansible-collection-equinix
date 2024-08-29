@@ -1,6 +1,6 @@
 # metal_ssh_key_info
 
-Gather personal SSH keys. Read more about personal vs project SSH keys in [Equinix Metal documentation](https://metal.equinix.com/developers/docs/accounts/ssh-keys/#personal-keys-vs-project-keys).
+Gather personal SSH keys. Read more about personal vs project SSH keys in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/identity-access-management/ssh-keys/).
 
 
 - [Examples](#examples)
