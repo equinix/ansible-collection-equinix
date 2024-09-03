@@ -15,6 +15,7 @@ This Terraform resource doesn't create an API resource in Equinix Metal, but rat
   tasks:
   - equinix.cloud.metal_port:
       id: "device port ID"
+      bonded: true
       layer2: true
 
 ```
@@ -33,10 +34,9 @@ This Terraform resource doesn't create an API resource in Equinix Metal, but rat
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
 | `id` | <center>`str`</center> | <center>**Required**</center> | UUID of the port.   |
-| `bonded` | <center>`bool`</center> | <center>Optional</center> | Whether the port should be bonded.  **(Default: `False`; Updatable)** |
-| `layer2` | <center>`bool`</center> | <center>Optional</center> | Whether the port should be in Layer 2 mode.  **(Default: `False`; Updatable)** |
+| `bonded` | <center>`bool`</center> | <center>**Required**</center> | Whether the port should be bonded.   |
+| `layer2` | <center>`bool`</center> | <center>Optional</center> | Whether the port should be in Layer 2 mode.  **(Updatable)** |
 | `native_vlan_id` | <center>`str`</center> | <center>Optional</center> | UUID of native VLAN of the port  **(Updatable)** |
-| `vlan_ids` | <center>`list`</center> | <center>Optional</center> | UUIDs of VLANs to attach to the port  **(Updatable)** |
 
 
 
@@ -50,11 +50,9 @@ This Terraform resource doesn't create an API resource in Equinix Metal, but rat
 ### Sample Response for metal_port
 ```json
 {
+  "bonded": true,
   "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
-  "layer2": true,
-  "vlan_ids": [
-    "some VLAN ID"
-  ]
+  "layer2": true
 }
 ```
 

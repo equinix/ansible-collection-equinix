@@ -14,10 +14,9 @@ module: metal_port
 notes: []
 options:
   bonded:
-    default: false
     description:
     - Whether the port should be bonded.
-    required: false
+    required: true
     type: bool
   id:
     description:
@@ -25,7 +24,6 @@ options:
     required: true
     type: str
   layer2:
-    default: false
     description:
     - Whether the port should be in Layer 2 mode.
     required: false
@@ -35,12 +33,6 @@ options:
     - UUID of native VLAN of the port
     required: false
     type: str
-  vlan_ids:
-    description:
-    - UUIDs of VLANs to attach to the port
-    elements: str
-    required: false
-    type: list
 requirements: null
 short_description: Manage a device port in Equinix Metal
 '''
@@ -50,6 +42,7 @@ EXAMPLES = '''
   tasks:
   - equinix.cloud.metal_port:
       id: device port ID
+      bonded: true
       layer2: true
 '''
 RETURN = '''
@@ -57,10 +50,9 @@ metal_port:
   description: The Metal device port
   returned: always
   sample:
-  - id: 7624f0f7-75b6-4271-bc64-632b80f87de2
+  - bonded: true
+    id: 7624f0f7-75b6-4271-bc64-632b80f87de2
     layer2: true
-    vlan_ids:
-    - some VLAN ID
   type: dict
 '''
 
@@ -89,24 +81,16 @@ module_spec = dict(
     bonded=SpecField(
         type=FieldType.bool,
         description=['Whether the port should be bonded.'],
-        default=False,
-        editable=True,
+        required=True,
     ),
     layer2=SpecField(
         type=FieldType.bool,
         description=['Whether the port should be in Layer 2 mode.'],
-        default=False,
         editable=True,
     ),
 	native_vlan_id=SpecField(
 		type=FieldType.string,
 		description=["UUID of native VLAN of the port"],
-        editable=True,
-    ),
-    vlan_ids=SpecField(
-        type=FieldType.list,
-        element_type=FieldType.string,
-        description=['UUIDs of VLANs to attach to the port'],
         editable=True,
     ),
 )
@@ -119,6 +103,7 @@ specdoc_examples = [
   tasks:
   - equinix.cloud.metal_port:
       id: "device port ID"
+      bonded: true
       layer2: true
 ''',
 ]
@@ -126,8 +111,8 @@ specdoc_examples = [
 return_values = [
 {
   "id": "7624f0f7-75b6-4271-bc64-632b80f87de2",
+  "bonded": True,
   "layer2": True,
-  "vlan_ids": ["some VLAN ID"]
 }
 ]
 
@@ -153,6 +138,9 @@ SPECDOC_META = getSpecDocMeta(
     },
 )
 
+l2_types = {"layer2-individual", "layer2-bonded"}
+l3_types = {"layer3", "hybrid", "hybrid-bonded"}
+
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
@@ -167,26 +155,62 @@ def main():
 
     try:
         module.params_syntax_check()
+        ports_api = equinix_metal.PortsApi(module.equinix_metal_client)
+        port_includes = ["native_virtual_network", "virtual_networks"]
+        port = ports_api.find_port_by_id(module.params.get('id'), port_includes)
 
-        port = equinix_metal.PortsApi(module.equinix_metal_client).find_port_by_id(module.params['id'])
-
-        result = port.to_dict()
+        wants_layer2 = module.params.get('layer2')
+        specified_layer2 = wants_layer2 is not None
+        wants_bonded = module.params.get('bonded')
+        wants_native_vlan_id = module.params.get('native_vlan_id')
 
         if port:
-            # TODO replace this with explicit checks to determine which
-            # actions are needed and then do those actions
-            diff = get_diff(module.params, result, MUTABLE_ATTRIBUTES)
-            if diff:
+            is_bond_port = (port.type == "NetworkBondPort")
+            if specified_layer2 and not is_bond_port:
+                     module.fail_json(msg="layer2 flag can be set only for bond ports")
+                
+            if wants_layer2:
+                if port.network_type not in l2_types:
+                    port = ports_api.convert_layer2(port.id, {}, port_includes)
+                    changed = True
+            elif port.network_type in l2_types:
+                port_convert_layer3_input = {
+                    "request_ips": [
+				        {"address_family": 4, "public": True},
+				        {"address_family": 4, "public": False},
+			            {"address_family": 6, "public": True},
+                    ]
+                }
+
+                port = ports_api.convert_layer3(port.id, port_includes, port_convert_layer3_input)
                 changed = True
+
+            if wants_bonded != port.data.bonded:
+                if wants_bonded:
+                    # TODO Need to bond
+                    changed = True
+                else:
+                    if is_bond_port and port.network_type in l3_types:
+                        module.fail_json(msg="layer 3 bond ports cannot be unbonded")
+                    # TODO Need to disbond
+                    changed = True
+
+            current_native_vlan_id = port.native_virtual_network.id if port.native_virtual_network is not None else None
+            if wants_native_vlan_id != current_native_vlan_id:
+                if wants_native_vlan_id is None:
+                    # TODO Need to delete native virtual network
+                    changed = True
+                else:
+                    # TODO Need to add/update native virtual network
+                    changed = True
         else:
             module.fail_json(msg="Could not find metal_port with ID {0}".format(module.params['id']))
     except Exception as e:
         tb = traceback.format_exc()
         module.fail_json(msg="Error in metal_port: {0}".format(to_native(e)),
                          exception=tb)
-
-
     
+    result = port.to_dict()
     result.update({'changed': changed})
     module.exit_json(**result)
 

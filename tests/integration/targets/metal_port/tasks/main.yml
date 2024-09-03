@@ -47,23 +47,35 @@
         vxlan: "{{ test_vxlan }}"
       register: test_vlan
 
-    - name: convert first port to layer 2
+    - name: capture first bond port id
+      set_fact:
+        bond_port_id: "{{ test_device.network_ports | selectattr('name', 'match', 'bond0') | map(attribute='id') | first }}"
+
+    - name: convert first bond port to layer 2
       equinix.cloud.metal_port:
-        id: "{{ test_device.network_ports.0.id }}"
+        id: "{{ bond_port_id }}"
         bonded: true
         layer2: true
-        vlan_ids:
-          - "{{ test_vlan.id }}"
       register: test_port
 
-    - name: debug port
-      debug:
-        var: test_port
-
-    - name: assert port found
+    - name: assert correct port found with correct network type
       assert:
         that:
-          - "test_port.id == test_device.network_ports.0.id"
+          - "test_port.id == bond_port_id"
+          - "test_port.network_type == 'layer2-bonded'"
+
+    - name: convert first bond port to layer 3
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: false
+      register: test_port
+
+    - name: assert correct port found with correct network type
+      assert:
+        that:
+          - "test_port.id == bond_port_id"
+          - "test_port.network_type == 'layer3'"
 
   always:
     - name: Announce teardown start
