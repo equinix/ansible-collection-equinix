@@ -57,7 +57,7 @@ options:
     - The Hardware Reservation UUID to provision. Alternatively, `next-available`
       can be specified to select from any of the available hardware reservations.
       An error will be returned if the requested reservation option is not available.
-      See [Reserved Hardware](https://metal.equinix.com/developers/docs/deploy/reserved/)
+      See [Reserved Hardware](https://deploy.equinix.com/developers/docs/metal/deploy/reserved/)
       for more details.
     required: false
     type: str
@@ -111,7 +111,7 @@ options:
   ipxe_script_url:
     description:
     - When set, the device will chainload an iPXE Script at boot fetched from the
-      supplied URL. See [Custom iPXE](https://metal.equinix.com/developers/docs/operating-systems/custom-ipxe/)
+      supplied URL. See [Custom iPXE](https://deploy.equinix.com/developers/docs/metal/operating-systems/custom-ipxe/)
       for more details.
     required: false
     type: str
@@ -268,8 +268,8 @@ options:
       fetched and interpreted by the operating system installed on the device. Acceptable
       formats are determined by the operating system, with the exception of a special
       iPXE enabling syntax which is handled before the operating system starts. See
-      [Server User Data](https://metal.equinix.com/developers/docs/servers/user-data/)
-      and [Provisioning with Custom iPXE] (https://metal.equinix.com/developers/docs/operating-systems/custom-ipxe/#provisioning-with-custom-ipxe)
+      [Server User Data](https://deploy.equinix.com/developers/docs/metal/server-metadata/user-data/)
+      and [Provisioning with Custom iPXE](https://deploy.equinix.com/developers/docs/metal/operating-systems/custom-ipxe/)
       for more details.
     required: false
     type: str
@@ -411,7 +411,7 @@ module_spec = dict(
         description=(
             'The Hardware Reservation UUID to provision. Alternatively, `next-available` can be specified to select from any of the available hardware '
             'reservations. An error will be returned if the requested reservation option is not available. '
-            'See [Reserved Hardware](https://metal.equinix.com/developers/docs/deploy/reserved/) for more details.'
+            'See [Reserved Hardware](https://deploy.equinix.com/developers/docs/metal/deploy/reserved/) for more details.'
         )
     ),
     hostname=SpecField(
@@ -457,7 +457,7 @@ module_spec = dict(
         type=FieldType.string,
         description=(
             'When set, the device will chainload an iPXE Script at boot fetched from the supplied URL. '
-            'See [Custom iPXE](https://metal.equinix.com/developers/docs/operating-systems/custom-ipxe/) for more details.'
+            'See [Custom iPXE](https://deploy.equinix.com/developers/docs/metal/operating-systems/custom-ipxe/) for more details.'
         ),
         editable=True,
     ),
@@ -588,8 +588,8 @@ module_spec = dict(
             'The userdata presented in the metadata service for this device.  Userdata is fetched and interpreted by the operating system installed on '
             'the device. Acceptable formats are determined by the operating system, with the exception of a special iPXE enabling '
             'syntax which is handled before the operating system starts. '
-            'See [Server User Data](https://metal.equinix.com/developers/docs/servers/user-data/) and [Provisioning with Custom iPXE] '
-            '(https://metal.equinix.com/developers/docs/operating-systems/custom-ipxe/#provisioning-with-custom-ipxe) for more details.'
+            'See [Server User Data](https://deploy.equinix.com/developers/docs/metal/server-metadata/user-data/) and [Provisioning with Custom iPXE]'
+            '(https://deploy.equinix.com/developers/docs/metal/operating-systems/custom-ipxe/) for more details.'
         ),
         editable=True,
     ),

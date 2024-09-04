@@ -6,7 +6,7 @@
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
 description: Gather personal SSH keys. Read more about personal vs project SSH keys
-  in [Equinix Metal documentation](https://metal.equinix.com/developers/docs/accounts/ssh-keys/#personal-keys-vs-project-keys).
+  in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/identity-access-management/ssh-keys/).
 module: metal_ssh_key_info
 notes: []
 options: {}
@@ -98,7 +98,7 @@ return_values = [
 
 SPECDOC_META = getSpecDocMeta(
     short_description="Gather personal SSH keys",
-    description="Gather personal SSH keys. Read more about personal vs project SSH keys in [Equinix Metal documentation](https://metal.equinix.com/developers/docs/accounts/ssh-keys/#personal-keys-vs-project-keys).",
+    description="Gather personal SSH keys. Read more about personal vs project SSH keys in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/identity-access-management/ssh-keys/).",
     examples=specdoc_examples,
     options={},
     return_values={
