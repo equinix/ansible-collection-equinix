@@ -12,8 +12,8 @@ import re
 HAS_EQUINIX_METAL = True
 HAS_EQUINIX_METAL_EXC = None
 try:
-    import equinix_metal
-    from equinix_metal.exceptions import NotFoundException
+    import equinix.services.metalv1 as equinix_metal
+    from equinix.services.metalv1.exceptions import NotFoundException
 except ImportError:
     HAS_EQUINIX_METAL = False
     HAS_EQUINIX_METAL_EXC = traceback.format_exc()
