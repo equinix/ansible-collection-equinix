@@ -588,7 +588,7 @@ module_spec = dict(
             'The userdata presented in the metadata service for this device.  Userdata is fetched and interpreted by the operating system installed on '
             'the device. Acceptable formats are determined by the operating system, with the exception of a special iPXE enabling '
             'syntax which is handled before the operating system starts. '
-            'See [Server User Data](https://deploy.equinix.com/developers/docs/metal/server-metadata/user-data/) and [Provisioning with Custom iPXE] '
+            'See [Server User Data](https://deploy.equinix.com/developers/docs/metal/server-metadata/user-data/) and [Provisioning with Custom iPXE]'
             '(https://deploy.equinix.com/developers/docs/metal/operating-systems/custom-ipxe/) for more details.'
         ),
         editable=True,
