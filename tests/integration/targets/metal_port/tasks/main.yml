@@ -64,6 +64,32 @@
           - "test_port.id == bond_port_id"
           - "test_port.network_type == 'layer2-bonded'"
 
+    - name: disbond first bond port
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: false
+        layer2: true
+      register: test_port
+
+    - name: assert correct port found with correct network type
+      assert:
+        that:
+          - "test_port.id == bond_port_id"
+          - "test_port.network_type == 'layer2-individual'"
+
+    - name: restore bond on first bond port
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+      register: test_port
+
+    - name: assert correct port found with correct network type
+      assert:
+        that:
+          - "test_port.id == bond_port_id"
+          - "test_port.network_type == 'layer2-bonded'"
+
     - name: convert first bond port to layer 3
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"

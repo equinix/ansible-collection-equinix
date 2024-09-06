@@ -187,12 +187,12 @@ def main():
 
             if wants_bonded != port.data.bonded:
                 if wants_bonded:
-                    # TODO Need to bond
+                    port = ports_api.bond_port(port.id, None, port_includes)
                     changed = True
                 else:
                     if is_bond_port and port.network_type in l3_types:
                         module.fail_json(msg="layer 3 bond ports cannot be unbonded")
-                    # TODO Need to disbond
+                    port = ports_api.disbond_port(port.id, None, port_includes)
                     changed = True
 
             current_native_vlan_id = port.native_virtual_network.id if port.native_virtual_network is not None else None
