@@ -3,7 +3,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 try:
-    import equinix_metal
+    import equinix.services.metalv1 as equinix_metal
 except ImportError:
     # This is handled in raise_if_missing_equinix_metal()
     pass
