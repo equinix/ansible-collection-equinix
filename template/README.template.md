@@ -1,6 +1,6 @@
 # Equinix Ansible Collection
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
-![Tests](https://img.shields.io/github/actions/workflow/status/equinix-labs/ansible-collection-equinix/integration-tests.yml?branch=main)
+![Tests](https://img.shields.io/github/actions/workflow/status/equinix/ansible-collection-equinix/integration-tests.yml?branch=main)
 
 This is repository for Ansible collection registered in Ansible Galaxy as [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/). The collection contains various plugins for managing Equinix services.
 
@@ -23,7 +23,7 @@ Modules for managing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-{% for mod in modules %}[equinix.cloud.{{ mod.name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/v{{ collection_version }}/docs/modules/{{ mod.name }}.md{% else %}./docs/modules/{{ mod.name }}.md{% endif %})|{{ mod.description }}|
+{% for mod in modules %}[equinix.cloud.{{ mod.name }}]({% if is_release %}https://github.com/equinix/ansible-collection-equinix/blob/v{{ collection_version }}/docs/modules/{{ mod.name }}.md{% else %}./docs/modules/{{ mod.name }}.md{% endif %})|{{ mod.description }}|
 {% endfor %}
 
 ### Info Modules
@@ -32,7 +32,7 @@ Modules for retrieving information about existing Equinix infrastructure.
 
 Name | Description |
 --- | ------------ |
-{% for mod in info_modules %}[equinix.cloud.{{ mod.name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/v{{ collection_version }}/docs/modules/{{ mod.name }}.md{% else %}./docs/modules/{{ mod.name }}.md{% endif %})|{{ mod.description }}|
+{% for mod in info_modules %}[equinix.cloud.{{ mod.name }}]({% if is_release %}https://github.com/equinix/ansible-collection-equinix/blob/v{{ collection_version }}/docs/modules/{{ mod.name }}.md{% else %}./docs/modules/{{ mod.name }}.md{% endif %})|{{ mod.description }}|
 {% endfor %}
 
 ### Inventory Plugins
@@ -41,7 +41,7 @@ Dynamically add Equinix infrastructure to an Ansible inventory.
 
 Name |
 --- |
-{% for name in inventory %}[equinix.cloud.{{ name }}]({% if is_release %}https://github.com/equinix-labs/ansible-collection-equinix/blob/v{{ collection_version }}/docs/inventory/{{ name }}.rst{% else %}./docs/inventory/{{ name }}.rst{% endif %})|
+{% for name in inventory %}[equinix.cloud.{{ name }}]({% if is_release %}https://github.com/equinix/ansible-collection-equinix/blob/v{{ collection_version }}/docs/inventory/{{ name }}.rst{% else %}./docs/inventory/{{ name }}.rst{% endif %})|
 {% endfor %}
 
 <!--end collection content-->
@@ -58,7 +58,7 @@ The Python module dependencies are not installed by `ansible-galaxy`.  They can
 be manually installed using pip:
 
 ```shell
-pip install -r https://raw.githubusercontent.com/equinix-labs/ansible-collection-equinix/v{{collection_version}}/requirements.txt
+pip install -r https://raw.githubusercontent.com/equinix/ansible-collection-equinix/v{{collection_version}}/requirements.txt
 ```
 
 ## Usage
@@ -95,7 +95,7 @@ See [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Releasing
 
-Go to [https://github.com/equinix-labs/ansible-collection-equinix/releases/new](https://github.com/equinix-labs/ansible-collection-equinix/releases/new) and create a new release from `main`. Don't choose an existing tag. Put version to the field for "Release title", for example `v0.1.2`. Don't add collection number to the Makefile.
+Go to [https://github.com/equinix/ansible-collection-equinix/releases/new](https://github.com/equinix/ansible-collection-equinix/releases/new) and create a new release from `main`. Don't choose an existing tag. Put version to the field for "Release title", for example `v0.1.2`. Don't add collection number to the Makefile.
 
 Add release notes in format of [Terraform Provider Equinix](https://github.com/equinix/terraform-provider-equinix/releases), with at least one of the sections (NOTES, FEATURES, BUG FIXES, ENHANCEMENTS).
 
@@ -103,7 +103,7 @@ Click "Publish release", and the manual part should be over.
 
 The release will create a tag, and we have a Github action in place that should create an Ansible Galaxy release. The script that creates tarball for Galay removes the first "v", so releasing `v0.1.2` should upload collection equinix.cloud version 0.1.2.
 
-Verify that the [releasing Github action](https://github.com/equinix-labs/ansible-collection-equinix/actions) succeeded.
+Verify that the [releasing Github action](https://github.com/equinix/ansible-collection-equinix/actions) succeeded.
 
 Verify that new version of [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/) is available in Ansible Galaxy.
 

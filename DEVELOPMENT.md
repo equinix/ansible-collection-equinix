@@ -26,7 +26,7 @@ We use Python 3.8 for the collection development.
 Development of the collection is best done if your repository is located in a path that concludes with `ansible_collections/equinix/cloud`. This is a requirement specific to Ansible. You can clone the repository using the following command:
 
 ```
-git clone https://github.com/equinix-labs/ansible-collection-equinix ansible_collections/equinix/cloud
+git clone https://github.com/equinix/ansible-collection-equinix ansible_collections/equinix/cloud
 ```
 
 You also need to export your METAL_AUTH_TOKEN in the environment variables:
@@ -68,7 +68,7 @@ Just make sure you remove all the "q" calls before merging to main.
 
 The primary task for this collection is the addition of new modules with the aim of achieving parity with the [Terraform Provider Equinix](https://github.com/equinix/terraform-provider-equinix). Each Terraform resource should have a corresponding module, and each needed datasource should have an accompanying `_info` module.
 
-For instance, the [equinix_metal_device resource](https://registry.terraform.io/providers/equinix/equinix/latest/docs/resources/equinix_metal_device) in Terraform Provider corresponds to the [metal_device resource](https://github.com/equinix-labs/ansible-collection-equinix/blob/main/docs/modules/metal_device.md) in this collection. In the same vein, the [equinix_metal_device datasource](https://registry.terraform.io/providers/equinix/equinix/latest/docs/data-sources/equinix_metal_device) correlates with the [metal_device_info module](https://github.com/equinix-labs/ansible-collection-equinix/blob/main/docs/modules/metal_device_info.md) in our collection.
+For instance, the [equinix_metal_device resource](https://registry.terraform.io/providers/equinix/equinix/latest/docs/resources/equinix_metal_device) in Terraform Provider corresponds to the [metal_device resource](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/modules/metal_device.md) in this collection. In the same vein, the [equinix_metal_device datasource](https://registry.terraform.io/providers/equinix/equinix/latest/docs/data-sources/equinix_metal_device) correlates with the [metal_device_info module](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/modules/metal_device_info.md) in our collection.
 
 Issues have been created for every plausible existing Terraform resource and datasource within this repository. If you decide to work on a new module, please assign the corresponding issue to yourself.
 
@@ -148,7 +148,7 @@ All the samples will be rendered in markdown docs visible in the GitHub repo, on
 
 ###  2.3. <a name='mainfunction'></a>main() function
 
-The collection is structured to maintain consistency in the `main()` function across all modules. Modifications to the `main()` logic are only necessary for non-standard behavior. For instance, the `backend_transfer` attribute of the Project resource cannot be specified in the API call that creates a Project. As a result, we need to extend the `main()` function of the [metal_project module](https://github.com/equinix-labs/ansible-collection-equinix/blob/10fca6a7e1ea06b86204fd301454ab9eff254ef5/plugins/modules/metal_project.py#L256) to accommodate this.
+The collection is structured to maintain consistency in the `main()` function across all modules. Modifications to the `main()` logic are only necessary for non-standard behavior. For instance, the `backend_transfer` attribute of the Project resource cannot be specified in the API call that creates a Project. As a result, we need to extend the `main()` function of the [metal_project module](https://github.com/equinix/ansible-collection-equinix/blob/10fca6a7e1ea06b86204fd301454ab9eff254ef5/plugins/modules/metal_project.py#L256) to accommodate this.
 
 The module initialization leverages the parameter specification from SPECDOC_META.ansible_spec. This is where ansible-specdoc proves beneficial, as it eliminates the redundancy that would occur in the parameter specification documentation with standard Ansible use.
 

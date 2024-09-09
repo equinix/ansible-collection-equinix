@@ -1,6 +1,6 @@
 namespace: equinix
 name: cloud
-version: {{ collection_version }}
+version: { { collection_version } }
 readme: README.md
 description: Equinix ansible collection
 authors:
@@ -9,18 +9,17 @@ license_file: LICENSE
 tags:
   - equinix
   - cloud
-repository: https://github.com/equinix-labs/ansible-collection-equinix
-documentation: https://github.com/equinix-labs/ansible-collection-equinix/blob/v{{ collection_version }}/README.md
-homepage: https://github.com/equinix-labs/ansible-collection-equinix
-issues: https://github.com/equinix-labs/ansible-collection-equinix/issues
+repository: https://github.com/equinix/ansible-collection-equinix
+documentation: https://github.com/equinix/ansible-collection-equinix/blob/v{{ collection_version }}/README.md
+homepage: https://github.com/equinix/ansible-collection-equinix
+issues: https://github.com/equinix/ansible-collection-equinix/issues
 build_ignore:
-  - '.gitignore'
-  - '.github'
-  - '.pylintrc'
-  - '*.tar.gz'
-  - 'Makefile'
-#  - 'template'
-  - 'tests'
-#  - 'scripts'
-  - 'venv'
-
+  - ".gitignore"
+  - ".github"
+  - ".pylintrc"
+  - "*.tar.gz"
+  - "Makefile"
+  #  - 'template'
+  - "tests"
+  #  - 'scripts'
+  - "venv"
