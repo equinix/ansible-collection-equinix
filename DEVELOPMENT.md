@@ -158,7 +158,7 @@ As implied by the code, a module initially attempts to locate a resource by its 
 
 Rather than directly calling the Equinix API, the module code invokes semantic actions such as get_by_id, get_one_from_list, update_by_id, delete_by_id, create, and list. The specific API calls for each module type (resource type) are defined in separate files, with [plugins/module_utils/metal/api_routes.py](plugins/module_utils/metal/api_routes.py) being the reference for the Metal API. 
 
-The `get_routes()` function outlines specific API calls and their parameters for each (resource_type, action_type) pairing. If you're adding support for a new resource (i.e., creating a new module), you need to identify the relevant SDK functions and request classes from [metal-python](https://github.com/equinix-labs/metal-python).
+The `get_routes()` function outlines specific API calls and their parameters for each (resource_type, action_type) pairing. If you're adding support for a new resource (i.e., creating a new module), you need to identify the relevant SDK functions and request classes from [equinix-sdk-python](https://github.com/equinix/equinix-sdk-python).
 
 The specification looks like:
 
@@ -170,7 +170,7 @@ The specification looks like:
     ),
 ```
 
-This indicates that the "create" action for "metal_device" will invoke the `equinix_metal.DevicesApi(mpc).create_device` method from [metal-python](https://github.com/equinix-labs/metal-python). The `project_id` argument will be mapped to the positional parameter `id`, while the remaining relevant module arguments will be used to populate an object of the `equinix_metal.CreateDeviceRequest` class, which will then be passed to the `create_device` method.
+This indicates that the "create" action for "metal_device" will invoke the `equinix_metal.DevicesApi(mpc).create_device` method from [equinix-sdk-python](https://github.com/equinix/equinix-sdk-python). The `project_id` argument will be mapped to the positional parameter `id`, while the remaining relevant module arguments will be used to populate an object of the `equinix_metal.CreateDeviceRequest` class, which will then be passed to the `create_device` method.
 
 The arguments in spec_types.Specs constructor are
 
