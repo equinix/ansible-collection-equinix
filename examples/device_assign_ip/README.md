@@ -1,6 +1,6 @@
 # IP Assignment to Metal Device
 
-This example playbook demonstrates the use of `equinix.cloud.metal_*` modules to manage resources on Equinix Metal. The playbook is available on GitHub at https://github.com/equinix-labs/ansible-collection-equinix/tree/examples/device_assign_ip.
+This example playbook demonstrates the use of `equinix.cloud.metal_*` modules to manage resources on Equinix Metal. The playbook is available on GitHub at https://github.com/equinix/ansible-collection-equinix/tree/examples/device_assign_ip.
 
 ## Overview
 

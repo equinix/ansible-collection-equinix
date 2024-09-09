@@ -16,7 +16,7 @@ The `equinix.cloud` collection is an Equinix Metal-maintained collection.
 
 ## Submitting Issues
 All software has bugs, and the `equinix.cloud` collection is no exception. When you find a bug, 
-you can help tremendously by [telling us about it](https://github.com/equinix-labs/ansible-collection-metal/issues/new/choose).
+you can help tremendously by [telling us about it](https://github.com/equinix/ansible-collection-equinix/issues/new/choose).
 
 If you should discover that the bug you're trying to file already exists in an issue, 
 you can help by verifying the behavior of the reported bug with a comment in that 
