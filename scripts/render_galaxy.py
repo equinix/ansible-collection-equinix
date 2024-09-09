@@ -5,7 +5,7 @@ import jinja2
 
 def main() -> None:
     env = jinja2.Environment(loader=jinja2.FileSystemLoader('template'))
-    tpl = env.get_template('galaxy.template.yml')
+    tpl = env.get_template('galaxy.yml.j2')
     version = "0.0.0"
     if len(sys.argv) > 1:
         version = sys.argv[1]
