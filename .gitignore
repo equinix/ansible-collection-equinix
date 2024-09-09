@@ -396,3 +396,4 @@ ansible.cfg
 *tar.gz
 getbody.py
 tests/integration/inventory
+.venv
