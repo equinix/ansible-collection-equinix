@@ -62,6 +62,7 @@ from ansible_specdoc.objects import (
     FieldType,
     SpecReturnValue,
 )
+import time
 import traceback
 
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
@@ -86,6 +87,11 @@ module_spec = dict(
     layer2=SpecField(
         type=FieldType.bool,
         description=['Whether the port should be in Layer 2 mode.'],
+        editable=True,
+    ),
+	vlan_ids=SpecField(
+		type=FieldType.list,
+		description=["UUIDs of VLANs that should be assigned to the port"],
         editable=True,
     ),
 	native_vlan_id=SpecField(
@@ -141,6 +147,21 @@ SPECDOC_META = getSpecDocMeta(
 l2_types = {"layer2-individual", "layer2-bonded"}
 l3_types = {"layer3", "hybrid", "hybrid-bonded"}
 
+def create_and_wait_for_batch(ports_api, port, vlan_assignments, timeout: int):
+    stop_time = time.time() + timeout
+    batch = ports_api.create_port_vlan_assignment_batch(port.id, { "vlan_assignments": vlan_assignments })
+
+    while time.time() < stop_time:
+        batch = ports_api.find_port_vlan_assignment_batch_by_port_id_and_batch_id(port.id, batch.id)
+
+        if batch.state == "failed":
+            raise Exception("vlan assignment batch {0} provisioning failed: {1}".format(batch.id, batch.error_messages))
+        if batch.state == "completed":
+            return batch
+        time.sleep(5)
+
+    raise Exception("vlan assignment batch {0} is not complete after timeout".format(batch.id))
+
 def main():
     module = EquinixModule(
         argument_spec=SPECDOC_META.ansible_spec,
@@ -162,18 +183,35 @@ def main():
         wants_layer2 = module.params.get('layer2')
         specified_layer2 = wants_layer2 is not None
         wants_bonded = module.params.get('bonded')
+        wants_vlan_ids = module.params.get('vlan_ids')
         wants_native_vlan_id = module.params.get('native_vlan_id')
 
         if port:
+            # 1: confirm that parameters are consistent
             is_bond_port = (port.type == "NetworkBondPort")
             if specified_layer2 and not is_bond_port:
                      module.fail_json(msg="layer2 flag can be set only for bond ports")
-                
+
+            # 3: disbond if needed
+            if port.data.bonded and not wants_bonded:
+                if is_bond_port and port.network_type in l3_types:
+                    module.fail_json(msg="layer 3 bond ports cannot be unbonded")
+                port = ports_api.disbond_port(port.id, None, port_includes)
+                changed = True
+
+            # 4: convert to L2 if needed
             if wants_layer2:
                 if port.network_type not in l2_types:
                     port = ports_api.convert_layer2(port.id, {}, port_includes)
                     changed = True
-            elif port.network_type in l2_types:
+
+            # 5: bond if needed
+            if wants_bonded and not port.data.bonded:
+                port = ports_api.bond_port(port.id, None, port_includes)
+                changed = True
+
+            # 6: convert to L3 if needed
+            if not wants_layer2 and port.network_type in l2_types:
                 port_convert_layer3_input = {
                     "request_ips": [
 				        {"address_family": 4, "public": True},
@@ -185,16 +223,17 @@ def main():
                 port = ports_api.convert_layer3(port.id, port_includes, port_convert_layer3_input)
                 changed = True
 
-            if wants_bonded != port.data.bonded:
-                if wants_bonded:
-                    port = ports_api.bond_port(port.id, None, port_includes)
-                    changed = True
-                else:
-                    if is_bond_port and port.network_type in l3_types:
-                        module.fail_json(msg="layer 3 bond ports cannot be unbonded")
-                    port = ports_api.disbond_port(port.id, None, port_includes)
-                    changed = True
+            # 7: batch VLAN assignment changes, add and remove
+            if wants_vlan_ids is not None:
+                current_vlan_ids = [vlan.id for vlan in port.virtual_networks]
+                vlans_to_remove = [{ "vlan": id, "state": "unassigned" } for id in current_vlan_ids if not id in wants_vlan_ids]
+                vlans_to_add = [{ "vlan": id, "state": "assigned" } for id in wants_vlan_ids if not id in current_vlan_ids]
+                vlan_assignments = vlans_to_remove + vlans_to_add
 
+                create_and_wait_for_batch(ports_api, port, vlan_assignments, 1800)
+                port = ports_api.find_port_by_id(module.params.get('id'), port_includes)
+
+            # 8: TODO update native VLAN ID
             current_native_vlan_id = port.native_virtual_network.id if port.native_virtual_network is not None else None
             if wants_native_vlan_id != current_native_vlan_id:
                 if wants_native_vlan_id is None:

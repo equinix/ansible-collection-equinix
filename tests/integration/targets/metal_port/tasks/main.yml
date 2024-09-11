@@ -24,7 +24,9 @@
     - set_fact:
         test_plan: c3.small.x86
     - set_fact:
-        test_vxlan: 123
+        test_vxlan1: 123
+    - set_fact:
+        test_vxlan2: 456
 
     - name: create project for test
       equinix.cloud.metal_project:
@@ -40,12 +42,19 @@
         metro: "{{ metal_test_metro }}"
       register: test_device
 
-    - name: create vlan for test
+    - name: create first vlan for test
       equinix.cloud.metal_vlan:
         project_id: "{{ test_project.id }}"
         metro: "{{ metal_test_metro }}"
-        vxlan: "{{ test_vxlan }}"
-      register: test_vlan
+        vxlan: "{{ test_vxlan1 }}"
+      register: test_vlan1
+
+    - name: create second vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ test_project.id }}"
+        metro: "{{ metal_test_metro }}"
+        vxlan: "{{ test_vxlan2 }}"
+      register: test_vlan2
 
     - name: capture first bond port id
       set_fact:
@@ -102,6 +111,33 @@
         that:
           - "test_port.id == bond_port_id"
           - "test_port.network_type == 'layer3'"
+
+    - name: attach vlans
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: false
+        vlan_ids:
+          - "{{ test_vlan1.id }}"
+          - "{{ test_vlan2.id }}"
+      register: test_port
+
+    - debug:
+        var: test_port
+
+    - name: assert VLAN attachments found
+      assert:
+        that:
+          - "test_port.virtual_networks.0.id == test_vlan1.id"
+          - "test_port.virtual_networks.1.id == test_vlan2.id"
+
+    - name: detach vlans
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: false
+        vlan_ids: []
+      register: test_port
 
   always:
     - name: Announce teardown start
