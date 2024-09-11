@@ -45,15 +45,13 @@ export METAL_AUTH_TOKEN=your_api_token_here
 | [equinix.metal.sshkey_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.sshkey_info_module.rst)                         | [equinix.cloud.metal_ssh_key_info](https://github.com/equinix/ansible-collection-equinix/blob/main/docs/modules/metal_ssh_key_info.md)                         |
 | [equinix.metal.user_info](https://github.com/equinix/ansible-collection-metal/blob/main/docs/equinix.metal.user_info_module.rst)                             | Not present in the new collection yes, [issue #137](https://github.com/equinix/ansible-collection-equinix/issues/137)                         |
 
-
 ## Testing
 
 After updating your playbooks, it's essential to test them in a non-production environment to ensure that all tasks execute as expected and that there are no issues with the new collection.
 
 ## Support and Additional Resources
 
-- Utilize the [Equinix Metal Community Slack](https://slack.equinixmetal.com/) and [Community Site](https://community.equinix.com/) for support and to engage with other users who have made similar migrations.
+- Utilize the [Equinix Community](https://community.equinix.com/) for support and to engage with other users who have made similar migrations.
 - Keep an eye on the [Ansible Collection for Equinix GitHub repository](https://github.com/equinix/ansible-collection-equinix) for updates, and submit new feature requests on the Equinix Metal Roadmap.
 
 Remember that while the equinix.metal and equinix.cloud collections may be similar, there may be differences in functionality and features. Always refer to the official documentation for the most accurate and up-to-date information.
-

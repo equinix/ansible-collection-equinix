@@ -1,6 +1,8 @@
 # Equinix Ansible Collection
+
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix/ansible-collection-equinix/integration-tests.yml?branch=main)
+[![Equinix Community](https://img.shields.io/badge/Equinix%20Community%20-%20%23E91C24?logo=equinixmetal)](https://community.equinix.com)
 
 This is repository for Ansible collection registered in Ansible Galaxy as [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/). The collection contains various plugins for managing Equinix services.
 
@@ -39,7 +41,6 @@ Name | Description |
 [equinix.cloud.metal_vlan](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.0/docs/modules/metal_vlan.md)|Manage a VLAN resource in Equinix Metal|
 [equinix.cloud.metal_vrf](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.0/docs/modules/metal_vrf.md)|Manage a VRF resource in Equinix Metal|
 
-
 ### Info Modules
 
 Modules for retrieving information about existing Equinix infrastructure.
@@ -66,7 +67,6 @@ Name | Description |
 [equinix.cloud.metal_vlan_info](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.0/docs/modules/metal_vlan_info.md)|Gather VLANs.|
 [equinix.cloud.metal_vrf_info](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.0/docs/modules/metal_vrf_info.md)|Gather VRFs|
 
-
 ### Inventory Plugins
 
 Dynamically add Equinix infrastructure to an Ansible inventory.
@@ -74,7 +74,6 @@ Dynamically add Equinix infrastructure to an Ansible inventory.
 Name |
 --- |
 [equinix.cloud.metal_device](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.0/docs/inventory/metal_device.rst)|
-
 
 <!--end collection content-->
 
@@ -94,6 +93,7 @@ pip install -r https://raw.githubusercontent.com/equinix/ansible-collection-equi
 ```
 
 ## Usage
+
 Once the Equinix Ansible collection is installed, it can be referenced by its [Fully Qualified Collection Namespace (FQCN)](https://github.com/ansible-collections/overview#terminology): `equinix.cloud.module_name`.
 
 In order to use this collection, you should have account in the relevant Equinix service. For example you should have an account in Equinix Metal to use the `metal_*` modules.
@@ -138,7 +138,6 @@ The release will create a tag, and we have a Github action in place that should 
 Verify that the [releasing Github action](https://github.com/equinix/ansible-collection-equinix/actions) succeeded.
 
 Verify that new version of [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/) is available in Ansible Galaxy.
-
 
 ## Licensing
 
