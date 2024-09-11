@@ -49,11 +49,8 @@ For general information on running the integration tests see the
 especially the section on configuration for cloud tests.  For questions about writing tests the Equinix Metal community can
 be found as detailed below.
 
-
 ### Code of Conduct
+
 The `equinix.cloud` collection follows the Ansible project's 
 [Code of Conduct](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html). 
 Please read and familiarize yourself with this document.
-
-### Contact Information
-If you require support, please email [support@equinixmetal.com](mailto:support@equinixmetal.com), visit the Equinix Metal IRC channel (#equinixmetal on freenode), subscribe to the [Equinix Metal Community Slack channel](https://slack.equinixmetal.com/) or post an issue within this repository.
