@@ -89,14 +89,14 @@ module_spec = dict(
         description=['Whether the port should be in Layer 2 mode.'],
         editable=True,
     ),
-	vlan_ids=SpecField(
-		type=FieldType.list,
-		description=["UUIDs of VLANs that should be assigned to the port"],
+    vlan_ids=SpecField(
+        type=FieldType.list,
+        description=["UUIDs of VLANs that should be assigned to the port"],
         editable=True,
     ),
-	native_vlan_id=SpecField(
-		type=FieldType.string,
-		description=["UUID of native VLAN of the port"],
+    native_vlan_id=SpecField(
+        type=FieldType.string,
+        description=["UUID of native VLAN of the port"],
         editable=True,
     ),
 )
@@ -190,7 +190,7 @@ def main():
             # 1: confirm that parameters are consistent
             is_bond_port = (port.type == "NetworkBondPort")
             if specified_layer2 and not is_bond_port:
-                     module.fail_json(msg="layer2 flag can be set only for bond ports")
+                module.fail_json(msg="layer2 flag can be set only for bond ports")
 
             # 3: disbond if needed
             if port.data.bonded and not wants_bonded:
@@ -214,9 +214,9 @@ def main():
             if not wants_layer2 and port.network_type in l2_types:
                 port_convert_layer3_input = {
                     "request_ips": [
-				        {"address_family": 4, "public": True},
-				        {"address_family": 4, "public": False},
-			            {"address_family": 6, "public": True},
+                        {"address_family": 4, "public": True},
+                        {"address_family": 4, "public": False},
+                        {"address_family": 6, "public": True},
                     ]
                 }
 
