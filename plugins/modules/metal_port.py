@@ -230,17 +230,18 @@ def main():
                 vlans_to_add = [{ "vlan": id, "state": "assigned" } for id in wants_vlan_ids if not id in current_vlan_ids]
                 vlan_assignments = vlans_to_remove + vlans_to_add
 
-                create_and_wait_for_batch(ports_api, port, vlan_assignments, 1800)
-                port = ports_api.find_port_by_id(module.params.get('id'), port_includes)
+                if len(vlan_assignments) > 0:
+                    create_and_wait_for_batch(ports_api, port, vlan_assignments, 1800)
+                    port = ports_api.find_port_by_id(module.params.get('id'), port_includes)
 
-            # 8: TODO update native VLAN ID
+            # 8: update native VLAN ID
             current_native_vlan_id = port.native_virtual_network.id if port.native_virtual_network is not None else None
             if wants_native_vlan_id != current_native_vlan_id:
                 if wants_native_vlan_id is None:
-                    # TODO Need to delete native virtual network
+                    port = ports_api.delete_native_vlan(port.id, port_includes)
                     changed = True
                 else:
-                    # TODO Need to add/update native virtual network
+                    port = ports_api.assign_native_vlan(port.id, wants_native_vlan_id, port_includes)
                     changed = True
         else:
             module.fail_json(msg="Could not find metal_port with ID {0}".format(module.params['id']))

@@ -99,31 +99,15 @@
           - "test_port.id == bond_port_id"
           - "test_port.network_type == 'layer2-bonded'"
 
-    - name: convert first bond port to layer 3
-      equinix.cloud.metal_port:
-        id: "{{ bond_port_id }}"
-        bonded: true
-        layer2: false
-      register: test_port
-
-    - name: assert correct port found with correct network type
-      assert:
-        that:
-          - "test_port.id == bond_port_id"
-          - "test_port.network_type == 'layer3'"
-
     - name: attach vlans
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
-        layer2: false
+        layer2: true
         vlan_ids:
           - "{{ test_vlan1.id }}"
           - "{{ test_vlan2.id }}"
       register: test_port
-
-    - debug:
-        var: test_port
 
     - name: assert VLAN attachments found
       assert:
@@ -131,7 +115,38 @@
           - "test_port.virtual_networks.0.id == test_vlan1.id"
           - "test_port.virtual_networks.1.id == test_vlan2.id"
 
-    - name: detach vlans
+    - name: assign native vlan
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+        vlan_ids:
+          - "{{ test_vlan1.id }}"
+          - "{{ test_vlan2.id }}"
+        native_vlan_id: "{{ test_vlan1.id }}"
+      register: test_port
+
+    - name: assert native VLAN found
+      assert:
+        that:
+          - "test_port.native_virtual_network.id == test_vlan1.id"
+
+    - name: unassign native vlan
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+        vlan_ids:
+          - "{{ test_vlan1.id }}"
+          - "{{ test_vlan2.id }}"
+      register: test_port
+
+    - name: assert native VLAN found
+      assert:
+        that:
+          - "'native_virtual_network' not in test_port.keys()"
+
+    - name: detach vlans and convert first bond port to layer 3
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
@@ -139,6 +154,12 @@
         vlan_ids: []
       register: test_port
 
+    - name: assert correct port found with correct network type and vlans
+      assert:
+        that:
+          - "test_port.id == bond_port_id"
+          - "test_port.network_type == 'layer3'"
+          - "test_port.virtual_networks | length == 0"
   always:
     - name: Announce teardown start
       debug:
