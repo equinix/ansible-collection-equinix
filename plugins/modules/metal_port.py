@@ -146,21 +146,34 @@ SPECDOC_META = getSpecDocMeta(
 
 l2_types = {"layer2-individual", "layer2-bonded"}
 l3_types = {"layer3", "hybrid", "hybrid-bonded"}
+port_includes = {"native_virtual_network", "virtual_networks"}
 
-def create_and_wait_for_batch(ports_api, port, vlan_assignments, timeout: int):
+def _convert_layer3(module, port):
+    port_convert_layer3_input = {
+        "request_ips": [
+            {"address_family": 4, "public": True},
+            {"address_family": 4, "public": False},
+            {"address_family": 6, "public": True},
+        ]
+    }
+
+    return equinix_metal.PortsApi(module.equinix_metal_client).convert_layer3(port.id, port_includes, port_convert_layer3_input)
+
+def _create_and_wait_for_batch(module, port, vlan_assignments, timeout: int):
     stop_time = time.time() + timeout
+    ports_api = equinix_metal.PortsApi(module.equinix_metal_client)
     batch = ports_api.create_port_vlan_assignment_batch(port.id, { "vlan_assignments": vlan_assignments })
 
     while time.time() < stop_time:
         batch = ports_api.find_port_vlan_assignment_batch_by_port_id_and_batch_id(port.id, batch.id)
 
         if batch.state == "failed":
-            raise Exception("vlan assignment batch {0} provisioning failed: {1}".format(batch.id, batch.error_messages))
+            module.fail_json("vlan assignment batch {0} provisioning failed: {1}".format(batch.id, batch.error_messages))
         if batch.state == "completed":
-            return batch
+            return ports_api.find_port_by_id(port.id, port_includes)
         time.sleep(5)
 
-    raise Exception("vlan assignment batch {0} is not complete after timeout".format(batch.id))
+    module.fail_json("vlan assignment batch {0} is not complete after timeout".format(batch.id))
 
 def main():
     module = EquinixModule(
@@ -177,7 +190,6 @@ def main():
     try:
         module.params_syntax_check()
         ports_api = equinix_metal.PortsApi(module.equinix_metal_client)
-        port_includes = ["native_virtual_network", "virtual_networks"]
         port = ports_api.find_port_by_id(module.params.get('id'), port_includes)
 
         wants_layer2 = module.params.get('layer2')
@@ -212,15 +224,7 @@ def main():
 
             # 6: convert to L3 if needed
             if not wants_layer2 and port.network_type in l2_types:
-                port_convert_layer3_input = {
-                    "request_ips": [
-                        {"address_family": 4, "public": True},
-                        {"address_family": 4, "public": False},
-                        {"address_family": 6, "public": True},
-                    ]
-                }
-
-                port = ports_api.convert_layer3(port.id, port_includes, port_convert_layer3_input)
+                port = _convert_layer3(module, port)
                 changed = True
 
             # 7: batch VLAN assignment changes, add and remove
@@ -231,8 +235,7 @@ def main():
                 vlan_assignments = vlans_to_remove + vlans_to_add
 
                 if len(vlan_assignments) > 0:
-                    create_and_wait_for_batch(ports_api, port, vlan_assignments, 1800)
-                    port = ports_api.find_port_by_id(module.params.get('id'), port_includes)
+                    port = _create_and_wait_for_batch(module, port, vlan_assignments, 1800)
 
             # 8: update native VLAN ID
             current_native_vlan_id = port.native_virtual_network.id if port.native_virtual_network is not None else None
