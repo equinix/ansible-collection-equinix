@@ -1,6 +1,6 @@
 # metal_port
 
-This Terraform resource doesn't create an API resource in Equinix Metal, but rather provides finer control for [Layer 2 networking](https://deploy.equinix.com/developers/docs/metal/layer2-networking/overview/).
+This module doesn't create a resource in Equinix Metal, but rather provides finer control for [Layer 2 networking](https://deploy.equinix.com/developers/docs/metal/layer2-networking/overview/).
 
 
 - [Examples](#examples)
