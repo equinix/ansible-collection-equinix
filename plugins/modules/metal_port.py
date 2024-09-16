@@ -204,35 +204,35 @@ def main():
         wants_native_vlan_id = module.params.get('native_vlan_id')
 
         if port:
-            # 1: confirm that parameters are consistent
+            # confirm that parameters are consistent
             is_bond_port = (port.type == "NetworkBondPort")
             if specified_layer2 and not is_bond_port:
                 module.fail_json(msg="layer2 flag can be set only for bond ports")
 
-            # 3: disbond if needed
+            # disbond if needed
             if port.data.bonded and not wants_bonded:
                 if is_bond_port and port.network_type in l3_types:
                     module.fail_json(msg="layer 3 bond ports cannot be unbonded")
                 port = ports_api.disbond_port(port.id, None, port_includes)
                 changed = True
 
-            # 4: convert to L2 if needed
+            # convert to L2 if needed
             if wants_layer2:
                 if port.network_type not in l2_types:
                     port = ports_api.convert_layer2(port.id, {}, port_includes)
                     changed = True
 
-            # 5: bond if needed
+            # bond if needed
             if wants_bonded and not port.data.bonded:
                 port = ports_api.bond_port(port.id, None, port_includes)
                 changed = True
 
-            # 6: convert to L3 if needed
+            # convert to L3 if needed
             if not wants_layer2 and port.network_type in l2_types:
                 port = _convert_layer3(module, port)
                 changed = True
 
-            # 7: batch VLAN assignment changes, add and remove
+            # batch VLAN assignment changes, add and remove
             if wants_vlan_ids is not None:
                 current_vlan_ids = [vlan.id for vlan in port.virtual_networks]
                 vlans_to_remove = [{ "vlan": id, "state": "unassigned" } for id in current_vlan_ids if not id in wants_vlan_ids]
@@ -242,7 +242,7 @@ def main():
                 if len(vlan_assignments) > 0:
                     port = _create_and_wait_for_batch(module, port, vlan_assignments, 1800)
 
-            # 8: update native VLAN ID
+            # update native VLAN ID
             current_native_vlan_id = port.native_virtual_network.id if port.native_virtual_network is not None else None
             if wants_native_vlan_id != current_native_vlan_id:
                 if wants_native_vlan_id is None:
