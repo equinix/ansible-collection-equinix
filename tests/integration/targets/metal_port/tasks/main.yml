@@ -120,9 +120,6 @@
         id: "{{ bond_port_id }}"
         bonded: true
         layer2: true
-        vlan_ids:
-          - "{{ test_vlan1.id }}"
-          - "{{ test_vlan2.id }}"
         native_vlan_id: "{{ test_vlan1.id }}"
       register: test_port
 
