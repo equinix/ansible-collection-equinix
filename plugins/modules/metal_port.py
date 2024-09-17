@@ -204,7 +204,7 @@ def _create_and_wait_for_batch(module, port, vlan_assignments, timeout: int):
             return ports_api.find_port_by_id(port.id, port_includes)
         time.sleep(5)
 
-    module.fail_json("vlan assignment batch {0} is not complete after timeout".format(batch.id))
+    module.fail_json("vlan assignment batch {0} status is '{1}' after timeout".format(batch.id, batch.state))
 
 def main():
     module = EquinixModule(
