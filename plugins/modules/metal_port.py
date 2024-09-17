@@ -191,11 +191,11 @@ def _convert_layer3(module, port):
     return equinix_metal.PortsApi(module.equinix_metal_client).convert_layer3(port.id, port_includes, port_convert_layer3_input)
 
 def _create_and_wait_for_batch(module, port, vlan_assignments, timeout: int):
-    stop_time = time.time() + timeout
+    stop_time = time.perf_counter() + timeout
     ports_api = equinix_metal.PortsApi(module.equinix_metal_client)
     batch = ports_api.create_port_vlan_assignment_batch(port.id, { "vlan_assignments": vlan_assignments })
 
-    while time.time() < stop_time:
+    while time.perf_counter() < stop_time:
         batch = ports_api.find_port_vlan_assignment_batch_by_port_id_and_batch_id(port.id, batch.id)
 
         if batch.state == "failed":
