@@ -10,18 +10,12 @@ This module doesn't create a resource in Equinix Metal, but rather provides fine
 ## Examples
 
 ```yaml
-- name: capture first bond port id for my_device
+- name: capture port ids for my_device
   set_fact:
     bond_port_id: "{{ my_device.network_ports | selectattr('name', 'match', 'bond0') | map(attribute='id') | first }}"
+    eth1_port_id: "{{ my_device.network_ports | selectattr('name', 'match', 'eth1') | map(attribute='id') | first }}"
 
-- name: convert first bond port to layer 2
-  equinix.cloud.metal_port:
-    id: "{{ bond_port_id }}"
-    bonded: true
-    layer2: true
-
-
-- name: attach VLANs by UUID
+- name: convert to layer2 bonded mode
   equinix.cloud.metal_port:
     id: "{{ bond_port_id }}"
     bonded: true
@@ -37,12 +31,23 @@ This module doesn't create a resource in Equinix Metal, but rather provides fine
     layer2: true
     native_vlan_id: "{{ test_vlan1.id }}"
 
+- name: convert to hybrid bonded mode
+  equinix.cloud.metal_port:
+    id: "{{ bond_port_id }}"
+    bonded: true
+    layer2: false
 
-- name: disbond the bond port
+- name: convert to layer2 unbonded mode
   equinix.cloud.metal_port:
     id: "{{ bond_port_id }}"
     bonded: false
     layer2: true
+
+- name: convert to hybrid unbonded mode
+  equinix.cloud.metal_port:
+    id: "{{ eth1_port_id }}"
+    bonded: true
+    layer2: false
 
 ```
 

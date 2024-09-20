@@ -14,7 +14,7 @@
       metal_api_token: "{{ metal_api_token }}"
   block:
     - set_fact:
-        test_resource_name_prefix: "ansible-integration-test-device"
+        test_resource_name_prefix: "ansible-integration-test-port"
     - set_fact:
         unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
     - set_fact:
@@ -56,50 +56,51 @@
         vxlan: "{{ test_vxlan2 }}"
       register: test_vlan2
 
-    - name: capture first bond port id
+    - name: capture device port ids
       set_fact:
         bond_port_id: "{{ test_device.network_ports | selectattr('name', 'match', 'bond0') | map(attribute='id') | first }}"
+        eth1_port_id: "{{ test_device.network_ports | selectattr('name', 'match', 'eth1') | map(attribute='id') | first }}"
 
-    - name: convert first bond port to layer 2
+    - name: convert bond port to layer 2 bonded mode
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
         layer2: true
-      register: test_port
+      register: test_bond_port
 
     - name: assert correct port found with correct network type
       assert:
         that:
-          - "test_port.id == bond_port_id"
-          - "test_port.network_type == 'layer2-bonded'"
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer2-bonded'"
 
-    - name: disbond first bond port
+    - name: convert bond port to layer 2 unbonded mode
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: false
         layer2: true
-      register: test_port
+      register: test_bond_port
 
     - name: assert correct port found with correct network type
       assert:
         that:
-          - "test_port.id == bond_port_id"
-          - "test_port.network_type == 'layer2-individual'"
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer2-individual'"
 
-    - name: restore bond on first bond port
+    - name: restore bond on bond port
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
         layer2: true
-      register: test_port
+      register: test_bond_port
 
     - name: assert correct port found with correct network type
       assert:
         that:
-          - "test_port.id == bond_port_id"
-          - "test_port.network_type == 'layer2-bonded'"
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer2-bonded'"
 
-    - name: attach vlans
+    - name: attach vlans to bond port
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
@@ -107,28 +108,28 @@
         vlan_ids:
           - "{{ test_vlan1.id }}"
           - "{{ test_vlan2.id }}"
-      register: test_port
+      register: test_bond_port
 
     - name: assert VLAN attachments found
       assert:
         that:
-          - "test_port.virtual_networks.0.id == test_vlan1.id"
-          - "test_port.virtual_networks.1.id == test_vlan2.id"
+          - "test_bond_port.virtual_networks.0.id == test_vlan1.id"
+          - "test_bond_port.virtual_networks.1.id == test_vlan2.id"
 
-    - name: assign native vlan
+    - name: assign native vlan to bond port
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
         layer2: true
         native_vlan_id: "{{ test_vlan1.id }}"
-      register: test_port
+      register: test_bond_port
 
     - name: assert native VLAN found
       assert:
         that:
-          - "test_port.native_virtual_network.id == test_vlan1.id"
+          - "test_bond_port.native_virtual_network.id == test_vlan1.id"
 
-    - name: unassign native vlan
+    - name: unassign native vlan from bond port
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
@@ -136,27 +137,57 @@
         vlan_ids:
           - "{{ test_vlan1.id }}"
           - "{{ test_vlan2.id }}"
-      register: test_port
+      register: test_bond_port
 
     - name: assert native VLAN found
       assert:
         that:
-          - "'native_virtual_network' not in test_port.keys()"
+          - "'native_virtual_network' not in test_bond_port.keys()"
 
-    - name: detach vlans and convert first bond port to layer 3
+    - name: convert bond port to hybrid bonded mode
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: false
+        vlan_ids:
+          - "{{ test_vlan1.id }}"
+          - "{{ test_vlan2.id }}"
+      register: test_bond_port
+
+    - name: assert correct port found with correct network type and vlans
+      assert:
+        that:
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'hybrid-bonded'"
+          - "test_bond_port.virtual_networks | length == 2"
+
+    - name: convert bond port to layer3 bonded mode
       equinix.cloud.metal_port:
         id: "{{ bond_port_id }}"
         bonded: true
         layer2: false
         vlan_ids: []
-      register: test_port
+      register: test_bond_port
 
     - name: assert correct port found with correct network type and vlans
       assert:
         that:
-          - "test_port.id == bond_port_id"
-          - "test_port.network_type == 'layer3'"
-          - "test_port.virtual_networks | length == 0"
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer3'"
+          - "test_bond_port.virtual_networks | length == 0"
+
+    - name: convert eth1 port to hybrid unbonded mode
+      equinix.cloud.metal_port:
+        id: "{{ eth1_port_id }}"
+        bonded: false
+      register: test_eth1_port
+
+    - name: assert correct port found with correct network type and vlans
+      assert:
+        that:
+          - "test_eth1_port.id == eth1_port_id"
+          - "test_eth1_port.data.bonded == False"
+          - "test_eth1_port.virtual_networks | length == 0"
   always:
     - name: Announce teardown start
       debug:
