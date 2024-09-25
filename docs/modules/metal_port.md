@@ -65,7 +65,7 @@ This module doesn't create a resource in Equinix Metal, but rather provides fine
 | Field     | Type | Required | Description                                                                  |
 |-----------|------|----------|------------------------------------------------------------------------------|
 | `id` | <center>`str`</center> | <center>**Required**</center> | UUID of the port.   |
-| `bonded` | <center>`bool`</center> | <center>**Required**</center> | Whether the port should be bonded.   |
+| `bonded` | <center>`bool`</center> | <center>Optional</center> | Whether the port should be bonded.  **(Updatable)** |
 | `layer2` | <center>`bool`</center> | <center>Optional</center> | Whether the port should be in Layer 2 mode.  **(Updatable)** |
 | `vlan_ids` | <center>`list`</center> | <center>Optional</center> | UUIDs of VLANs that should be assigned to the port  **(Updatable)** |
 | `native_vlan_id` | <center>`str`</center> | <center>Optional</center> | UUID of native VLAN of the port  **(Updatable)** |

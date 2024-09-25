@@ -87,7 +87,7 @@ module_spec = dict(
     bonded=SpecField(
         type=FieldType.bool,
         description=['Whether the port should be bonded.'],
-        required=True,
+        editable=True,
     ),
     layer2=SpecField(
         type=FieldType.bool,

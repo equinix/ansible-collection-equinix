@@ -1,6 +1,8 @@
 # Equinix Ansible Collection
+
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix/ansible-collection-equinix/integration-tests.yml?branch=main)
+[![Equinix Community](https://img.shields.io/badge/Equinix%20Community%20-%20%23E91C24?logo=equinixmetal)](https://community.equinix.com)
 
 This is repository for Ansible collection registered in Ansible Galaxy as [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/). The collection contains various plugins for managing Equinix services.
 
