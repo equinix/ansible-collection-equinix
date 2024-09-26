@@ -139,7 +139,7 @@
           - "{{ test_vlan2.id }}"
       register: test_bond_port
 
-    - name: assert native VLAN found
+    - name: assert native VLAN removed
       assert:
         that:
           - "'native_virtual_network' not in test_bond_port.keys()"
