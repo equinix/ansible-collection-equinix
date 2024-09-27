@@ -1,0 +1,219 @@
+- name: metal_project
+  module_defaults:
+    equinix.cloud.metal_project:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_device:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_project_info:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_device_info:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_port:
+      metal_api_token: "{{ metal_api_token }}"
+    equinix.cloud.metal_vlan:
+      metal_api_token: "{{ metal_api_token }}"
+  block:
+    - set_fact:
+        test_resource_name_prefix: "ansible-integration-test-port"
+    - set_fact:
+        unique_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+    - set_fact:
+        test_prefix: "{{ test_resource_name_prefix }}-{{ unique_id }}"
+    - set_fact:
+        test_os: ubuntu_22_04
+    - set_fact:
+        test_plan: c3.small.x86
+    - set_fact:
+        test_vxlan1: 123
+    - set_fact:
+        test_vxlan2: 456
+
+    - name: create project for test
+      equinix.cloud.metal_project:
+        name: "{{ test_prefix }}"
+      register: test_project
+
+    - name: create device for test
+      equinix.cloud.metal_device:
+        project_id: "{{ test_project.id }}"
+        hostname: "{{ test_prefix }}-dev1"
+        operating_system: "{{ test_os }}"
+        plan: "{{ test_plan }}"
+        metro: "{{ metal_test_metro }}"
+      register: test_device
+
+    - name: create first vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ test_project.id }}"
+        metro: "{{ metal_test_metro }}"
+        vxlan: "{{ test_vxlan1 }}"
+      register: test_vlan1
+
+    - name: create second vlan for test
+      equinix.cloud.metal_vlan:
+        project_id: "{{ test_project.id }}"
+        metro: "{{ metal_test_metro }}"
+        vxlan: "{{ test_vxlan2 }}"
+      register: test_vlan2
+
+    - name: capture device port ids
+      set_fact:
+        bond_port_id: "{{ test_device.network_ports | selectattr('name', 'match', 'bond0') | map(attribute='id') | first }}"
+        eth1_port_id: "{{ test_device.network_ports | selectattr('name', 'match', 'eth1') | map(attribute='id') | first }}"
+
+    - name: convert bond port to layer 2 bonded mode
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+      register: test_bond_port
+
+    - name: assert correct port found with correct network type
+      assert:
+        that:
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer2-bonded'"
+
+    - name: convert bond port to layer 2 unbonded mode
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: false
+        layer2: true
+      register: test_bond_port
+
+    - name: assert correct port found with correct network type
+      assert:
+        that:
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer2-individual'"
+
+    - name: restore bond on bond port
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+      register: test_bond_port
+
+    - name: assert correct port found with correct network type
+      assert:
+        that:
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer2-bonded'"
+
+    - name: attach vlans to bond port
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+        vlan_ids:
+          - "{{ test_vlan1.id }}"
+          - "{{ test_vlan2.id }}"
+      register: test_bond_port
+
+    - name: assert VLAN attachments found
+      assert:
+        that:
+          - "test_bond_port.virtual_networks.0.id == test_vlan1.id"
+          - "test_bond_port.virtual_networks.1.id == test_vlan2.id"
+
+    - name: assign native vlan to bond port
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+        native_vlan_id: "{{ test_vlan1.id }}"
+      register: test_bond_port
+
+    - name: assert native VLAN found
+      assert:
+        that:
+          - "test_bond_port.native_virtual_network.id == test_vlan1.id"
+
+    - name: unassign native vlan from bond port
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: true
+        vlan_ids:
+          - "{{ test_vlan1.id }}"
+          - "{{ test_vlan2.id }}"
+      register: test_bond_port
+
+    - name: assert native VLAN removed
+      assert:
+        that:
+          - "'native_virtual_network' not in test_bond_port.keys()"
+
+    - name: convert bond port to hybrid bonded mode
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: false
+        vlan_ids:
+          - "{{ test_vlan1.id }}"
+          - "{{ test_vlan2.id }}"
+      register: test_bond_port
+
+    - name: assert correct port found with correct network type and vlans
+      assert:
+        that:
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'hybrid-bonded'"
+          - "test_bond_port.virtual_networks | length == 2"
+
+    - name: convert bond port to layer3 bonded mode
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: false
+        vlan_ids: []
+      register: test_bond_port
+
+    - name: assert correct port found with correct network type and vlans
+      assert:
+        that:
+          - "test_bond_port.id == bond_port_id"
+          - "test_bond_port.network_type == 'layer3'"
+          - "test_bond_port.virtual_networks | length == 0"
+
+    - name: convert eth1 port to hybrid unbonded mode
+      equinix.cloud.metal_port:
+        id: "{{ eth1_port_id }}"
+        bonded: false
+      register: test_eth1_port
+
+    - name: assert correct port found with correct network type and vlans
+      assert:
+        that:
+          - "test_eth1_port.id == eth1_port_id"
+          - "test_eth1_port.data.bonded == False"
+          - "test_eth1_port.virtual_networks | length == 0"
+  always:
+    - name: Announce teardown start
+      debug:
+        msg: "***** TESTING COMPLETE. COMMENCE TEARDOWN *****"
+
+    - name: list test projects
+      equinix.cloud.metal_project_info:
+        name: "{{ test_prefix }}"
+      register: test_projects
+
+    - name: list devices in test projects
+      equinix.cloud.metal_device_info:
+        project_id: "{{ item.id }}"
+      register: "test_devices"
+      loop: "{{ test_projects.resources }}"
+
+    - name: delete test devices
+      equinix.cloud.metal_device:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_devices.results | map(attribute='resources') | flatten }}"
+
+    - name: delete test projects
+      equinix.cloud.metal_project:
+        id: "{{ item.id }}"
+        state: absent
+      ignore_errors: yes
+      loop: "{{ test_projects.resources }}"

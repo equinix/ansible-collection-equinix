@@ -1,6 +1,8 @@
 # Equinix Ansible Collection
+
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix/ansible-collection-equinix/integration-tests.yml?branch=main)
+[![Equinix Community](https://img.shields.io/badge/Equinix%20Community%20-%20%23E91C24?logo=equinixmetal)](https://community.equinix.com)
 
 This is repository for Ansible collection registered in Ansible Galaxy as [equinix.cloud](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/). The collection contains various plugins for managing Equinix services.
 
@@ -30,6 +32,7 @@ Name | Description |
 [equinix.cloud.metal_hardware_reservation](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_hardware_reservation.md)|Lookup a single hardware_reservation by ID in Equinix Metal|
 [equinix.cloud.metal_ip_assignment](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_ip_assignment.md)|Manage Equinix Metal IP assignments|
 [equinix.cloud.metal_organization](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_organization.md)|Lookup a single organization by ID in Equinix Metal|
+[equinix.cloud.metal_port](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_port.md)|Manage a device port in Equinix Metal|
 [equinix.cloud.metal_project](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_project.md)|Manage Projects in Equinix Metal|
 [equinix.cloud.metal_project_bgp_config](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_project_bgp_config.md)|Manage BGP Config for Equinix Metal Project|
 [equinix.cloud.metal_project_ssh_key](https://github.com/equinix/ansible-collection-equinix/blob/v0.10.1/docs/modules/metal_project_ssh_key.md)|Manage a project ssh key in Equinix Metal|
