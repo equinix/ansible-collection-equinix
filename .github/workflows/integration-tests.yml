@@ -22,6 +22,9 @@ permissions:
   pull-requests: read
   contents: read
 
+env:
+  COLLECTION_PATH: .ansible/collections/ansible_collections/equinix/cloud
+
 jobs:
   authorize:
     environment:
@@ -41,11 +44,11 @@ jobs:
     concurrency: 'e2e-test'
     defaults:
       run:
-        working-directory: .ansible/collections/ansible_collections/equinix/cloud
+        working-directory: ${{ env.COLLECTION_PATH }}
     steps:
       - uses: actions/checkout@v4
         with:
-          path: .ansible/collections/ansible_collections/equinix/cloud
+          path: ${{ env.COLLECTION_PATH }}
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
 
       - name: update packages
@@ -57,7 +60,7 @@ jobs:
       - name: setup python 3
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version-file: ${{ env.COLLECTION_PATH }}/.python-version
 
       - name: install dependencies
         run: pip3 install -r requirements-dev.txt -r requirements.txt

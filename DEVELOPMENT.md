@@ -21,7 +21,7 @@
 
 ##  0. <a name="Developmentenvironmentsetup"></a>Development environment setup
 
-We use Python 3.8 for the collection development.
+We use Python for collection development.  The Python version that is currently used in GitHub Actions workflows is tracked in the `.python-version` file in the root of this repository.  We recommend using the same Python version for local development.  Some tools, such as `pyenv`, may reference the `.python-version` file automatically, but in other cases you may have to manually install the specified Python version and add it to your path.
 
 Development of the collection is best done if your repository is located in a path that concludes with `ansible_collections/equinix/cloud`. This is a requirement specific to Ansible. You can clone the repository using the following command:
 

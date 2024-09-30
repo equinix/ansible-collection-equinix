@@ -5,6 +5,10 @@ name: Semantic Release to GitHub and Ansible Galaxy
 on:
   workflow_dispatch: null
 
+env:
+  COLLECTION_PATH: .ansible/collections/ansible_collections/equinix/cloud
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +19,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v4
         with:
-          path: .ansible/collections/ansible_collections/equinix/cloud
+          path: ${{ env.COLLECTION_PATH }}
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
@@ -28,7 +32,7 @@ jobs:
       - name: setup python 3
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version-file: ${{ env.COLLECTION_PATH }}/.python-version
 
       - name: install dependencies
         run: pip3 install -r requirements-dev.txt -r requirements.txt
@@ -36,7 +40,7 @@ jobs:
       - name: Do GitHub release
         uses: cycjimmy/semantic-release-action@v4
         with:
-          working_directory: .ansible/collections/ansible_collections/equinix/cloud
+          working_directory: ${{ env.COLLECTION_PATH }}
           semantic_version: 19.0.5
           extra_plugins: |
             @semantic-release/exec@6.0.3
