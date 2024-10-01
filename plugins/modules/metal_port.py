@@ -272,6 +272,7 @@ def main():
 
                 if len(vlan_assignments) > 0:
                     port = _create_and_wait_for_batch(module, port, vlan_assignments, 1800)
+                    changed = True
 
             # update native VLAN ID
             current_native_vlan_id = port.native_virtual_network.id if port.native_virtual_network is not None else None
