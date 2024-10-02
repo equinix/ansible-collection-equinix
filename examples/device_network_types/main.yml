@@ -1,0 +1,94 @@
+---
+- name: Equinix Metal Example Playbook
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Include the required variables
+      include_vars: "vars/equinix_metal_vars.yml"
+
+    - name: Equinix Metal integration test
+      block:
+        # Create a project
+        - name: Create a project
+          equinix.cloud.metal_project:
+            name: "{{ project_name }}"
+          register: project
+
+        # Create a device
+        - name: Create a device
+          equinix.cloud.metal_device:
+            project_id: "{{ project.id }}"
+            hostname: "{{ device_hostname }}"
+            operating_system: "{{ operating_system }}"
+            plan: "{{ plan }}"
+            metro: "{{ metro }}"
+            state: present
+          register: device
+
+        - name: capture port ids for device
+          set_fact:
+            bond_port_id: "{{ device.network_ports | selectattr('name', 'match', 'bond0') | map(attribute='id') | first }}"
+            eth1_port_id: "{{ device.network_ports | selectattr('name', 'match', 'eth1') | map(attribute='id') | first }}"
+
+        - name: create first vlan
+          equinix.cloud.metal_vlan:
+            project_id: "{{ project.id }}"
+            metro: "{{ metro }}"
+            vxlan: "1234"
+          register: first_vlan
+
+        - name: create second vlan
+          equinix.cloud.metal_vlan:
+            project_id: "{{ project.id }}"
+            metro: "{{ metro }}"
+            vxlan: "2345"
+          register: second_vlan
+
+        - name: convert bond port to hybrid bonded mode
+          equinix.cloud.metal_port:
+            id: "{{ bond_port_id }}"
+            bonded: true
+            layer2: false
+            vlan_ids:
+              - "{{ first_vlan.id }}"
+              - "{{ second_vlan.id }}"
+          register: port
+
+        - name: revert bond port to layer 3 mode
+          equinix.cloud.metal_port:
+            id: "{{ bond_port_id }}"
+            bonded: true
+            layer2: false
+            vlan_ids: []
+          register: port
+
+        - name: convert eth1 port to hybrid unbonded mode
+          equinix.cloud.metal_port:
+            id: "{{ eth1_port_id }}"
+            bonded: false
+
+        - name: restore bond on eth1 port
+          equinix.cloud.metal_port:
+            id: "{{ eth1_port_id }}"
+            bonded: true
+
+        - name: convert bond port to layer 2 bonded mode
+          equinix.cloud.metal_port:
+            id: "{{ bond_port_id }}"
+            bonded: true
+            layer2: true
+
+        - name: convert bond port to layer 2 unbonded mode
+          equinix.cloud.metal_port:
+            id: "{{ bond_port_id }}"
+            bonded: false
+            layer2: true
+
+        - name: attach VLANs to eth1 and assign native VLAN
+          equinix.cloud.metal_port:
+            id: "{{ eth1_port_id }}"
+            bonded: false
+            vlan_ids:
+              - "{{ first_vlan.id }}"
+              - "{{ second_vlan.id }}"
+            native_vlan_id: "{{ first_vlan.id }}"
