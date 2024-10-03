@@ -53,6 +53,8 @@ When a user provisions first device in a facility, Equinix Metal API automatical
 | `customdata` | <center>`str`</center> | <center>Optional</center> | Custom data to associate with the reserved IP block   |
 | `comments` | <center>`str`</center> | <center>Optional</center> | Comments to associate with the reserved IP block   |
 | `vrf_id` | <center>`str`</center> | <center>Optional</center> | The ID of the VRF in which this VRF IP Reservation is created. The VRF must have an existing IP Range that contains the requested subnet.   |
+| `network` | <center>`str`</center> | <center>Optional</center> | The starting address for this VRF IP Reservation's subnet. Both IPv4 and IPv6 are supported.   |
+| `cidr` | <center>`int`</center> | <center>Optional</center> | The size of the VRF IP Reservation's subnet. The following subnet sizes are supported:<br>- IPv4: between 22 - 29 inclusive<br>- IPv6: exactly 64   |
 | `project_id` | <center>`str`</center> | <center>Optional</center> | The ID of the project to which the reserved IP block will be assigned   |
 | `tags` | <center>`list`</center> | <center>Optional</center> | Tags to associate with the reserved IP block   |
 
