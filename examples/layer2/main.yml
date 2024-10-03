@@ -1,0 +1,126 @@
+---
+- name: Equinix Metal Example Playbook
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Include the required variables
+      include_vars: "vars/equinix_metal_vars.yml"
+
+    - name: Compute peering ranges for VRF and virtual circuit
+      set_fact:
+        vrf_peering_ip_range: "{{ vrf_peering_ip_network }}/29"
+        vrf_vc_peering_ip_range: "{{ vrf_peering_ip_network }}/30"
+
+    # Equinix resources
+    - name: Create a project
+      equinix.cloud.metal_project:
+        name: "{{ project_name }}"
+      register: project
+
+    - name: Enable BGP for the project
+      equinix.cloud.metal_project_bgp_config:
+        project_id: "{{ project.id }}"
+        deployment_type: local
+        asn: 65000
+
+    - name: create a vlan
+      equinix.cloud.metal_vlan:
+        project_id: "{{ project.id }}"
+        metro: "{{ metro }}"
+        vxlan: "1234"
+      register: vlan
+
+    - name: create a VRF
+      equinix.cloud.metal_vrf:
+        name: example-vrf
+        metro: "{{ metro }}"
+        local_asn: "65000"
+        ip_ranges:
+          - "{{ vrf_peering_ip_range }}"
+          - "{{ aws_network_cidr }}"
+          - "{{ vrf_gateway_ip_range }}"
+        project_id: "{{ project.id }}"
+      register: vrf
+
+    - name: create a VRF IP reservation
+      equinix.cloud.metal_reserved_ip_block:
+        project_id: "{{ project.id }}"
+        vrf_id: "{{ vrf.id }}"
+        type: "vrf"
+        metro: "{{ metro }}"
+        network: "{{ vrf_gateway_ip_range | split('/') | first }}"
+        cidr: "{{ vrf_gateway_ip_range | split('/') | last }}"
+      register: vrf_ip_reservation
+
+    - name: create a VRF Metal Gateway
+      equinix.cloud.metal_gateway:
+        project_id: "{{ project.id }}"
+        ip_reservation_id: "{{ vrf_ip_reservation.id }}"
+        virtual_network_id: "{{ vlan.id }}"
+      register: gateway
+
+    # Create a device
+    - name: Create a device
+      equinix.cloud.metal_device:
+        project_id: "{{ project.id }}"
+        metro: "{{ metro }}"
+        hostname: "{{ device_hostname }}"
+        operating_system: "{{ operating_system }}"
+        plan: "{{ plan }}"
+        state: present
+        userdata: |2
+          #!/bin/bash
+
+          cat <<EOF >> /etc/network/interfaces
+          auto bond0.{{vlan.vxlan}}
+          iface bond0.{{vlan.vxlan}} inet static
+              address {{ vrf_gateway_ip_range | ansible.utils.nthhost(2) }}
+              netmask {{ vrf_ip_reservation.netmask }}
+              post-up route add -net {{ vrf_gateway_ip_range }} gw {{ vrf_ip_reservation.gateway }}
+              post-up route add -net {{ aws_network_cidr }} gw {{ vrf_ip_reservation.gateway }}
+          EOF
+
+          systemctl restart networking
+      register: device
+
+    - name: capture port ids for device
+      set_fact:
+        bond_port_id: "{{ device.network_ports | selectattr('name', 'match', 'bond0') | map(attribute='id') | first }}"
+        eth1_port_id: "{{ device.network_ports | selectattr('name', 'match', 'eth1') | map(attribute='id') | first }}"
+
+    - name: convert bond port to hybrid bonded mode
+      equinix.cloud.metal_port:
+        id: "{{ bond_port_id }}"
+        bonded: true
+        layer2: false
+        vlan_ids:
+          - "{{ vlan.id }}"
+
+    - name: create a Metal-billed VRF interconnection
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        metro: "{{ metro }}"
+        name: "{{ interconnection_name }}"
+        type: "shared"
+        speed: "50Mbps"
+        service_token_type: a_side
+        redundancy: primary
+        vrfs:
+          - "{{ vrf.id }}"
+      register: connection
+
+    # TODO this task will fail until the service token is
+    # redeemed on the Fabric side; consider checking virtual
+    # circuit status and skipping if it is `pending`
+    - name: configure BGP for interconnection virtual circuit
+      equinix.cloud.metal_virtual_circuit:
+        id: "{{ connection.ports[0].virtual_circuits[0].id }}"
+        peer_asn: "{{ vrf_peering_asn }}"
+        customer_ip: "{{ vrf_vc_peering_ip_range | ansible.utils.nthhost(1) }}"
+        metal_ip: "{{ vrf_vc_peering_ip_range | ansible.utils.nthhost(2) }}"
+        subnet: "{{ vrf_vc_peering_ip_range }}"
+        md5: "{{ bgp_md5_password }}"
+        # The metal_virtual_circuit module requires this parameter
+        # in order to know that the circuit is a VRF circuit and
+        # not a VLAN circuit
+        vrf: "{{ vrf.id }}"
