@@ -220,6 +220,14 @@ module_spec = dict(
             'The VRF must have an existing IP Range that contains the requested subnet.',
         ],
     ),
+    network=SpecField(
+        type=FieldType.string,
+        description=['''The starting address for this VRF IP Reservation's subnet. Both IPv4 and IPv6 are supported.'''],
+    ),
+    cidr=SpecField(
+        type=FieldType.integer,
+        description=['''The size of the VRF IP Reservation's subnet. The following subnet sizes are supported:<br>- IPv4: between 22 - 29 inclusive<br>- IPv6: exactly 64'''],
+    ),
     project_id=SpecField(
         type=FieldType.string,
         description=['The ID of the project to which the reserved IP block will be assigned'],
@@ -278,10 +286,12 @@ def main():
         # argument_spec=argument_spec,
         argument_spec=SPECDOC_META.ansible_spec,
         required_one_of=[['id', 'project_id']],
-        required_by=dict(project_id=['quantity', 'type']),
+        required_by=dict(project_id=['type']),
         required_if=[
             ['type', 'vrf', ['vrf_id', 'cidr', 'network']],
-            ['type', 'public_ipv4', ['metro']]
+            ['type', 'public_ipv4', ['quantity', 'metro']],
+            ['type', 'private_ipv4', ['quantity']],
+            ['type', 'global_ipv4', ['quantity']]
         ],
     )
 
