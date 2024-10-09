@@ -305,9 +305,14 @@ def main():
             fetched = module.get_by_id("metal_ip_reservation", tolerate_not_found)
         else:
             module.params['types'] = [module.params.get('type')]
+
+            attributes_to_compare = ["type", "metro"]
+            if module.params['network'] is not None:
+                attributes_to_compare.append("network")
+
             fetched = module.get_one_from_list(
                 "metal_ip_reservation",
-                ["type", "metro"],
+                attributes_to_compare,
             )
 
         if fetched:
