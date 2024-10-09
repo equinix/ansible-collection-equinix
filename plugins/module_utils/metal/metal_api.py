@@ -347,10 +347,10 @@ METAL_PLAN_RESPONSE_ATTRIBUTE_MAP = {
 METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
     'name': 'name',
-    'customer_ip': 'customer_ip',
-    'metal_ip': 'metal_ip',
+    'customer_ip': optional('customer_ip'),
+    'metal_ip': optional('metal_ip'),
     'nni_vlan': 'nni_vlan',
-    'peer_asn': 'peer_asn',
+    'peer_asn': optional('peer_asn'),
     'port': 'port',
     'project': 'project',
     'status': 'status',
