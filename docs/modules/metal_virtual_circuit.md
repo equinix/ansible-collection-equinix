@@ -45,16 +45,16 @@ Manage a Virtual Circuit in Equinix Metal. You can use *id* or *name* to lookup 
 | `port_id` | <center>`str`</center> | <center>Optional</center> | UUID of the Connection Port where the VC is scoped to.   |
 | `nni_vlan` | <center>`int`</center> | <center>Optional</center> | Equinix Metal network-to-network VLAN ID.   |
 | `vlan_id` | <center>`str`</center> | <center>Optional</center> | UUID of the VLAN to associate.   |
-| `vnid` | <center>`str`</center> | <center>Optional</center> | VNID VLAN parameter, see the documentation for Equinix Fabric.   |
-| `description` | <center>`str`</center> | <center>Optional</center> | Description for the Virtual Circuit resource.   |
-| `tags` | <center>`str`</center> | <center>Optional</center> | Tags for the Virtual Circuit resource.   |
-| `speed` | <center>`str`</center> | <center>Optional</center> | Speed of the Virtual Circuit resource.   |
+| `vnid` | <center>`str`</center> | <center>Optional</center> | VNID VLAN parameter, see the documentation for Equinix Fabric.  **(Updatable)** |
+| `description` | <center>`str`</center> | <center>Optional</center> | Description for the Virtual Circuit resource.  **(Updatable)** |
+| `tags` | <center>`str`</center> | <center>Optional</center> | Tags for the Virtual Circuit resource.  **(Updatable)** |
+| `speed` | <center>`str`</center> | <center>Optional</center> | Speed of the Virtual Circuit resource.  **(Updatable)** |
 | `vrf` | <center>`str`</center> | <center>Optional</center> | UUID of the VRF to associate.   |
-| `peer_asn` | <center>`int`</center> | <center>Optional</center> | The BGP ASN of the peer. The same ASN may be the used across several VCs, but it cannot be the same as the local_asn of the VRF.   |
-| `subnet` | <center>`str`</center> | <center>Optional</center> | A subnet from one of the IP blocks associated with the VRF that we will help create an IP reservation for. Can only be either a /30 or /31. For a /31 block, it will only have two IP addresses, which will be used for the metal_ip and customer_ip. For a /30 block, it will have four IP addresses, but the first and last IP addresses are not usable. We will default to the first usable IP address for the metal_ip.   |
-| `metal_ip` | <center>`str`</center> | <center>Optional</center> | The Metal IP address for the SVI (Switch Virtual Interface) of the VirtualCircuit. Will default to the first usable IP in the subnet.   |
-| `customer_ip` | <center>`str`</center> | <center>Optional</center> | The Customer IP address which the CSR switch will peer with. Will default to the other usable IP in the subnet.   |
-| `md5` | <center>`str`</center> | <center>Optional</center> | The password that can be set for the VRF BGP peer   |
+| `peer_asn` | <center>`int`</center> | <center>Optional</center> | The BGP ASN of the peer. The same ASN may be the used across several VCs, but it cannot be the same as the local_asn of the VRF.  **(Updatable)** |
+| `subnet` | <center>`str`</center> | <center>Optional</center> | A subnet from one of the IP blocks associated with the VRF that we will help create an IP reservation for. Can only be either a /30 or /31. For a /31 block, it will only have two IP addresses, which will be used for the metal_ip and customer_ip. For a /30 block, it will have four IP addresses, but the first and last IP addresses are not usable. We will default to the first usable IP address for the metal_ip.  **(Updatable)** |
+| `metal_ip` | <center>`str`</center> | <center>Optional</center> | The Metal IP address for the SVI (Switch Virtual Interface) of the VirtualCircuit. Will default to the first usable IP in the subnet.  **(Updatable)** |
+| `customer_ip` | <center>`str`</center> | <center>Optional</center> | The Customer IP address which the CSR switch will peer with. Will default to the other usable IP in the subnet.  **(Updatable)** |
+| `md5` | <center>`str`</center> | <center>Optional</center> | The password that can be set for the VRF BGP peer  **(Updatable)** |
 | `timeout` | <center>`int`</center> | <center>Optional</center> | Timeout in seconds for Virtual Circuit to get to "ready" state  **(Default: `15`)** |
 
 
