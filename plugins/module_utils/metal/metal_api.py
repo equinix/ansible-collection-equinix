@@ -349,6 +349,7 @@ METAL_VIRTUAL_CIRCUIT_RESPONSE_ATTRIBUTE_MAP = {
     'id': 'id',
     'name': 'name',
     'customer_ip': optional('customer_ip'),
+    'md5': optional('md5'),
     'metal_ip': optional('metal_ip'),
     'nni_vlan': 'nni_vlan',
     'peer_asn': optional('peer_asn'),
