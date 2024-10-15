@@ -414,7 +414,8 @@ def main():
         if fetched:
             module.params['id'] = fetched['id']
             if state == "present":
-                diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
+                overwrite_undefined_from_api = True
+                diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES, overwrite_undefined_from_api)
                 if diff:
                     fetched = module.update_by_id(diff, module_route)
                     changed = True
