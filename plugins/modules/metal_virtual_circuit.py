@@ -412,6 +412,9 @@ def main():
 
     try:
         if fetched:
+            if fetched['vrf'] is not None:
+                module_route = 'metal_virtual_circuit_vrf'
+
             module.params['id'] = fetched['id']
             if state == "present":
                 overwrite_undefined_from_api = True
