@@ -162,24 +162,24 @@ specdoc_examples = [
 
 
 return_values = [
-    {
+{
         "address_family": 4,
-        "changed": True,
         "customdata": {},
         "details": "",
         "id": "6d94f567-6cf5-4536-8216-7dc96e1585dd",
+        "gateway": "192.168.200.1",
         "management": False,
         "metro": "sv",
-        "netmask": "255.255.255.255",
-        "network": "145.40.67.3",
+        "netmask": "255.255.255.128",
+        "network": "192.168.200.0",
         "project_id": "fd554070-70b6-420d-b3f8-7ed8438862d5",
-        "public": True,
-        "quantity": 1,
+        "public": False,
+        "quantity": 128,
         "tags": [
             "t1",
             "t2"
         ],
-        "type": "public_ipv4"
+        "type": "vrf"
     }
 ]
 

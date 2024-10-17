@@ -138,6 +138,7 @@ METAL_IP_RESERVATION_RESPONSE_ATTRIBUTE_MAP = {
     'metro': find_metro,
     'netmask': 'netmask',
     'network': 'network',
+    'gateway': 'gateway',
     'project_id': 'project.id',
     'public': 'public',
     'quantity': cidr_to_quantity('cidr'),
