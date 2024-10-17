@@ -252,9 +252,20 @@ def only_defined_mutable(params: dict, mutables: list):
     return return_dict
 
 
-def get_diff(params: dict, fetched: dict, mutables: list):
+def get_diff(params: dict, fetched: dict, mutables: list, overwrite_undefined_from_api=False):
     current_mutable = only_defined_mutable(params, mutables)
-    fetched_mutable = only_defined_mutable(fetched, mutables)
+
+    # The shared get_diff function will not report a diff if an attribute
+    # has a None value in either the config or the API response.  Setting
+    # overwrite_undefined_from_api to True tells get_diff to report a diff
+    # if an attribute is defined in the config but not the API response.
+    # TODO: Long-term we should probably move away from this centralized
+    # logic so that each module has to make its own decisions about when
+    # and how to update attributes
+    if overwrite_undefined_from_api:
+        fetched_mutable = fetched
+    else:
+        fetched_mutable = only_defined_mutable(fetched, mutables)
 
     defined_mutable_keys = current_mutable.keys() & fetched_mutable.keys()
     if defined_mutable_keys == set():

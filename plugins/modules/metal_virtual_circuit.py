@@ -231,24 +231,28 @@ module_spec = dict(
        description=[
            'VNID VLAN parameter, see the documentation for Equinix Fabric.'
        ],
+       editable=True
     ),
     description=SpecField(
         type=FieldType.string,
         description=[
             'Description for the Virtual Circuit resource.'
         ],
+        editable=True,
     ),
     tags=SpecField(
         type=FieldType.string,
         description=[
             'Tags for the Virtual Circuit resource.'
         ],
+        editable=True
     ),
     speed=SpecField(
         type=FieldType.string,
         description=[
             'Speed of the Virtual Circuit resource.'
         ],
+        editable=True
     ),
     vrf=SpecField(
         type=FieldType.string,
@@ -262,6 +266,7 @@ module_spec = dict(
             'The BGP ASN of the peer.',
             'The same ASN may be the used across several VCs, but it cannot be the same as the local_asn of the VRF.'
         ],
+        editable=True,
     ),
     subnet=SpecField(
         type=FieldType.string,
@@ -272,6 +277,7 @@ module_spec = dict(
             'For a /30 block, it will have four IP addresses, but the first and last IP addresses are not usable.',
             'We will default to the first usable IP address for the metal_ip.',
         ],
+        editable=True,
     ),
     metal_ip=SpecField(
         type=FieldType.string,
@@ -279,6 +285,7 @@ module_spec = dict(
             'The Metal IP address for the SVI (Switch Virtual Interface) of the VirtualCircuit.',
             'Will default to the first usable IP in the subnet.'
         ],
+        editable=True,
     ),
     customer_ip=SpecField(
         type=FieldType.string,
@@ -286,12 +293,14 @@ module_spec = dict(
             'The Customer IP address which the CSR switch will peer with.',
             'Will default to the other usable IP in the subnet.'
         ],
+        editable=True,
     ),
     md5=SpecField(
         type=FieldType.string,
         description=[
             'The password that can be set for the VRF BGP peer'
         ],
+        editable=True,
     ),
     timeout=SpecField(
         type=FieldType.integer,
@@ -405,7 +414,8 @@ def main():
         if fetched:
             module.params['id'] = fetched['id']
             if state == "present":
-                diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES)
+                overwrite_undefined_from_api = True
+                diff = get_diff(module.params, fetched, MUTABLE_ATTRIBUTES, overwrite_undefined_from_api)
                 if diff:
                     fetched = module.update_by_id(diff, module_route)
                     changed = True
