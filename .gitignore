@@ -59,7 +59,6 @@ flycheck_*.el
 # network security
 /network-security.data
 
-
 ### Git ###
 # Created by git for backups. To disable backups in Git:
 # $ git config --global mergetool.keepBackup false
@@ -244,9 +243,6 @@ docs/_build/
 
 # PyBuilder
 target/
-
-# pyenv
-.python-version
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
