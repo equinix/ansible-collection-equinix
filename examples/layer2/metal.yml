@@ -4,12 +4,7 @@
   gather_facts: no
   tasks:
     - name: Include the required variables
-      include_vars: "vars/equinix_metal_vars.yml"
-
-    - name: Compute peering ranges for VRF and virtual circuit
-      set_fact:
-        vrf_peering_ip_range: "{{ vrf_peering_ip_network }}/29"
-        vrf_vc_peering_ip_range: "{{ vrf_peering_ip_network }}/30"
+      include_vars: "vars/vars.yml"
 
     # Equinix resources
     - name: Create a project
@@ -109,15 +104,12 @@
           - "{{ vrf.id }}"
       register: connection
 
-    # TODO this task will fail until the service token is
-    # redeemed on the Fabric side; consider checking virtual
-    # circuit status and skipping if it is `pending`
     - name: configure BGP for interconnection virtual circuit
       equinix.cloud.metal_virtual_circuit:
         id: "{{ connection.ports[0].virtual_circuits[0].id }}"
         peer_asn: "{{ vrf_peering_asn }}"
-        customer_ip: "{{ vrf_vc_peering_ip_range | ansible.utils.nthhost(1) }}"
-        metal_ip: "{{ vrf_vc_peering_ip_range | ansible.utils.nthhost(2) }}"
+        customer_ip: "{{ aws_peering_ip }}"
+        metal_ip: "{{ metal_peering_ip }}"
         subnet: "{{ vrf_vc_peering_ip_range }}"
         md5: "{{ bgp_md5_password }}"
         # The metal_virtual_circuit module requires this parameter
