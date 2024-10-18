@@ -1,0 +1,55 @@
+---
+# NOTE: this playbook should be run _after_:
+# 1. Running the metal.yml playbook
+# 2. Redeeming the Fabric service token in the Fabric portal
+# 3. Accepting the Direct Connect request in the AWS console
+- name: Equinix Layer 2 example -- AWS resources
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Include the required variables
+      include_vars: "vars/vars.yml"
+
+    - name: create a VPC
+      amazon.aws.ec2_vpc_net:
+        name: ansible-equinix-layer2-example
+        cidr_block: "{{ aws_network_cidr }}"
+        region: "{{ aws_region }}"
+      register: created_vpc
+
+    - name: Gather information about any VPC route table within VPC with ID "{{ created_vpc.vpc.id }}"
+      amazon.aws.ec2_vpc_route_table_info:
+        filters:
+          vpc-id: "{{ created_vpc.vpc.id }}"
+      register: route_table_info
+
+    - name: Create new vpc endpoint with the default policy
+      amazon.aws.ec2_vpc_endpoint:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        service: "com.amazonaws.{{ aws_region }}.s3"
+        route_table_ids: "{{ route_table_info.route_tables | map(attribute='id') }}"
+      register: new_vpc_endpoint
+
+    - name: Create a new VGW attached to the VPC
+      community.aws.ec2_vpc_vgw:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        name: ansible-equinix-layer2-example
+      register: created_vgw
+
+    # TODO this is failing, saying that the virtual gateway
+    # does not exist, but I can see it...so?
+    - name: Create an association between VGW and connection
+      community.aws.directconnect_virtual_interface:
+        state: present
+        region: "{{ aws_region }}"
+        name: "ansible-equinix-layer2-example"
+        public: false
+        connection_id: "{{ aws_connection_id }}"
+        vlan: "{{ aws_connection_vlan }}"
+        virtual_gateway_id: "{{ created_vgw.vgw.id }}"
+        customer_address: "{{ metal_peering_ip }}/30"
+        amazon_address: "{{ aws_peering_ip }}/30"
+        bgp_asn: "{{ vrf_peering_asn }}"
+        authentication_key: "{{ bgp_md5_password }}"
