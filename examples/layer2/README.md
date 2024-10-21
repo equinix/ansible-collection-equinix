@@ -27,7 +27,7 @@ Before running the playbook, you will need to have the following:
   # Install AWS collection and Ansible IP function dependencies
   pip install boto3 netaddr
   ```
-- An Equinix Metal API token. You can obtain an API token from the Equinix Metal Portal. Set the environment variable METAL_AUTH_TOKEN to your API token:
+- An [Equinix Metal API token](https://deploy.equinix.com/developers/docs/metal/identity-access-management/api-keys/). You can obtain an API token from the Equinix Metal Portal. Set the environment variable METAL_AUTH_TOKEN to your API token:
   ```bash
   export METAL_AUTH_TOKEN=your_api_token_here
   ```
