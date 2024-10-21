@@ -14,7 +14,7 @@ The [AWS playbook](aws.yml) creates a new VPC, a VPC endpoint for S3, and a Virt
 
 Before running the playbook, you will need to have the following:
 
-- Ansible installed on your local machine.
+- [Ansible installed on your local machine.](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html)
 - The Community.Aws, and Equinix Ansible Collections installed. You can install them using the following commands:
   ```bash
   ansible-galaxy collection install equinix.cloud
