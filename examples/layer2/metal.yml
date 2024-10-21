@@ -116,3 +116,7 @@
         # in order to know that the circuit is a VRF circuit and
         # not a VLAN circuit
         vrf: "{{ vrf.id }}"
+
+    - name: print service token to redeem in Fabric portal
+      debug:
+        var: connection.service_tokens[0].id
