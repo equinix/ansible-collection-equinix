@@ -34,7 +34,7 @@ Before running the playbook, you will need to have the following:
 
 ## Variables
 
-You can customize some variables from [vars/vars.yml](vars/equinix_metal_vars.yml).
+You can customize some variables, such as Equinix Metal device hostname and IP ranges for Equinix Metal and AWS, from [vars/vars.yml](vars/vars.yml).
 
 ## Running the Playbooks
 
