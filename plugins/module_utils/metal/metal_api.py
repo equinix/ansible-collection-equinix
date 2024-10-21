@@ -281,6 +281,7 @@ METAL_CONNECTION_RESPONSE_ATTRIBUTE_MAP = {
     'ports': 'ports',
     'requested_by': 'requested_by',
     'status': 'status',
+    'service_tokens': optional('service_tokens')
 }
 
 def private_ipv4_subnet_size(resource: dict):
