@@ -20,6 +20,13 @@ Before running the playbook, you will need to have the following:
   ansible-galaxy collection install equinix.cloud
   ansible-galaxy collection install community.aws
   ```
+- You will also need to ensure that the necessary Python libraries are installed:
+  ```bash
+  # Install Equinix Ansible collection dependencies
+  pip install -r https://raw.githubusercontent.com/equinix/ansible-collection-equinix/v0.11.1/requirements.txt
+  # Install AWS collection and Ansible IP function dependencies
+  pip install boto3 netaddr
+  ```
 - An Equinix Metal API token. You can obtain an API token from the Equinix Metal Portal. Set the environment variable METAL_AUTH_TOKEN to your API token:
   ```bash
   export METAL_AUTH_TOKEN=your_api_token_here
@@ -39,6 +46,21 @@ To create the Equinix Metal infrastructure for this example, navigate to the dir
 ansible-playbook metal.yml -extra-vars "bgp_md5_password=<some_value>"
 ```
 
+*NOTE:* The API performs some validation on the md5 for BGP.  For the latest rules refer to [the VRF virtual circuit API docs](https://deploy.equinix.com/developers/api/metal/#tag/Interconnections/operation/updateVirtualCircuit). As of this writing, the md5:
+* must be 10-20 characters long
+* may not include punctuation
+* must be a combination of numbers and letters
+* must contain at least one lowercase, uppercase, and digit character
+
+The last task in the `metal.yml` playbook will print out the service token for your Metal connection:
+
+```bash
+TASK [print service token to redeem in Fabric portal] **************************************************************************
+ok: [localhost] => {
+    "connection.service_tokens[0].id": "<service_token_id>"
+}
+```
+
 After the Equinix Metal infrastructure is created, you will need to redeem the service token for your connection in the [Fabric portal](https://fabric.equinix.com).
 
 Once the service token is redeemed, you will need to accept the Direct Connect request in the [AWS console](https://console.aws.amazon.com). Take note of the Direct Connect ID and the Direct Connect VLAN when you accept the connection.  You will need the ID and VLAN for the next playbook.
@@ -46,5 +68,5 @@ Once the service token is redeemed, you will need to accept the Direct Connect r
 To finish setting up the AWS infrastructure, run the following command:
 
 ```bash
-ansible-playbook aws.yml -extra-vars "bgp_md5_password=<some_value>" --extra-vars "aws_connection_id=<your_direct_connect_id>" --extra-vars "aws_connection_vlan=<your_direct_connect_vlan>"
+ansible-playbook aws.yml --extra-vars "bgp_md5_password=<some_value>" --extra-vars "aws_connection_id=<your_direct_connect_id>" --extra-vars "aws_connection_vlan=<your_direct_connect_vlan>"
 ```
