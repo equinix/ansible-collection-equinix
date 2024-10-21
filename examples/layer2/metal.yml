@@ -32,7 +32,6 @@
         local_asn: "65000"
         ip_ranges:
           - "{{ vrf_peering_ip_range }}"
-          - "{{ aws_network_cidr }}"
           - "{{ vrf_gateway_ip_range }}"
         project_id: "{{ project.id }}"
       register: vrf
