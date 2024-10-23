@@ -65,7 +65,7 @@ After the Equinix Metal infrastructure is created, you will need to redeem the s
 
 Once the service token is redeemed, you will need to accept the Direct Connect request in the [AWS console](https://console.aws.amazon.com). Take note of the Direct Connect ID and the Direct Connect VLAN when you accept the connection.  You will need the ID and VLAN for the next playbook.
 
-To finish setting up the AWS infrastructure, run the following command:
+To finish setting up the AWS infrastructure, wait for the connection to be available, then run the following command:
 
 ```bash
 ansible-playbook aws.yml --extra-vars "bgp_md5_password=<some_value>" --extra-vars "aws_connection_id=<your_direct_connect_id>" --extra-vars "aws_connection_vlan=<your_direct_connect_vlan>"
