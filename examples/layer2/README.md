@@ -62,6 +62,7 @@ ok: [localhost] => {
 ```
 
 After the Equinix Metal infrastructure is created, you will need to redeem the service token for your connection in the [Fabric portal](https://fabric.equinix.com).
+After the Equinix Metal infrastructure is created, you will need to redeem the service token for your connection in the [Equinix portal](https://portal.equinix.com). Navigate to Fabric -> Connect to Provider, choose AWS, and finally AWS Direct Connect. Choose Primary, put in your account number, choose the metro, click next, then choose "Service Token" from the drop down, and put in the service token.
 
 Once the service token is redeemed, you will need to accept the Direct Connect request in the [AWS console](https://console.aws.amazon.com). Take note of the Direct Connect ID and the Direct Connect VLAN when you accept the connection.  You will need the ID and VLAN for the next playbook.
 
