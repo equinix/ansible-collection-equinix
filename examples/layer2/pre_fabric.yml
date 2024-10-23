@@ -12,12 +12,6 @@
         name: "{{ project_name }}"
       register: project
 
-    - name: Enable BGP for the project
-      equinix.cloud.metal_project_bgp_config:
-        project_id: "{{ project.id }}"
-        deployment_type: local
-        asn: 65000
-
     - name: create a vlan
       equinix.cloud.metal_vlan:
         project_id: "{{ project.id }}"
@@ -29,7 +23,7 @@
       equinix.cloud.metal_vrf:
         name: example-vrf
         metro: "{{ metro }}"
-        local_asn: "65000"
+        local_asn: "{{ metal_side_asn }}"
         ip_ranges:
           - "{{ vrf_peering_ip_range }}"
           - "{{ vrf_gateway_ip_range }}"
@@ -102,19 +96,6 @@
         vrfs:
           - "{{ vrf.id }}"
       register: connection
-
-    - name: configure BGP for interconnection virtual circuit
-      equinix.cloud.metal_virtual_circuit:
-        id: "{{ connection.ports[0].virtual_circuits[0].id }}"
-        peer_asn: "{{ vrf_peering_asn }}"
-        customer_ip: "{{ aws_peering_ip }}"
-        metal_ip: "{{ metal_peering_ip }}"
-        subnet: "{{ vrf_vc_peering_ip_range }}"
-        md5: "{{ bgp_md5_password }}"
-        # The metal_virtual_circuit module requires this parameter
-        # in order to know that the circuit is a VRF circuit and
-        # not a VLAN circuit
-        vrf: "{{ vrf.id }}"
 
     - name: print service token to redeem in Fabric portal
       debug:

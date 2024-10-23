@@ -4,11 +4,11 @@ This example demonstrates the use of the `equinix.cloud.metal_connection`, `equi
 
 ## Overview
 
-The [Metal playbook](metal.yml) creates a new project, a VLAN, a VRF, a VRF Metal Gateway, and a device, converts the device to [hybrid bonded mode](https://deploy.equinix.com/developers/docs/metal/layer2-networking/overview/#network-configuration-types), and then creates a Metal-billed VRF interconnection and configures BGP peering settings on the interconnection's virtual circuit.
+The [pre-Fabric playbook](pre_fabric.yml) creates a new project, a VLAN, a VRF, a VRF Metal Gateway, and a device, converts the device to [hybrid bonded mode](https://deploy.equinix.com/developers/docs/metal/layer2-networking/overview/#network-configuration-types), and then creates a Metal-billed VRF interconnection and configures BGP peering settings on the interconnection's virtual circuit.
 
 Manual intervention is needed in order to finish setting up the interconnection and accept the Direct Connect request in AWS.
 
-The [AWS playbook](aws.yml) creates a new VPC, a VPC endpoint for S3, and a Virtual Private Gateway attached to the specified Direct Connect.
+The [post-Fabric playbook](post_fabric.yml) creates a new VPC, a VPC endpoint for S3, and a Virtual Private Gateway attached to the specified Direct Connect, and configures BGP peering between the Direct Connect and your Metal VRF.
 
 ## Prerequisites
 
@@ -40,10 +40,10 @@ You can customize some variables, such as Equinix Metal device hostname and IP r
 
 This example contains multiple playbooks and requires manual intervention between the playbooks.
 
-To create the Equinix Metal infrastructure for this example, navigate to the directory containing the playbook file `metal.yml` and run the following command:
+To create the Equinix Metal infrastructure for this example, navigate to the directory containing the playbook file `pre_fabric.yml` and run the following command:
 
 ```bash
-ansible-playbook metal.yml -extra-vars "bgp_md5_password=<some_value>"
+ansible-playbook pre_fabric.yml -extra-vars "bgp_md5_password=<some_value>"
 ```
 
 *NOTE:* The API performs some validation on the md5 for BGP.  For the latest rules refer to [the VRF virtual circuit API docs](https://deploy.equinix.com/developers/api/metal/#tag/Interconnections/operation/updateVirtualCircuit). As of this writing, the md5:
@@ -52,7 +52,7 @@ ansible-playbook metal.yml -extra-vars "bgp_md5_password=<some_value>"
 * must be a combination of numbers and letters
 * must contain at least one lowercase, uppercase, and digit character
 
-The last task in the `metal.yml` playbook will print out the service token for your Metal connection:
+The last task in the `pre_fabric.yml` playbook will print out the service token for your Metal connection:
 
 ```bash
 TASK [print service token to redeem in Fabric portal] **************************************************************************
@@ -61,13 +61,10 @@ ok: [localhost] => {
 }
 ```
 
-After the Equinix Metal infrastructure is created, you will need to redeem the service token for your connection in the [Fabric portal](https://fabric.equinix.com).
-After the Equinix Metal infrastructure is created, you will need to redeem the service token for your connection in the [Equinix portal](https://portal.equinix.com). Navigate to Fabric -> Connect to Provider, choose AWS, and finally AWS Direct Connect. Choose Primary, put in your account number, choose the metro, click next, then choose "Service Token" from the drop down, and put in the service token.
+After the Equinix Metal infrastructure is created, you will need to redeem the service token for your connection in the [Equinix portal](https://portal.equinix.com). Navigate to Fabric -> Connect to Provider, choose AWS, and finally AWS Direct Connect. Choose Primary, put in your account number, choose the metro, click next, then choose "Service Token" from the drop down, and put in the service token.  You will be prompted to name your connection; **take note of the name you use**, you will need it for the next playbook.
 
-Once the service token is redeemed, you will need to accept the Direct Connect request in the [AWS console](https://console.aws.amazon.com). Take note of the Direct Connect ID and the Direct Connect VLAN when you accept the connection.  You will need the ID and VLAN for the next playbook.
-
-To finish setting up the AWS infrastructure, wait for the connection to be available, then run the following command:
+To finish setting up the AWS infrastructure, run the following command which will accept the direct connect request in AWS; wait for the connection to become active; create an AWS VPC, VPC endpoint, and VPN gateway; create a virtual interface connecting the VPC to your direct connect, and configure the Metal side of your interconnection to connect to the virtual interface in AWS:
 
 ```bash
-ansible-playbook aws.yml --extra-vars "bgp_md5_password=<some_value>" --extra-vars "aws_connection_id=<your_direct_connect_id>" --extra-vars "aws_connection_vlan=<your_direct_connect_vlan>"
+ansible-playbook post_fabric.yml --extra-vars "bgp_md5_password=<some_value>" --extra-vars "aws_connection_name=<your_direct_connect_name>"
 ```

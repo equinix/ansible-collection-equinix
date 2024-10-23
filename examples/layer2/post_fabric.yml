@@ -1,0 +1,119 @@
+---
+# NOTE: this playbook should be run _after_:
+# 1. Running the pre_fabric.yml playbook
+# 2. Redeeming the Fabric service token in the Fabric portal
+- name: Equinix Layer 2 example -- AWS resources
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Include the required variables
+      include_vars: "vars/vars.yml"
+
+    - name: confirm the direct connect
+      community.aws.directconnect_confirm_connection:
+        region: "{{ aws_region }}"
+        name: "{{ aws_connection_name }}"
+      register: confirm_response
+
+    - name: wait for the direct connect to become available
+      community.aws.directconnect_connection:
+        region: "{{ aws_region }}"
+        name: "{{ aws_connection_name }}"
+        # The below attributes are required by the community.aws.directconnect_connection
+        # module but do not appear to be used, since this works for looking up the connection
+        location: "dummy"
+        bandwidth: "1Gbps"
+        state: present
+      register: connection_response
+      until: connection_response.connection.connection_state == "available"
+      retries: 10
+      delay: 60
+
+    - name: create a VPC
+      amazon.aws.ec2_vpc_net:
+        region: "{{ aws_region }}"
+        name: ansible-equinix-layer2-example
+        cidr_block: "{{ aws_network_cidr }}"
+      register: created_vpc
+
+    - name: Gather information about any VPC route table within VPC with ID "{{ created_vpc.vpc.id }}"
+      amazon.aws.ec2_vpc_route_table_info:
+        region: "{{ aws_region }}"
+        filters:
+          vpc-id: "{{ created_vpc.vpc.id }}"
+      register: route_table_info
+
+    - name: Create new vpc endpoint with the default policy
+      amazon.aws.ec2_vpc_endpoint:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        service: "com.amazonaws.{{ aws_region }}.s3"
+        route_table_ids: "{{ route_table_info.route_tables | map(attribute='id') }}"
+      register: new_vpc_endpoint
+
+    - name: Create a new VGW attached to the VPC
+      community.aws.ec2_vpc_vgw:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        name: ansible-equinix-layer2-example
+      register: created_vgw
+
+    - name: Create an association between VGW and connection
+      community.aws.directconnect_virtual_interface:
+        region: "{{ aws_region }}"
+        state: present
+        name: "ansible-equinix-layer2-example"
+        public: false
+        connection_id: "{{ connection_response.connection.connection_id }}"
+        vlan: "{{ connection_response.connection.vlan }}"
+        virtual_gateway_id: "{{ created_vgw.vgw.id }}"
+        customer_address: "{{ metal_peering_ip }}/30"
+        amazon_address: "{{ aws_peering_ip }}/30"
+        bgp_asn: "{{ metal_side_asn }}"
+        authentication_key: "{{ bgp_md5_password }}"
+      register: created_vif
+      until: created_vif.virtual_interface_state == "available"
+      retries: 10
+      delay: 60
+
+    - name: Look up the project we created earlier
+      equinix.cloud.metal_project:
+        name: "{{ project_name }}"
+      register: project
+
+    - name: Look up the VRF we created earlier
+      equinix.cloud.metal_vrf:
+        name: example-vrf
+        metro: "{{ metro }}"
+        local_asn: "{{ metal_side_asn }}"
+        ip_ranges:
+          - "{{ vrf_peering_ip_range }}"
+          - "{{ vrf_gateway_ip_range }}"
+        project_id: "{{ project.id }}"
+      register: vrf
+
+    - name: look up the Metal-billed VRF interconnection we created earlier
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        metro: "{{ metro }}"
+        name: "{{ interconnection_name }}"
+        type: "shared"
+        speed: "50Mbps"
+        service_token_type: a_side
+        redundancy: primary
+        vrfs:
+          - "{{ vrf.id }}"
+      register: connection
+
+    - name: Configure BGP for interconnection virtual circuit
+      equinix.cloud.metal_virtual_circuit:
+        id: "{{ connection.ports[0].virtual_circuits[0].id }}"
+        peer_asn: "{{ created_vif.amazon_side_asn }}"
+        customer_ip: "{{ aws_peering_ip }}"
+        metal_ip: "{{ metal_peering_ip }}"
+        subnet: "{{ vrf_vc_peering_ip_range }}"
+        md5: "{{ bgp_md5_password }}"
+        # The metal_virtual_circuit module requires this parameter
+        # in order to know that the circuit is a VRF circuit and
+        # not a VLAN circuit
+        vrf: "{{ vrf.id }}"
