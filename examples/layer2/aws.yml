@@ -12,13 +12,14 @@
 
     - name: create a VPC
       amazon.aws.ec2_vpc_net:
+        region: "{{ aws_region }}"
         name: ansible-equinix-layer2-example
         cidr_block: "{{ aws_network_cidr }}"
-        region: "{{ aws_region }}"
       register: created_vpc
 
     - name: Gather information about any VPC route table within VPC with ID "{{ created_vpc.vpc.id }}"
       amazon.aws.ec2_vpc_route_table_info:
+        region: "{{ aws_region }}"
         filters:
           vpc-id: "{{ created_vpc.vpc.id }}"
       register: route_table_info
@@ -42,8 +43,8 @@
     # does not exist, but I can see it...so?
     - name: Create an association between VGW and connection
       community.aws.directconnect_virtual_interface:
-        state: present
         region: "{{ aws_region }}"
+        state: present
         name: "ansible-equinix-layer2-example"
         public: false
         connection_id: "{{ aws_connection_id }}"
