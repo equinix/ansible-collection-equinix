@@ -21,7 +21,7 @@
 
     - name: create a VRF
       equinix.cloud.metal_vrf:
-        name: example-vrf
+        name: "{{ vrf_name }}"
         metro: "{{ metro }}"
         local_asn: "{{ metal_side_asn }}"
         ip_ranges:

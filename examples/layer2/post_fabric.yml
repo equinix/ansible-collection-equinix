@@ -32,7 +32,7 @@
     - name: create a VPC
       amazon.aws.ec2_vpc_net:
         region: "{{ aws_region }}"
-        name: ansible-equinix-layer2-example
+        name: "{{ vpc_name }}"
         cidr_block: "{{ aws_network_cidr }}"
       register: created_vpc
 
@@ -47,14 +47,12 @@
       amazon.aws.ec2_security_group:
         region: "{{ aws_region }}"
         vpc_id: "{{ created_vpc.vpc.id }}"
-        name: ansible-equinix-layer2-example
+        name: "{{ security_group_name }}"
         description: sg for Equinix Ansible Layer 2 example
         rules:
-          - proto: tcp
-            ports:
-              - 443
+          - proto: all
             cidr_ip: 0.0.0.0/0
-            rule_desc: allow all on port 443
+            rule_desc: allow all traffic
       register: created_sg
 
     - name: Create new VPC endpoint for S3
@@ -73,14 +71,14 @@
       community.aws.ec2_vpc_vgw:
         region: "{{ aws_region }}"
         vpc_id: "{{ created_vpc.vpc.id }}"
-        name: ansible-equinix-layer2-example
+        name: "{{ vpc_gateway_name }}"
       register: created_vgw
 
     - name: Create an association between VGW and connection
       community.aws.directconnect_virtual_interface:
         region: "{{ aws_region }}"
         state: present
-        name: "ansible-equinix-layer2-example"
+        name: "{{ directconnect_vif_name }}"
         public: false
         connection_id: "{{ connection_response.connection.connection_id }}"
         vlan: "{{ connection_response.connection.vlan }}"
@@ -108,7 +106,7 @@
 
     - name: Look up the VRF we created earlier
       equinix.cloud.metal_vrf:
-        name: example-vrf
+        name: "{{ vrf_name }}"
         metro: "{{ metro }}"
         local_asn: "{{ metal_side_asn }}"
         ip_ranges:
