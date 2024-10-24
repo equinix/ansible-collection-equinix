@@ -36,20 +36,38 @@
         cidr_block: "{{ aws_network_cidr }}"
       register: created_vpc
 
-    - name: Gather information about any VPC route table within VPC with ID "{{ created_vpc.vpc.id }}"
-      amazon.aws.ec2_vpc_route_table_info:
+    - name: Create a subnet in the VPC
+      amazon.aws.ec2_vpc_subnet:
         region: "{{ aws_region }}"
-        filters:
-          vpc-id: "{{ created_vpc.vpc.id }}"
-      register: route_table_info
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        cidr: "{{ aws_network_cidr }}"
+      register: created_subnet
 
-    - name: Create new vpc endpoint with the default policy
+    - name: create security group for VPC endpoint
+      amazon.aws.ec2_security_group:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        name: ansible-equinix-layer2-example
+        description: sg for Equinix Ansible Layer 2 example
+        rules:
+          - proto: tcp
+            ports:
+              - 443
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all on port 443
+      register: created_sg
+
+    - name: Create new VPC endpoint for S3
       amazon.aws.ec2_vpc_endpoint:
         region: "{{ aws_region }}"
         vpc_id: "{{ created_vpc.vpc.id }}"
         service: "com.amazonaws.{{ aws_region }}.s3"
-        route_table_ids: "{{ route_table_info.route_tables | map(attribute='id') }}"
-      register: new_vpc_endpoint
+        vpc_endpoint_type: "Interface"
+        vpc_endpoint_subnets:
+          - "{{ created_subnet.subnet.id }}"
+        vpc_endpoint_security_groups:
+          - "{{ created_sg.group_id }}"
+      register: created_vpc_endpoint
 
     - name: Create a new VGW attached to the VPC
       community.aws.ec2_vpc_vgw:
@@ -75,6 +93,13 @@
       until: created_vif.virtual_interface_state == "available"
       retries: 10
       delay: 60
+
+    - name: Enable VGW route propagation
+      amazon.aws.ec2_vpc_route_table:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        propagating_vgw_ids:
+          - "{{ created_vgw.vgw.id }}"
 
     - name: Look up the project we created earlier
       equinix.cloud.metal_project:
@@ -117,3 +142,7 @@
         # in order to know that the circuit is a VRF circuit and
         # not a VLAN circuit
         vrf: "{{ vrf.id }}"
+
+    - name: print DNS name for VPC endpoint
+      debug:
+        msg: "{{ created_vpc_endpoint.result.dns_entries[0].dns_name | replace('*.', '') }}"

@@ -68,3 +68,55 @@ To finish setting up the AWS infrastructure, run the following command which wil
 ```bash
 ansible-playbook post_fabric.yml --extra-vars "bgp_md5_password=<some_value>" --extra-vars "aws_connection_name=<your_direct_connect_name>"
 ```
+
+The last task in the `post_fabric.yml` playbook will print the DNS hostname for your S3 VPC endpoint:
+
+```bash
+TASK [print DNS name for VPC endpoint] *****************************************************************************************
+ok: [localhost] => {
+    "msg": "vpce-<some_id>.s3.us-west-1.vpce.amazonaws.com"
+}
+```
+
+
+
+## Testing the VPC endpoint and interconnection
+
+The DNS entry for your VPC endpoint is public, so you can look up the corresponding IP address from any Internet-connected computer.  You will see that it resolves to an IP address within your private VPC address space (the example below uses the default VPC CIDR for this module, `172.16.0.0/16`):
+
+```bash
+$ dig vpce-<some_id>.s3.us-west-1.vpce.amazonaws.com
+# ...
+;; ANSWER SECTION:
+vpce-<some_id>.s3.us-west-1.vpce.amazonaws.com. 60 IN A 172.16.94.176
+# ...
+```
+
+Since this address resolves to an IP within your VPC, though, you can only connect to it from an EC2 instance in your VPC or from the Metal device you deployed earlier.
+
+SSH in to the Metal device that was created by the `pre_fabric.yml` playbook.
+
+Install the AWS CLI:
+
+```bash
+$ apt install -y awscli
+```
+
+Configure your [AWS CLI credentials](https://docs.aws.amazon.com/cli/v1/userguide/cli-chap-authentication.html).  For example, if you want to store your credentials in environment variables, it will look something like this:
+
+```bash
+$ export AWS_ACCESS_KEY_ID=<some_aws_key_id>
+$ export AWS_SECRET_ACCESS_KEY=<some_aws_access_key>
+$ export AWS_DEFAULT_REGION=us-west-1
+```
+
+You can now use the AWS CLI with your VPC endpoint to interact with the S3 service by adding the `bucket.` prefix to your VPC endpoint hostname:
+
+```bash
+$ aws s3 ls --endpoint-url https://bucket.vpce-<some_id>.s3.us-west-1.vpce.amazonaws.com
+2021-03-22 11:13:54 <some_bucket>
+2021-03-22 11:13:54 <some_other_bucket>
+...
+```
+
+You can learn about other usages of the S3 VPC endpoint with AWS CLI in [the AWS PrivateLink docs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html).
