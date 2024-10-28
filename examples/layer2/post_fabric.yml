@@ -92,9 +92,19 @@
       retries: 10
       delay: 60
 
+    - name: look up the main route table for our VPC
+      amazon.aws.ec2_vpc_route_table_info:
+        region: "{{ aws_region }}"
+        filters:
+          association.main: true
+          vpc-id: "{{ created_vpc.vpc.id }}"
+      register: route_tables
+
     - name: Enable VGW route propagation
       amazon.aws.ec2_vpc_route_table:
         region: "{{ aws_region }}"
+        lookup: id
+        route_table_id: "{{ route_tables.route_tables[0].route_table_id }}"
         vpc_id: "{{ created_vpc.vpc.id }}"
         propagating_vgw_ids:
           - "{{ created_vgw.vgw.id }}"
