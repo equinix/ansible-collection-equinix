@@ -88,7 +88,7 @@
         bgp_asn: "{{ metal_side_asn }}"
         authentication_key: "{{ bgp_md5_password }}"
       register: created_vif
-      until: created_vif.virtual_interface_state == "available"
+      until: created_vif.amazon_side_asn is defined
       retries: 10
       delay: 60
 
