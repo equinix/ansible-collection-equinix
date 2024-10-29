@@ -1,0 +1,156 @@
+---
+# NOTE: this playbook should be run _after_:
+# 1. Running the pre_fabric.yml playbook
+# 2. Redeeming the Fabric service token in the Fabric portal
+- name: Equinix Layer 2 example -- AWS resources
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Include the required variables
+      include_vars: "vars/vars.yml"
+
+    - name: confirm the direct connect
+      community.aws.directconnect_confirm_connection:
+        region: "{{ aws_region }}"
+        name: "{{ aws_connection_name }}"
+      register: confirm_response
+
+    - name: wait for the direct connect to become available
+      community.aws.directconnect_connection:
+        region: "{{ aws_region }}"
+        name: "{{ aws_connection_name }}"
+        # The below attributes are required by the community.aws.directconnect_connection
+        # module but do not appear to be used, since this works for looking up the connection
+        location: "dummy"
+        bandwidth: "1Gbps"
+        state: present
+      register: connection_response
+      until: connection_response.connection.connection_state == "available"
+      retries: 10
+      delay: 60
+
+    - name: create a VPC
+      amazon.aws.ec2_vpc_net:
+        region: "{{ aws_region }}"
+        name: "{{ vpc_name }}"
+        cidr_block: "{{ aws_network_cidr }}"
+      register: created_vpc
+
+    - name: Create a subnet in the VPC
+      amazon.aws.ec2_vpc_subnet:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        cidr: "{{ aws_network_cidr }}"
+      register: created_subnet
+
+    - name: create security group for VPC endpoint
+      amazon.aws.ec2_security_group:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        name: "{{ security_group_name }}"
+        description: sg for Equinix Ansible Layer 2 example
+        rules:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all traffic
+      register: created_sg
+
+    - name: Create new VPC endpoint for S3
+      amazon.aws.ec2_vpc_endpoint:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        service: "com.amazonaws.{{ aws_region }}.s3"
+        vpc_endpoint_type: "Interface"
+        vpc_endpoint_subnets:
+          - "{{ created_subnet.subnet.id }}"
+        vpc_endpoint_security_groups:
+          - "{{ created_sg.group_id }}"
+      register: created_vpc_endpoint
+
+    - name: Create a new VGW attached to the VPC
+      community.aws.ec2_vpc_vgw:
+        region: "{{ aws_region }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        name: "{{ vpc_gateway_name }}"
+      register: created_vgw
+
+    - name: Create an association between VGW and connection
+      community.aws.directconnect_virtual_interface:
+        region: "{{ aws_region }}"
+        state: present
+        name: "{{ directconnect_vif_name }}"
+        public: false
+        connection_id: "{{ connection_response.connection.connection_id }}"
+        vlan: "{{ connection_response.connection.vlan }}"
+        virtual_gateway_id: "{{ created_vgw.vgw.id }}"
+        customer_address: "{{ metal_peering_ip }}/30"
+        amazon_address: "{{ aws_peering_ip }}/30"
+        bgp_asn: "{{ metal_side_asn }}"
+        authentication_key: "{{ bgp_md5_password }}"
+      register: created_vif
+      until: created_vif.amazon_side_asn is defined
+      retries: 10
+      delay: 60
+
+    - name: look up the main route table for our VPC
+      amazon.aws.ec2_vpc_route_table_info:
+        region: "{{ aws_region }}"
+        filters:
+          association.main: true
+          vpc-id: "{{ created_vpc.vpc.id }}"
+      register: route_tables
+
+    - name: Enable VGW route propagation
+      amazon.aws.ec2_vpc_route_table:
+        region: "{{ aws_region }}"
+        lookup: id
+        route_table_id: "{{ route_tables.route_tables[0].route_table_id }}"
+        vpc_id: "{{ created_vpc.vpc.id }}"
+        propagating_vgw_ids:
+          - "{{ created_vgw.vgw.id }}"
+
+    - name: Look up the project we created earlier
+      equinix.cloud.metal_project:
+        name: "{{ project_name }}"
+      register: project
+
+    - name: Look up the VRF we created earlier
+      equinix.cloud.metal_vrf:
+        name: "{{ vrf_name }}"
+        metro: "{{ metro }}"
+        local_asn: "{{ metal_side_asn }}"
+        ip_ranges:
+          - "{{ vrf_peering_ip_range }}"
+          - "{{ vrf_gateway_ip_range }}"
+        project_id: "{{ project.id }}"
+      register: vrf
+
+    - name: look up the Metal-billed VRF interconnection we created earlier
+      equinix.cloud.metal_connection:
+        project_id: "{{ project.id }}"
+        metro: "{{ metro }}"
+        name: "{{ interconnection_name }}"
+        type: "shared"
+        speed: "50Mbps"
+        service_token_type: a_side
+        redundancy: primary
+        vrfs:
+          - "{{ vrf.id }}"
+      register: connection
+
+    - name: Configure BGP for interconnection virtual circuit
+      equinix.cloud.metal_virtual_circuit:
+        id: "{{ connection.ports[0].virtual_circuits[0].id }}"
+        peer_asn: "{{ created_vif.amazon_side_asn }}"
+        customer_ip: "{{ aws_peering_ip }}"
+        metal_ip: "{{ metal_peering_ip }}"
+        subnet: "{{ vrf_vc_peering_ip_range }}"
+        md5: "{{ bgp_md5_password }}"
+        # The metal_virtual_circuit module requires this parameter
+        # in order to know that the circuit is a VRF circuit and
+        # not a VLAN circuit
+        vrf: "{{ vrf.id }}"
+
+    - name: print DNS name for VPC endpoint
+      debug:
+        msg: "{{ created_vpc_endpoint.result.dns_entries[0].dns_name | replace('*.', '') }}"
