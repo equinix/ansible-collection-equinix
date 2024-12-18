@@ -1,4 +1,4 @@
-equinix==0.5.0
+equinix==0.7.0
 ansible-specdoc>=0.0.13
 pydantic >= 2
 requests
