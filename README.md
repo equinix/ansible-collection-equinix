@@ -1,5 +1,8 @@
 # Equinix Ansible Collection
 
+> [!WARNING]
+> With the upcoming EoL of Equinix Metal on June 30, 2026, this repo is being archived on July 1, 2026.
+
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix/ansible-collection-equinix/integration-tests.yml?branch=main)
 [![Equinix Community](https://img.shields.io/badge/Equinix%20Community%20-%20%23E91C24?logo=equinixmetal)](https://community.equinix.com)
