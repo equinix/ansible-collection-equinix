@@ -22,7 +22,7 @@ jobs:
       run:
         working-directory: ${{ env.COLLECTION_PATH }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: ${{ env.COLLECTION_PATH }}
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
