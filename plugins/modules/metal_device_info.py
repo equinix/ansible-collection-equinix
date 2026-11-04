@@ -8,6 +8,10 @@ __metaclass__ = type
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Select list of Equinix Metal devices
 module: metal_device_info
 notes: []
@@ -165,6 +169,7 @@ import traceback
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 module_spec = dict(
@@ -372,6 +377,7 @@ return_values = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description="Select list of Equinix Metal devices",
     description="Select list of Equinix Metal devices",
     examples=specdoc_examples,

@@ -7,6 +7,10 @@ from __future__ import absolute_import, division, print_function
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Create, update, or delete Equinix Metal devices
 module: metal_device
 notes: []
@@ -361,6 +365,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 module_spec = dict(
@@ -707,6 +712,7 @@ return_values = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Create, update, or delete Equinix Metal devices',
     description='Create, update, or delete Equinix Metal devices',
     examples=specdoc_examples,

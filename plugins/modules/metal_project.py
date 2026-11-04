@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Manage Projects in Equinix Metal. You can use *id* or *name* to lookup
   a project. If you want to create new project, you must provide *name*.
 module: metal_project
@@ -105,6 +109,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 
@@ -195,6 +200,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Manage Projects in Equinix Metal',
     description=(
         'Manage Projects in Equinix Metal. '

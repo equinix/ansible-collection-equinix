@@ -2,6 +2,8 @@
 
 When a user provisions first device in a facility, Equinix Metal API automatically allocates IPv6/56 and private IPv4/25 blocks. The new device then gets IPv6 and private IPv4 addresses from those block. It also gets a public IPv4/31 address. Every new device in the project and facility will automatically get IPv6 and private IPv4 addresses from these pre-allocated blocks. The IPv6 and private IPv4 blocks can't be created, only imported. With this resource, it's possible to create either public IPv4 blocks or global IPv4 blocks.
 
+> [!WARNING]
+> **Deprecated:** Equinix Metal reached end of life on June 30, 2026. This module will be removed in version 1.0.0. Alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 
 - [Examples](#examples)
 - [Parameters](#parameters)

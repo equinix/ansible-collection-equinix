@@ -1,2 +1,149 @@
 ---
 requires_ansible: '>=2.9.10'
+plugin_routing:
+  modules:
+    metal_available_ips_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_bgp_session:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_bgp_session_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_connection:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_connection_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_device:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_device_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_gateway:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_gateway_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_hardware_reservation:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_hardware_reservation_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_ip_assignment:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_ip_assignment_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_metro_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_operating_system_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_organization:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_organization_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_plan_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_port:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_project:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_project_bgp_config:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_project_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_project_ssh_key:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_project_ssh_key_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_reserved_ip_block:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_reserved_ip_block_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_ssh_key:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_ssh_key_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_user_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_virtual_circuit:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_virtual_circuit_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_vlan:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_vlan_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_vrf:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+    metal_vrf_info:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/
+  inventory:
+    metal_device:
+      deprecation:
+        removal_version: 1.0.0
+        warning_text: Equinix Metal reached end of life on June 30, 2026. See https://docs.equinix.com/metal/

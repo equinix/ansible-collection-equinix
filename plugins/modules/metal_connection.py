@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Manage an Interconnection in Equinix Metal. You can use *connection_id*
   to lookup the resource. If you want to create a new resource, you must provide *project_id*,
   *name*, *type*, *redundancy*, and *speed*.
@@ -171,6 +175,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 MEGA = 1000 * 1000
@@ -300,6 +305,7 @@ return_values = [
 MUTABLE_ATTRIBUTES = [k for k, v in module_spec.items() if v.editable]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description="Manage an Interconnection in Equinix Metal",
     description=(
         "Manage an Interconnection in Equinix Metal. "

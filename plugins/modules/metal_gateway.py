@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Manage Metal Gateway in Equinix Metal. You can use *id* or *ip_reservation_id*
   to lookup a Gateway. If you want to create new resource, you must provide *project_id*,
   *virtual_network_id* and either *ip_reservation_id* or *private_ipv4_subnet_size*.
@@ -120,6 +124,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 MODULE_NAME = "metal_gateway"
@@ -220,6 +225,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Manage Metal Gateway in Equinix Metal',
     description=(
         'Manage Metal Gateway in Equinix Metal. '

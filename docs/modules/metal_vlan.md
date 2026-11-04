@@ -2,6 +2,8 @@
 
 Manage the VLAN in Equinix Metal. You can use *id*, *vxlan* or *tags* to lookup the resource. If you want to create new resource, you must provide *metro*.
 
+> [!WARNING]
+> **Deprecated:** Equinix Metal reached end of life on June 30, 2026. This module will be removed in version 1.0.0. Alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 
 - [Examples](#examples)
 - [Parameters](#parameters)

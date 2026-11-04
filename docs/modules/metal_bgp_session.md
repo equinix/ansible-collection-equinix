@@ -2,6 +2,8 @@
 
 Manage BGP sessions in Equinix Metal.Create, update or delete BGP session. To look up an existing session, pass only the *id* attribute.
 
+> [!WARNING]
+> **Deprecated:** Equinix Metal reached end of life on June 30, 2026. This module will be removed in version 1.0.0. Alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 
 - [Examples](#examples)
 - [Parameters](#parameters)

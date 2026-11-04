@@ -2,6 +2,8 @@
 
 You can use this module to enable BGP Config for a project. To lookup BGP Config of an existing project, call the module only with `project_id`. 
 
+> [!WARNING]
+> **Deprecated:** Equinix Metal reached end of life on June 30, 2026. This module will be removed in version 1.0.0. Alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 
 - [Examples](#examples)
 - [Parameters](#parameters)

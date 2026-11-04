@@ -2,6 +2,8 @@
 
 Lookup a single hardware_reservation by ID in Equinix Metal. This resource only fetches a single hardware_reservation by resource ID. It doesn't allow to create or update hardware_reservations.
 
+> [!WARNING]
+> **Deprecated:** Equinix Metal reached end of life on June 30, 2026. This module will be removed in version 1.0.0. Alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 
 - [Examples](#examples)
 - [Parameters](#parameters)

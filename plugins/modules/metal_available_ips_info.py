@@ -5,6 +5,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Get list of avialable IP addresses from a reserved IP block
 module: metal_available_ips_info
 notes: []
@@ -51,6 +55,7 @@ from ansible_specdoc.objects import (
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 module_spec = dict(
@@ -84,6 +89,7 @@ return_values = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description="Get list of avialable IP addresses from a reserved IP block",
     description="Get list of avialable IP addresses from a reserved IP block",
     examples=specdoc_examples,

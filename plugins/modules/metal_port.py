@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: This module doesn't create a resource in Equinix Metal, but rather provides
   finer control for [Layer 2 networking](https://deploy.equinix.com/developers/docs/metal/layer2-networking/overview/).
 module: metal_port
@@ -74,6 +78,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 import equinix.services.metalv1 as equinix_metal
@@ -163,6 +168,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Manage a device port in Equinix Metal',
     description=(
         'This module doesn\'t create a resource in Equinix Metal, '

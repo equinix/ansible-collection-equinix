@@ -6,7 +6,11 @@
 
 {% endfor %}
 {% endif %}
+{% if deprecated %}
+> [!WARNING]
+> **Deprecated:** {{ deprecated.why }} This module will be removed in version {{ deprecated.removed_in }}. Alternative: {{ deprecated.alternative }}
 
+{% endif %}
 - [Examples](#examples)
 - [Parameters](#parameters)
 - [Return Values](#return-values)

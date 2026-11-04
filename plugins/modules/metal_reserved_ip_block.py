@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: When a user provisions first device in a facility, Equinix Metal API
   automatically allocates IPv6/56 and private IPv4/25 blocks. The new device then
   gets IPv6 and private IPv4 addresses from those block. It also gets a public IPv4/31
@@ -18,6 +22,12 @@ description: When a user provisions first device in a facility, Equinix Metal AP
 module: metal_reserved_ip_block
 notes: []
 options:
+  cidr:
+    description:
+    - 'The size of the VRF IP Reservation''s subnet. The following subnet sizes are
+      supported:<br>- IPv4: between 22 - 29 inclusive<br>- IPv6: exactly 64'
+    required: false
+    type: int
   comments:
     description:
     - Comments to associate with the reserved IP block
@@ -41,6 +51,12 @@ options:
   metro:
     description:
     - The metro where the reserved IP block will be created
+    required: false
+    type: str
+  network:
+    description:
+    - The starting address for this VRF IP Reservation's subnet. Both IPv4 and IPv6
+      are supported.
     required: false
     type: str
   project_id:
@@ -101,21 +117,21 @@ metal_reserved_ip_block:
   returned: always
   sample:
   - address_family: 4
-    changed: true
     customdata: {}
     details: ''
+    gateway: 192.168.200.1
     id: 6d94f567-6cf5-4536-8216-7dc96e1585dd
     management: false
     metro: sv
-    netmask: 255.255.255.255
-    network: 145.40.67.3
+    netmask: 255.255.255.128
+    network: 192.168.200.0
     project_id: fd554070-70b6-420d-b3f8-7ed8438862d5
-    public: true
-    quantity: 1
+    public: false
+    quantity: 128
     tags:
     - t1
     - t2
-    type: public_ipv4
+    type: vrf
   type: dict
 """
 
@@ -126,6 +142,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 from ansible_specdoc.objects import (
@@ -239,6 +256,7 @@ module_spec = dict(
 )
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description=(
         "Create/delete blocks of reserved IP addresses in a project."
     ),

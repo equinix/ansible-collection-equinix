@@ -5,6 +5,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Asign reserved IPs to Equinix Metal devices.
 module: metal_ip_assignment
 notes: []
@@ -100,6 +104,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 module_spec = dict(
@@ -185,6 +190,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Manage Equinix Metal IP assignments',
     description='Asign reserved IPs to Equinix Metal devices.',
     examples=specdoc_examples,

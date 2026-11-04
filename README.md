@@ -1,7 +1,7 @@
 # Equinix Ansible Collection
 
 > [!WARNING]
-> With the upcoming EoL of Equinix Metal on June 30, 2026, this repo is being archived on July 1, 2026.
+> Equinix Metal reached end of life on June 30, 2026 (see [docs.equinix.com/metal](https://docs.equinix.com/metal/)). The `metal_*` modules and the `metal_device` inventory plugin in this collection are deprecated and will be removed in a future major release. The `equinix.cloud` collection itself remains in place for other Equinix services.
 
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-equinix.cloud-660198.svg?style=flat)](https://galaxy.ansible.com/ui/repo/published/equinix/cloud/)
 ![Tests](https://img.shields.io/github/actions/workflow/status/equinix/ansible-collection-equinix/integration-tests.yml?branch=main)

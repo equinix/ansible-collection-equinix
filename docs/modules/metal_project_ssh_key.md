@@ -2,6 +2,8 @@
 
 Manage project ssh key in Equinix Metal. Read more about personal and project SSH keys in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/accounts/ssh-keys/#personal-keys-vs-project-keys). You can use *id* or *label* to lookup a project SSH key. If you want to create new resource, you must provide *label*, *key* and *project_id*.
 
+> [!WARNING]
+> **Deprecated:** Equinix Metal reached end of life on June 30, 2026. This module will be removed in version 1.0.0. Alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 
 - [Examples](#examples)
 - [Parameters](#parameters)

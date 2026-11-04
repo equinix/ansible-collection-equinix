@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Lookup a single organization by ID in Equinix Metal. This resource only
   fetches a single organization by resource ID. It doesn't allow to create or update
   organizations.
@@ -69,6 +73,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 
@@ -111,6 +116,7 @@ return_values = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Lookup a single organization by ID in Equinix Metal',
     description=(
         'Lookup a single organization by ID in Equinix Metal. '

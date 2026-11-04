@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Manage the VLAN in Equinix Metal. You can use *id*, *vxlan* or *tags*
   to lookup the resource. If you want to create new resource, you must provide *metro*.
 module: metal_vlan
@@ -97,6 +101,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 MODULE_NAME = "metal_vlan"
@@ -161,6 +166,7 @@ return_values = [
 MUTABLE_ATTRIBUTES = [k for k, v in module_spec.items() if v.editable]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description="Manage a VLAN resource in Equinix Metal",
     description=(
         "Manage the VLAN in Equinix Metal. "

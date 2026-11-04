@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Manage personal SSH keys in Equinix Metal. Read more about personal and
   project SSH keys in [Equinix Metal documentation](https://deploy.equinix.com/developers/docs/metal/accounts/ssh-keys/#personal-keys-vs-project-keys).
   You can use *id* or *label* to lookup a SSH key. If you want to create new personal
@@ -75,6 +79,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 
@@ -128,6 +133,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Manage personal SSH keys in Equinix Metal',
     description=(
         'Manage personal SSH keys in Equinix Metal. '

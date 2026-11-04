@@ -1,0 +1,2 @@
+deprecated_features:
+  - All ``equinix.cloud.metal_*`` modules and the ``equinix.cloud.metal_device`` inventory plugin are deprecated and will be removed in 1.0.0. Equinix Metal reached end of life on June 30, 2026 (https://docs.equinix.com/metal/). The collection remains available for other Equinix services.

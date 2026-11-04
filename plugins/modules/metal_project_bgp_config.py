@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: 'You can use this module to enable BGP Config for a project. To lookup
   BGP Config of an existing project, call the module only with `project_id`. '
 module: metal_project_bgp_config
@@ -76,6 +80,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     get_diff,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 
@@ -139,6 +144,7 @@ MUTABLE_ATTRIBUTES = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description='Manage BGP Config for Equinix Metal Project',
     description=(
         'You can use this module to enable BGP Config for a project. To lookup BGP Config of an existing project, call the module only with `project_id`. '

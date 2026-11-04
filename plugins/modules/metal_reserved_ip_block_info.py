@@ -8,6 +8,10 @@
 
 DOCUMENTATION = r"""
 author: Equinix DevRel Team (@equinix) <support@equinix.com>
+deprecated:
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
 description: Gather list of reserved IP blocks matching the specified criteria
 module: metal_reserved_ip_block_info
 notes: []
@@ -80,6 +84,7 @@ from ansible_specdoc.objects import SpecField, FieldType, SpecDocMeta, SpecRetur
 from ansible_collections.equinix.cloud.plugins.module_utils.equinix import (
     EquinixModule,
     getSpecDocMeta,
+    METAL_DEPRECATION,
 )
 
 specdoc_examples = '''
@@ -136,6 +141,7 @@ return_values = [
 ]
 
 SPECDOC_META = getSpecDocMeta(
+    deprecated=METAL_DEPRECATION,
     short_description="Gather list of reserved IP blocks",
     description="Gather list of reserved IP blocks matching the specified criteria",
     examples=specdoc_examples,

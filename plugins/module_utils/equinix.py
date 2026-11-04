@@ -23,7 +23,7 @@ from ansible_collections.equinix.cloud.plugins.module_utils.metal import (
     metal_api,
 )
 
-from ansible_specdoc.objects import SpecDocMeta
+from ansible_specdoc.objects import SpecDocMeta, DeprecationInfo
 
 METAL_COMMON_ARGS = dict(
     metal_api_url=dict(
@@ -277,7 +277,16 @@ def get_diff(params: dict, fetched: dict, mutables: list, overwrite_undefined_fr
     )
 
 
-def getSpecDocMeta(short_description, description, options, examples, return_values):
+# Equinix Metal reached end of life on June 30, 2026. Metal modules carry this
+# deprecation; modules for other Equinix services should not.
+METAL_DEPRECATION = DeprecationInfo(
+    alternative="None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/",
+    removed_in="1.0.0",
+    why="Equinix Metal reached end of life on June 30, 2026.",
+)
+
+
+def getSpecDocMeta(short_description, description, options, examples, return_values, deprecated=None):
     # validate_yaml(examples)
     return SpecDocMeta(
         short_description=short_description,
@@ -286,6 +295,7 @@ def getSpecDocMeta(short_description, description, options, examples, return_val
         examples=examples,
         return_values=return_values,
         author='Equinix DevRel Team (@equinix) <support@equinix.com>',
+        deprecated=deprecated,
     )
 
 

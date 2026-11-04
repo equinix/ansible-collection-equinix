@@ -25,6 +25,10 @@ description: Reads device inventories from Equinix Metal. Uses YAML configuratio
   IP address of the device.
 module: metal_device
 extends_documentation_fragment: [constructed]
+deprecated:
+  removed_in: 1.0.0
+  why: Equinix Metal reached end of life on June 30, 2026.
+  alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 notes: []
 options:
   plugin:

@@ -2,6 +2,8 @@
 
 Manage Metal Gateway in Equinix Metal. You can use *id* or *ip_reservation_id* to lookup a Gateway. If you want to create new resource, you must provide *project_id*, *virtual_network_id* and either *ip_reservation_id* or *private_ipv4_subnet_size*.
 
+> [!WARNING]
+> **Deprecated:** Equinix Metal reached end of life on June 30, 2026. This module will be removed in version 1.0.0. Alternative: None. Equinix Metal has reached end of life, see https://docs.equinix.com/metal/
 
 - [Examples](#examples)
 - [Parameters](#parameters)
